@@ -515,14 +515,7 @@
       "resolved": "https://registry.npmjs.org/http-signature/-/http-signature-1.2.0.tgz",
       "version": "1.2.0"
     },
-    "image-downloader": {
-      "integrity": "sha1-/vB+qPRZCJKm8xhXupfsi9qq0MQ=",
-      "requires": {
-        "request": "2.83.0"
-      },
-      "resolved": "https://registry.npmjs.org/image-downloader/-/image-downloader-3.3.0.tgz",
-      "version": "3.3.0"
-    },
+    "image-downloader": "^3.3.0",
     "inherits": {
       "integrity": "sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=",
       "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz",
