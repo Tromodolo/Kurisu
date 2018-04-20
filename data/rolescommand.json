@@ -1,0 +1,35 @@
+{
+	"messageId": "432648632479776779",
+	"reactions": [
+		{
+			"emoteName": "exclamation",
+			"emoteId": "432639860290093060",
+			"roleId": "432640740875829249",
+			"description": "Get notified on server updates"
+		},
+		{
+			"emoteName": "Game",
+			"emoteId": "410122520503648256",
+			"roleId": "397159845775671317",
+			"description": "Group Games"
+		},
+		{
+			"emoteName": "Ticket",
+			"emoteId": "410123115658477568",
+			"roleId": "397159731149537280",
+			"description": "Group Watching"
+		},
+		{
+			"emoteName": "curry",
+			"emoteId": "432639860432699404",
+			"roleId": "432640235520917574",
+			"description": "\"I enjoy curry more than coffee\""
+		},
+		{
+			"emoteName": "coffee",
+			"emoteId": "432639860373717004",
+			"roleId": "432640434268012544",
+			"description": "\"Coffee is for intellectuals\""
+		}
+	]
+}
