@@ -8,7 +8,7 @@ const download = require("image-downloader");
 	
 exports.function = async (msg, args) => {
 	let options = {
-		url: `https://tromo.me/leblanc/getprofile.php?id=${msg.author.id}`,
+		url: `https://tromo.me/leblanc/avatar/${msg.author.id}`,
 		dest: `./data/tmp/discordavatars/${msg.author.id}.png`        // Save to /path/to/dest/photo.jpg
 	};
 	

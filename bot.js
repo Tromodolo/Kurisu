@@ -144,11 +144,13 @@ bot.on("messageReactionRemove", async (message, emoji, userID) =>{
 		raw: true
 	});
 
-	if(!rolescommand.reactionmessageid){
+	let config = await db.Config.find({ raw: true, where: { id: 1 }});
+
+	if(!config.reactionmessageid){
 		return;
 	}
 
-	if(message.id !== rolescommand.reactionmessageid){
+	if(message.id !== config.reactionmessageid){
 		return;
 	}
 	else{

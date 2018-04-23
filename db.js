@@ -64,8 +64,12 @@ const UserLevels = sequelize.define("userlevels", {
 		type: Sequelize.INTEGER
 	},
 	profiledescription:{
-		type: Sequelize.STRING,
+		type: Sequelize.STRING(2000),
 		defaultValue: "I haven't changed this"
+	},
+	profilecodename:{
+		type: Sequelize.STRING,
+		defaultValue: "Unknown"
 	}
 });
 
