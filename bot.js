@@ -80,6 +80,32 @@ bot.on("messageCreate", async (message) => {
 	if(message.author.bot)
 		return;
 
+    let user = await db.UserLevels.findOrCreate(
+    { 
+        raw: true,
+        where:{
+            userid: message.author.id
+        },
+        defaults:{
+            userid: message.author.id,
+            username: message.author.username,
+            discriminator: message.author.discriminator,
+            avatarurl: message.author.avatarURL,
+            totalxp: 0,
+            currentxp: 0,
+            level: 0,
+            guildjoindate: message.member.joinedAt,
+            countfromdate: message.member.joinedAt
+        }
+    });
+
+    await db.UserLevels.update({
+        messagessent: db.sequelize.literal(`messagessent + 1`),
+        guildjoindate: message.member.joinedAt
+    }, {
+        where: { userid: message.author.id }
+    });
+
 	let customCommandList = await db.CustomCommands.findAll({ raw: true });
 	
 	let custom = customCommandList.find(x => x.commandname == message.content);
@@ -93,7 +119,7 @@ bot.on("messageCreate", async (message) => {
 	if(await checkifUserTimer(message.author.id)){
 		let oldTime = await getTimer(message.author.id);
 		if((((now - oldTime) / 1000) > 60)) {
-			await addExp(message, xpGain);
+			await addExp(user, message, xpGain);
 			await updateTimer(message.author.id, now); 
 			
 		}
@@ -102,7 +128,7 @@ bot.on("messageCreate", async (message) => {
 		}
 	} 
 	else{
-		await addExp(message, xpGain);        
+		await addExp(user, message, xpGain);        
 		await addTimer(message.author.id, now);
 	}
 });
@@ -206,23 +232,8 @@ function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
-async function addExp(message, xpGain){
-	let user = await db.UserLevels.findOrCreate(
-		{ 
-			raw: true,
-			where:{
-				userid: message.author.id
-			},
-			defaults:{
-				userid: message.author.id,
-				username: message.author.username,
-				discriminator: message.author.discriminator,
-				avatarurl: message.author.avatarURL,
-				totalxp: 0,
-				currentxp: 0,
-				level: 0
-			}
-		});
+async function addExp(user, message, xpGain){
+	
 
 	user = user[0];
 

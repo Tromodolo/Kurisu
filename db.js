@@ -70,7 +70,25 @@ const UserLevels = sequelize.define("userlevels", {
 	profilecodename:{
 		type: Sequelize.STRING,
 		defaultValue: "Unknown"
-	}
+    },
+    guildjoindate: {
+        type: Sequelize.STRING
+    },
+    countfromdate: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "2018-04-24T12:27:46.497Z"
+    },
+    messagessent: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
+    userpageviews: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    }
 });
 
 const Config = sequelize.define("config", {
