@@ -74,6 +74,7 @@ bot.on("ready", () => { // When the bot is ready
 	db.Config.sync();
 	db.CustomCommands.sync();
 	db.UserLevels.sync();
+	db.ProfileData.sync();
 });
 
 bot.on("messageCreate", async (message) => {
@@ -98,13 +99,32 @@ bot.on("messageCreate", async (message) => {
             countfromdate: message.member.joinedAt
         }
     });
+	//This is just to make sure it exists in the other database too since I'm too lazy to do it properly atm fuck it
+	await db.ProfileData.findOrCreate(
+	{ 
+		raw: true,
+		where:{
+			userid: message.author.id
+		},
+		defaults:{
+			userid: message.author.id,
+			username: message.author.username,
+			discriminator: message.author.discriminator,
+			avatarurl: message.author.avatarURL,
+			guildjoindate: message.member.joinedAt,
+			countfromdate: message.member.joinedAt
+		}
+	});
 
-    await db.UserLevels.update({
+    await db.ProfileData.update({
         messagessent: db.sequelize.literal(`messagessent + 1`),
         guildjoindate: message.member.joinedAt
     }, {
         where: { userid: message.author.id }
-    });
+	});
+	
+	user[0].username = message.author.username;
+	user[0].discriminator = message.author.discriminator;
 
 	let customCommandList = await db.CustomCommands.findAll({ raw: true });
 	
@@ -253,32 +273,56 @@ async function addExp(user, message, xpGain){
 		
 		//Means they leveled up
 		await db.UserLevels.update(
-			{
-				level: newLevel,
-				currentxp: restExp,
-				totalxp: db.sequelize.literal(`totalxp + ${xpGain}`),
-				avatarurl: message.author.avatarURL
-			}, 
-			{
-				where: {
-					userid: message.author.id
-				}
-			});
+		{
+			username: user.username,
+			discriminator: user.discriminator,
+			level: newLevel,
+			currentxp: restExp,
+			totalxp: db.sequelize.literal(`totalxp + ${xpGain}`),
+		}, 
+		{
+			where: {
+				userid: message.author.id
+			}
+		});
+		await db.ProfileData.update(
+		{
+			username: user.username,
+			discriminator: user.discriminator,
+			avatarurl: message.author.avatarURL
+		}, 
+		{
+			where: {
+				userid: message.author.id
+			}
+		});
 		//await bot.createMessage(message.channel.id, message.author.mention + " just achieved level **" + user.level + "**!");                         
 	}
 	else{		
 		await db.UserLevels.update(
-			{
-				level: newLevel,
-				currentxp: db.sequelize.literal(`currentxp + ${xpGain}`),
-				totalxp: db.sequelize.literal(`totalxp + ${xpGain}`),
-				avatarurl: message.author.avatarURL
-			}, 
-			{
-				where: {
-					userid: message.author.id
-				}
-			});
+		{
+			username: user.username,
+			discriminator: user.discriminator,
+			level: newLevel,
+			currentxp: db.sequelize.literal(`currentxp + ${xpGain}`),
+			totalxp: db.sequelize.literal(`totalxp + ${xpGain}`),
+		}, 
+		{
+			where: {
+				userid: message.author.id
+			}
+		});
+		await db.ProfileData.update(
+		{
+			username: user.username,
+			discriminator: user.discriminator,
+			avatarurl: message.author.avatarURL
+		}, 
+		{
+			where: {
+				userid: message.author.id
+			}
+		});
 	}
 }
 

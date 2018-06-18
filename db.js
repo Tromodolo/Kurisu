@@ -19,7 +19,6 @@ const sequelize = new Sequelize("kurisu", "tromodolo", "Mitsuka123", {
 		charset: "utf8mb4",
 		collate: "utf8mb4_bin"
 	},
-	
 	// disable logging; default: console.log enable if need be
 	logging: false
 });
@@ -51,9 +50,6 @@ const UserLevels = sequelize.define("userlevels", {
 	discriminator: {
 		type: Sequelize.STRING
 	},
-	avatarurl: {
-		type: Sequelize.STRING
-	},
 	totalxp: {
 		type: Sequelize.INTEGER
 	},
@@ -62,6 +58,22 @@ const UserLevels = sequelize.define("userlevels", {
 	},
 	level: {
 		type: Sequelize.INTEGER
+	}
+});
+
+const ProfileData = sequelize.define("profiledata", {
+	userid: {
+		type: Sequelize.STRING,
+		primaryKey: true
+	},
+	username: {
+		type: Sequelize.STRING
+	},
+	discriminator: {
+		type: Sequelize.STRING
+	},
+	avatarurl: {
+		type: Sequelize.STRING
 	},
 	profiledescription:{
 		type: Sequelize.STRING(2000),
@@ -91,6 +103,7 @@ const UserLevels = sequelize.define("userlevels", {
     }
 });
 
+
 const Config = sequelize.define("config", {
 	id:{
 		type: Sequelize.INTEGER,
@@ -117,4 +130,5 @@ exports.sequelize = sequelize;
 exports.AssignRoles = AssignRoles;
 exports.Config = Config;
 exports.UserLevels = UserLevels;
+exports.ProfileData = ProfileData;
 exports.CustomCommands = CustomCommands;
