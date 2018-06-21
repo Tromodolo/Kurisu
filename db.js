@@ -36,6 +36,25 @@ const AssignRoles = sequelize.define("assignroles", {
 	},
 	description: {
 		type: Sequelize.STRING(2000)
+	},
+	order:{
+		type: Sequelize.INTEGER
+	}
+});
+
+const ColourRoles = sequelize.define("colourroles", {
+	roleid: {
+		type: Sequelize.STRING,
+		primaryKey: true
+	},
+	emotename: {
+		type: Sequelize.STRING
+	},
+	emoteid: {
+		type: Sequelize.STRING
+	},
+	description: {
+		type: Sequelize.STRING(2000)
 	}
 });
 
@@ -112,7 +131,12 @@ const Config = sequelize.define("config", {
 		primaryKey: true
 	},
 	reactionmessageid: {
-		type: Sequelize.STRING
+		type: Sequelize.STRING,
+		allowNull: false
+	},
+	colorreactionid: {
+		type: Sequelize.STRING,
+		allowNull: false
 	}
 });
 
@@ -128,6 +152,7 @@ const CustomCommands = sequelize.define("customcommands",{
 
 exports.sequelize = sequelize;
 exports.AssignRoles = AssignRoles;
+exports.ColourRoles = ColourRoles;
 exports.Config = Config;
 exports.UserLevels = UserLevels;
 exports.ProfileData = ProfileData;

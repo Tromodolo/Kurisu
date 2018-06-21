@@ -155,25 +155,13 @@ bot.on("messageCreate", async (message) => {
 
 
 bot.on("messageReactionAdd", async (message, emoji, userID) =>{
-	let config = await db.Config.find(
-		{ 
-			where:{
-				id: 1
-			},
+	let config = await db.Config.find({ raw: true, where: { id: 1 }});
+
+	if(message.id == config.reactionmessageid){
+		let rolescommand = await db.AssignRoles.findAll({
 			raw: true
 		});
 
-	let rolescommand = await db.AssignRoles.findAll({
-		raw: true
-	});
-	
-	if(!config.reactionmessageid){
-		return;
-	}
-	if(message.id !== config.reactionmessageid){
-		return;
-	}
-	else{
 		var member = message.channel.guild.members.find(x => x.id == userID);
 		if(member.bot){
 			return;
@@ -181,39 +169,60 @@ bot.on("messageReactionAdd", async (message, emoji, userID) =>{
 		else{
 			var role = rolescommand.find(x => x.emoteid == emoji.id);
 			member.addRole(role.roleid, "Roles Command");
-		} 
+		}
 	}
-});
-
-bot.on("messageReactionRemove", async (message, emoji, userID) =>{
-	let rolescommand = await db.AssignRoles.findAll({
-		raw: true
-	});
-
-	let config = await db.Config.find({ raw: true, where: { id: 1 }});
-
-	if(!config.reactionmessageid){
-		return;
-	}
-
-	if(message.id !== config.reactionmessageid){
-		return;
-	}
-	else{
+	else if(message.id == config.colorreactionid){
+		let colours = await db.ColourRoles.findAll({
+			raw: true
+		});
 		var member = message.channel.guild.members.find(x => x.id == userID);
 		if(member.bot){
 			return;
 		}
 		else{
-			var role = rolescommand.find(x => x.emoteId == emoji.id);
-			if(!role){
-				return;
-			}
-			else{
-				member.removeRole(role.roleId, "Removal of role Roles Command");
-			}
+			var role = colours.find(x => x.emoteid == emoji.id);
+			member.addRole(role.roleid, "Colour Command");
 		}
 	}
+	else{
+		return;
+	}
+});
+
+bot.on("messageReactionRemove", async (message, emoji, userID) =>{
+
+	let config = await db.Config.find({ raw: true, where: { id: 1 }});
+
+	if(message.id == config.reactionmessageid){
+		let rolescommand = await db.AssignRoles.findAll({
+			raw: true
+		});
+
+		var role = rolescommand.find(x => x.emoteid == emoji.id);
+		if(!role){
+			return;
+		}
+		else{
+			member.removeRole(role.roleid, "Removal of role Roles Command");
+		}
+	}
+	else if(message.id == config.colorreactionid){
+		let colours = await db.ColourRoles.findAll({
+			raw: true
+		});
+		var member = message.channel.guild.members.find(x => x.id == userID);
+		if(member.bot){
+			return;
+		}
+		else{
+			var role = rolescommand.find(x => x.emoteid == emoji.id);
+			member.removeRole(role.roleid, "Removal of colour Command");
+		}
+	}
+	else{
+		return;
+	}
+
 });
 
 function checkifUserTimer( userid ){

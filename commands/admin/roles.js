@@ -5,9 +5,11 @@ db = require("../../db");
 
 exports.function = async (msg, args) => {
 if(msg.member.permission.json.administrator || msg.author.id == "123184215423582208"){
-    var description = "**List of Roles:\n**\n";
+    var description = "**List of Self-Assignable Roles:\n**\n";
 
     let rolescommand = await db.AssignRoles.findAll({ raw: true });
+
+	description += "React to this message with these emotes to receive a role.\nUnreact to remove a role you already have.\n\n";
 
     rolescommand.forEach((e) =>{
         description += "<:" + e.emotename + ":" + e.emoteid + "> - " + e.description + "\n";
@@ -15,13 +17,8 @@ if(msg.member.permission.json.administrator || msg.author.id == "123184215423582
 
     var reactMessage = await client.createMessage(msg.channel.id, {
         "embed": {
-            "author": {
-                "name": "Disquad",
-                "url": "https://disquad.net/",
-                "icon_url": "https://tromo.me/u/5a5bcebf454e5.png"
-            },
             "description": description,
-            "color": 16728385
+            "color": 0xff4141
         }
     });
     
