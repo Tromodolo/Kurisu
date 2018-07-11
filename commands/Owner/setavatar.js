@@ -1,8 +1,8 @@
-var exports = module.exports = {},
-	config = require("../../bot.js").config,
-	client = require("../../bot.js").client,
-	base64 = require("node-base64-image"); 
-	
+var exports = module.exports = {};
+
+const config = require("../../bot.js").config,
+	  client = require("../../bot.js").client,
+	  base64 = require("node-base64-image"); 
 	
 exports.function = (msg, args) => {
 	if(msg.member.id === config.ownerId){

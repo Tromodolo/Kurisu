@@ -1,9 +1,8 @@
-var exports = module.exports = {},
-	config = require("../../bot.js").config,
-	client = require("../../bot.js").client; //Not used but needed for eval ease of use
+var exports = module.exports = {};
 
-const util = require("util");
-
+const util = require("util"),
+	  config = require("../../bot.js").config,
+	  client = require("../../bot.js").client; //Not used but needed for eval ease of use
 
 exports.function = async (msg, args) => {
 	if(msg.author.id == config.ownerId){

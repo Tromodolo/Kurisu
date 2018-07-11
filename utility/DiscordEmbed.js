@@ -35,18 +35,21 @@ module.exports.DiscordEmbed = class DiscordEmbed{
 			return;
 		}
 		else{
+			if(url.substring(0, 8) != "https"){
+				if(!(url.substring(0, 8) != "http")) 
+					url = "https://" + url; 
+			}
 			this.url = url;
 		}
 	}
 
 	setColor(color){
-		//This needs to take in a hexcode string or else it breaks
+		//This needs to take in a RGB int or it will break
 		if(!color || color.length == 0){
 			return;
 		}
 		else{
-			var replacedColor = color.replace("#", "0x");
-			this.color = replacedColor;
+			this.color = color;
 		}
 	}
 
@@ -106,8 +109,14 @@ module.exports.DiscordEmbed = class DiscordEmbed{
 
 	addField(name, value, inline){
 		let fieldEmbed = {};
-		if(){
-			
+		if((name && value) && !(name.length == 0 || value.length == 0)){
+			fieldEmbed.name = name;
+			fieldEmbed.value = value;
+
+			if(!inline) fieldEmbed.inline = false;
+			else fieldEmbed.inline = true;
+
+			this.fields.push(fieldEmbed);
 		}
 		else{
 			return;
@@ -121,7 +130,7 @@ module.exports.DiscordEmbed = class DiscordEmbed{
 			embed.title = this.title;
 
 		if(this.description) 
-			embed.title = this.description;
+			embed.description = this.description;
 
 		if(this.url) 
 			embed.url = this.url;
@@ -146,7 +155,11 @@ module.exports.DiscordEmbed = class DiscordEmbed{
 
 		embed.fields = this.fields;
 		
-		return embed;
+		let fullEmbed = { "embed": {} };
+
+		fullEmbed.embed = embed;
+
+		return fullEmbed;
 	}
 
 };

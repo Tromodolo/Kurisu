@@ -1,27 +1,22 @@
-const eris = require("eris"),
-	fs = require("fs"),
-	db = require("./db");
-	
-var config = require("./config.json"),
-	customCommands = require("./data/customcommands.json"),
-	rolesCommand = require("./data/rolescommand.json"),
-	color = 0xd83e3e,
-	commandList = [];
+const	eris = require("eris"),
+		fs = require("fs"),
+	  	db = require("./db");
+	  	config = require("./config.json"),
+	  	color = 0xd83e3e,
+	  	commandList = [];
 
-var exports = module.exports = {};
-var messageTimers = [];
-
-var bot = new eris.CommandClient(config.botToken, { getAllUsers: true }, {
+let bot = new eris.CommandClient(config.botToken, { getAllUsers: true }, {
 	description: "A bot made with Eris",
 	owner: config.ownerName,
 	prefix: "!",
 	defaultHelpCommand: false
 });
 
+var exports = module.exports = {};
+let messageTimers = [];
+	
 exports.config          = config,
 exports.client          = bot,
-exports.customCommands  = customCommands;
-exports.rolesCommand    = rolesCommand;
 exports.kurisuColour    = color;
 exports.commandList     = commandList;
 
@@ -65,19 +60,14 @@ fs.readdir("./commands/", (err, folders) => {
 	});    
 });
 
-
-
 bot.on("ready", () => { // When the bot is ready
 	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
 	bot.editStatus({ name: "!help to see all commands"});
-	db.AssignRoles.sync();
-	db.Config.sync();
-	db.CustomCommands.sync();
-	db.UserLevels.sync();
-	db.ProfileData.sync();
 });
 
 bot.on("messageCreate", async (message) => {
+	if(message.channel.guild.id != "331573354291265548") return;
+
 	if(message.author.bot)
 		return;
 
@@ -162,12 +152,12 @@ bot.on("messageReactionAdd", async (message, emoji, userID) =>{
 			raw: true
 		});
 
-		var member = message.channel.guild.members.find(x => x.id == userID);
+		let member = message.channel.guild.members.find(x => x.id == userID);
 		if(member.bot){
 			return;
 		}
 		else{
-			var role = rolescommand.find(x => x.emoteid == emoji.id);
+			let role = rolescommand.find(x => x.emoteid == emoji.id);
 			member.addRole(role.roleid, "Roles Command");
 		}
 	}
@@ -175,12 +165,12 @@ bot.on("messageReactionAdd", async (message, emoji, userID) =>{
 		let colours = await db.ColourRoles.findAll({
 			raw: true
 		});
-		var member = message.channel.guild.members.find(x => x.id == userID);
+		let member = message.channel.guild.members.find(x => x.id == userID);
 		if(member.bot){
 			return;
 		}
 		else{
-			var role = colours.find(x => x.emoteid == emoji.id);
+			let role = colours.find(x => x.emoteid == emoji.id);
 			member.addRole(role.roleid, "Colour Command");
 		}
 	}
@@ -198,7 +188,7 @@ bot.on("messageReactionRemove", async (message, emoji, userID) =>{
 			raw: true
 		});
 
-		var role = rolescommand.find(x => x.emoteid == emoji.id);
+		let role = rolescommand.find(x => x.emoteid == emoji.id);
 		if(!role){
 			return;
 		}
@@ -210,12 +200,12 @@ bot.on("messageReactionRemove", async (message, emoji, userID) =>{
 		let colours = await db.ColourRoles.findAll({
 			raw: true
 		});
-		var member = message.channel.guild.members.find(x => x.id == userID);
+		let member = message.channel.guild.members.find(x => x.id == userID);
 		if(member.bot){
 			return;
 		}
 		else{
-			var role = rolescommand.find(x => x.emoteid == emoji.id);
+			let role = rolescommand.find(x => x.emoteid == emoji.id);
 			member.removeRole(role.roleid, "Removal of colour Command");
 		}
 	}
@@ -225,8 +215,10 @@ bot.on("messageReactionRemove", async (message, emoji, userID) =>{
 
 });
 
+bot.connect();
+
 function checkifUserTimer( userid ){
-	for (var i in messageTimers) {
+	for (let i in messageTimers) {
 		if (messageTimers[i].userid === userid) {
 			return true;
 		}
@@ -239,7 +231,7 @@ async function addTimer( userid, newTime ){
 }
 
 function updateTimer( userid, newTime){
-	for (var i in messageTimers) {
+	for (let i in messageTimers) {
 		if (messageTimers[i].userid == userid) {
 			messageTimers[i].time = newTime;
 		}
@@ -247,7 +239,7 @@ function updateTimer( userid, newTime){
 }
 
 function getTimer( userid ){
-	for (var i in messageTimers) {
+	for (let i in messageTimers) {
 		if (messageTimers[i].userid == userid) {
 			return messageTimers[i].time;
 		}
@@ -335,4 +327,3 @@ async function addExp(user, message, xpGain){
 	}
 }
 
-bot.connect();

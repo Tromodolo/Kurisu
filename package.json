@@ -413,6 +413,7 @@
       "resolved": "https://registry.npmjs.org/github-from-package/-/github-from-package-0.0.0.tgz",
       "version": "0.0.0"
     },
+    "googleapis": "^32.0.0",
     "har-schema": {
       "integrity": "sha1-qUwiJOvKwEeCoNkDVSHyRzW37JI=",
       "resolved": "https://registry.npmjs.org/har-schema/-/har-schema-2.0.0.tgz",

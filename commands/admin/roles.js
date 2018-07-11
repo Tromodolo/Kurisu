@@ -1,11 +1,11 @@
+var exports = module.exports = {};
 
-var exports = module.exports = {},
-client = require("../../bot.js").client,
-db = require("../../db");
+const client = require("../../bot.js").client,
+	  db = require("../../db");
 
 exports.function = async (msg, args) => {
 if(msg.member.permission.json.administrator || msg.author.id == "123184215423582208"){
-    var description = "**List of Self-Assignable Roles:\n**\n";
+    let description = "**List of Self-Assignable Roles:\n**\n";
 
     let rolescommand = await db.AssignRoles.findAll({ raw: true });
 
@@ -15,7 +15,7 @@ if(msg.member.permission.json.administrator || msg.author.id == "123184215423582
         description += "<:" + e.emotename + ":" + e.emoteid + "> - " + e.description + "\n";
     })
 
-    var reactMessage = await client.createMessage(msg.channel.id, {
+    let reactMessage = await client.createMessage(msg.channel.id, {
         "embed": {
             "description": description,
             "color": 0xff4141
@@ -32,7 +32,7 @@ if(msg.member.permission.json.administrator || msg.author.id == "123184215423582
     });
 
     rolescommand.forEach( (e) =>{
-        var reactionid = e.emotename + ":" + e.emoteid;
+        let reactionid = e.emotename + ":" + e.emoteid;
         reactMessage.addReaction(reactionid);
     })
 }

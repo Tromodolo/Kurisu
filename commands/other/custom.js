@@ -1,11 +1,12 @@
-var exports = module.exports = {},
-fs = require("fs"),
-client = require("../../bot.js").client,
-db = require("../../db");
+var exports = module.exports = {};
+
+const fs = require("fs"),
+	  client = require("../../bot.js").client,
+	  db = require("../../db");
 
 exports.function = async (msg, args) => {
 	if(msg.member.permission.json.manageGuild || msg.member.id == 123184215423582208){
-		var choice = args[0],
+		let choice = args[0],
 			commandname = args[1],
 			commandtextpre = args.splice(2);
 			commandtext = commandtextpre.join(" ");
@@ -68,9 +69,15 @@ exports.function = async (msg, args) => {
 		}
 	}
 	else{
-		return "You don't have permission to use this command.";
+		let list = await db.CustomCommands.findAll({ raw: true });
+		let listArr = [];
+		list.forEach(command => {
+			listArr.push(command.commandname);
+		});
+
+		return "The current custom commands are: " + listArr.sort().join(", ");
 	}
-	}
+}
 
 	exports.description = "Custom Command Menu";
 	exports.fullDescription = "Command used to create, edit or remove custom commands";

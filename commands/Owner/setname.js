@@ -1,6 +1,7 @@
-var exports = module.exports = {},
-	config = require("../../bot.js").config,
-	client = require("../../bot.js").client;
+var exports = module.exports = {};
+
+const config = require("../../bot.js").config,
+	  client = require("../../bot.js").client;
 
 exports.function = (msg, args) => {
 	if(msg.member.id === config.ownerId){

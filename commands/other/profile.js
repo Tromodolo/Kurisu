@@ -1,10 +1,10 @@
-var exports = module.exports = {},
-	client = require("../../bot.js").client,
-	color = require("../../bot.js").kurisuColour,
-	request = require("request"),
-	fs = require("fs");
+var exports = module.exports = {};
 
-const download = require("image-downloader");
+const client = require("../../bot.js").client,
+	  color = require("../../bot.js").kurisuColour,
+	  request = require("request"),
+	  fs = require("fs"),
+	  download = require("image-downloader");
 	
 exports.function = async (msg, args) => {
 	let options = {

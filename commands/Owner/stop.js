@@ -1,7 +1,8 @@
-var exports = module.exports = {},
-	config = require("../../bot.js").config,
-	cmd = require("node-cmd"),
-	client = require("../../bot.js").client;
+var exports = module.exports = {};
+
+const config = require("../../bot.js").config,
+	  cmd = require("node-cmd"),
+	  client = require("../../bot.js").client;
 
 exports.function = async (msg, args) => {
 	if(msg.author.id == config.ownerId){

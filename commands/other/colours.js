@@ -1,10 +1,10 @@
+var exports = module.exports = {};
 
-var exports = module.exports = {},
-client = require("../../bot.js").client,
-db = require("../../db");
+const client = require("../../bot.js").client,
+	  db = require("../../db");
 
 exports.function = async (msg, args) => {
-	var description = "**List of Colour Roles:\n**\n";
+	let description = "**List of Colour Roles:\n**\n";
 
 	let colours = await db.ColourRoles.findAll({ raw: true, order: [["order", "ASC"]] });
 
@@ -14,7 +14,7 @@ exports.function = async (msg, args) => {
 		description += "<:" + e.emotename + ":" + e.emoteid + "> - " + e.description + "\n";
 	})
 
-	var reactMessage = await client.createMessage(msg.channel.id, {
+	let reactMessage = await client.createMessage(msg.channel.id, {
 		"embed": {
 			"description": description,
 			"color": 0xff4141
@@ -31,12 +31,12 @@ exports.function = async (msg, args) => {
 	});
 
 	colours.forEach( (e) =>{
-		var reactionid = e.emotename + ":" + e.emoteid;
+		let reactionid = e.emotename + ":" + e.emoteid;
 		reactMessage.addReaction(reactionid);
 	});
 
 }
 
-exports.description = "Shows autoassign role menu";
-exports.fullDescription = "Shows autoassign role menu";
+exports.description = "Shows colour assignment menu";
+exports.fullDescription = "Shows colour assignment menu";
 exports.usage = "";
