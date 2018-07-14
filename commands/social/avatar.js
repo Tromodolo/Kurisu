@@ -2,27 +2,15 @@ var exports = module.exports = {};
 
 const client = require("../../bot.js").client,
 	  color = require("../../bot.js").kurisuColour,
-	  DiscordEmbed = require("../../utility/DiscordEmbed").DiscordEmbed;
+	  DiscordEmbed = require("../../utility/Utility").DiscordEmbed,
+	  getUserByMessage = require("../../utility/Utility").getUserByMessage;
 	
 exports.function = async (msg, args) => {
 	let embed = new DiscordEmbed();
 	embed.setTimestamp(new Date(Date.now()).toISOString());
 	embed.setColor(color);
 
-	if(args.length == 0){
-		//Means get the author
-		embed.setTitle(`Avatar for ${msg.author.username}#${msg.author.discriminator}`);
-		
-		let userAvatar = msg.author.avatarURL.replace("jpg", "png");
-		userAvatar = userAvatar.replace("?size=128", "?size=1024");
-
-		embed.setUrl(userAvatar);
-		embed.setImage(userAvatar);
-
-		client.createMessage(msg.channel.id, embed.getEmbed());
-		return;
-	}
-	else if(args[0].toLowerCase() == "server" || args[0].toLowerCase() == "guild"){
+	if(args[0].toLowerCase() == "server" || args[0].toLowerCase() == "guild"){
 		//Get the server
 		embed.setTitle(`Avatar for ${msg.channel.guild.name}`);
 
@@ -31,70 +19,21 @@ exports.function = async (msg, args) => {
 
 		embed.setUrl(guildAvatar);
 		embed.setImage(guildAvatar);
-
-		client.createMessage(msg.channel.id, embed.getEmbed());
-		return;
-	}
-
-	let mentionRegex = /(<@[0-9]*>)(?:\s?\w*)*/gi;
-
-	let mentionCheck = mentionRegex.exec(args.join(" "));
-
-	if(mentionCheck){
-		embed.setTitle(`Avatar for ${msg.mentions[0].username}#${msg.mentions[0].discriminator}`);
-		
-		let userAvatar = msg.mentions[0].avatarURL.replace("jpg", "png");
-		userAvatar = userAvatar.replace("?size=128", "?size=1024");
-
-		embed.setUrl(userAvatar);
-		embed.setImage(userAvatar);
-		//Get first mentioned user
 	}
 	else{
-		let guild = msg.channel.guild;
-		
-		let userCheck = guild.members.find(x => x.id == args[0]);
+		let user;
 
-		if(!userCheck){
-			userCheck = guild.members.find(x => x.username.toLowerCase() == args[0]);
-			if(!userCheck){
-				userCheck = guild.members.find(x => {
-					if(x.nick){
-						return x.nick.toLowerCase() == args[0];
-					}
-					else{
-						return false;
-					}
-				});
-				if(!userCheck){
-					userCheck = guild.members.find(x => x.username.toLowerCase().includes(args[0]));
-					if(!userCheck){
-						userCheck = guild.members.find(x => {
-							if(x.nick){
-								return x.nick.toLowerCase().includes(args[0]);
-							}
-							else{
-								return false;
-							}
-						});
-						if(!userCheck){
-							return "User not found";
-						}
-					}
-				}
-			}
-		}
+		user = getUserByMessage(msg, args);
 
-		embed.setTitle(`Avatar for ${userCheck.user.username}#${userCheck.user.discriminator}`);
+		if(!user) return "User not found";
+
+		embed.setTitle(`Avatar for ${user.username}#${user.discriminator}`);
 		
-		let userAvatar = userCheck.avatarURL.replace("jpg", "png");
+		let userAvatar = user.avatarURL.replace("jpg", "png");
 		userAvatar = userAvatar.replace("?size=128", "?size=1024");
 
 		embed.setUrl(userAvatar);
 		embed.setImage(userAvatar);
-
-
-		//Try to go by the args provided
 	}
 
 	client.createMessage(msg.channel.id, embed.getEmbed());

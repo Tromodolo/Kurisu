@@ -4,60 +4,18 @@ const client = require("../../bot.js").client,
 	  color = require("../../bot.js").kurisuColour,
 	  request = require("request"),
 	  fs = require("fs"),
-	  download = require("image-downloader");
+	  download = require("image-downloader"),
+	  getUserByMessage = require("../../utility/Utility").getUserByMessage;
 	
 exports.function = async (msg, args) => {
 	let embed = new DiscordEmbed();
 
 	let user;
 
-	if(args.length == 0){
-		user = msg.member;
-	}
+	user = getUserByMessage(msg, args);
 
-	let mentionRegex = /(<@[0-9]*>)(?:\s?\w*)*/gi;
-
-	let mentionCheck = mentionRegex.exec(args.join(" "));
-
-	if(mentionCheck){
-		user = msg.mentions[0];
-	}
-	else if(!user){
-		let guild = msg.channel.guild;
-		user = guild.members.find(x => x.id == args[0]);
-
-		if(!user){
-			user = guild.members.find(x => x.username.toLowerCase() == args[0]);
-			if(!user){
-				user = guild.members.find(x => {
-					if(x.nick){
-						return x.nick.toLowerCase() == args[0];
-					}
-					else{
-						return false;
-					}
-				});
-				if(!user){
-					user = guild.members.find(x => x.username.toLowerCase().includes(args[0]));
-					if(!user){
-						user = guild.members.find(x => {
-							if(x.nick){
-								return x.nick.toLowerCase().includes(args[0]);
-							}
-							else{
-								return false;
-							}
-						});
-						if(!user){
-							return "User not found";
-						}
-					}
-				}
-			}
-					
-		}
-	}
-
+	if(!user) return "User was not found";
+	
 	let options = {
 		url: `https://tro.moe/leblanc/avatar/${user.id}`,
 		dest: `./data/tmp/discordavatars/${user.id}.png`        // Save to /path/to/dest/photo.jpg

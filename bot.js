@@ -10,7 +10,7 @@ const	eris = require("eris"),
 			version: "v3",
 			auth: "AIzaSyD_f_HdZSjRuWsMZNPImhGy71NyLxUoi0A"
 		}),
-		DiscordEmbed = require("./utility/DiscordEmbed").DiscordEmbed;
+		DiscordEmbed = require("./utility/Utility").DiscordEmbed;
 
 let bot = new eris.CommandClient(config.botToken, { getAllUsers: true }, {
 	description: "A bot made with Eris",
