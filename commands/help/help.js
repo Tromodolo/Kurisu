@@ -19,7 +19,7 @@ exports.function = (msg, args) => {
 	commands.forEach(function(commandModule){
 		if(commandModule.name == "owner") return;
 
-		let field = { name: commandModule.name, value: "" };
+		let field = { name: (commandModule.name.charAt(0).toUpperCase() + commandModule.name.slice(1)), value: "" };
 		for(let i in commandModule.commands){
 			field.value += `**${commandModule.commands[i].name}** - ${commandModule.commands[i].description}\n`;
 		}

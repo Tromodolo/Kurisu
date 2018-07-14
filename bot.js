@@ -3,7 +3,14 @@ const	eris = require("eris"),
 	  	db = require("./db");
 	  	config = require("./config.json"),
 	  	color = 0xd83e3e,
-	  	commandList = [];
+	    commandList = [],
+		google = require("googleapis").google,
+		customSearch = google.customsearch("v1"),
+		youtube = google.youtube({
+			version: "v3",
+			auth: "AIzaSyD_f_HdZSjRuWsMZNPImhGy71NyLxUoi0A"
+		}),
+		DiscordEmbed = require("./utility/DiscordEmbed").DiscordEmbed;
 
 let bot = new eris.CommandClient(config.botToken, { getAllUsers: true }, {
 	description: "A bot made with Eris",
@@ -65,11 +72,135 @@ bot.on("ready", () => { // When the bot is ready
 	bot.editStatus({ name: "!help to see all commands"});
 });
 
-bot.on("messageCreate", async (message) => {
-	if(message.channel.guild.id != "331573354291265548") return;
+let searchReactions = 
+[
+	"Sure, give me a second.",
+	"I'll see what I can do.",
+	"This better not be something perverted.",
+	"Why do I always have to do stuff for you, ugh. Just wait, I'll look.",
+	"I'm not doing this for you, I'm just bored okay.",
+	"Fine, but you owe me a drink.",
+	"I'm not doing this cause I like you okay, you owe me."
+]
 
+let foundReactions = 
+[
+	"Hey something came up, is this it?",
+	"Here you go, have fun.",
+	"Found it, look here"
+]
+
+let notFoundReactions = 
+[
+	"Look, I tried the best I could, but nothing came up.",
+	"What was it about, cause nothing came up when I searched for it.",
+	"Nullpo, couldn't find it.",
+	"It came up with nothing, don't tell me this is one of your delusions again."
+]
+
+async function googleSearch(query, message){
+	//Doing this to get an index between 0 and 5 for the reactions
+	let search = Math.floor(Math.random() * 7);
+
+	//Found and Not Found do the same thing here, only with other indexes
+	let notFound = Math.floor(Math.random() * 4);
+	let found = Math.floor(Math.random() * 3);
+
+	bot.createMessage(message.channel.id, searchReactions[search]);
+
+	const res = await customSearch.cse.list({
+		cx: "000495943812474214127:uwgvp2yysyc",
+		q: query,
+		auth: "AIzaSyD_f_HdZSjRuWsMZNPImhGy71NyLxUoi0A"
+	});
+
+	data = res.data;
+
+	if(data.searchInformation.totalResults == 0){
+		bot.createMessage(message.channel.id, notFoundReactions[notFound]);
+	}
+	else{
+		bot.createMessage(message.channel.id, foundReactions[found]);
+
+		let embed = new DiscordEmbed();
+
+		embed.setColor(color);
+		embed.setTitle(data.items[0].title);
+		embed.setUrl(data.items[0].formattedUrl);
+		embed.setDescription(`${data.items[0].snippet.replace("\n", " ")}`);
+		embed.setAuthor(`Google Search for '${query}'`);
+
+        bot.createMessage(message.channel.id, embed.getEmbed())
+	}
+}
+
+async function youtubeSearch(query, message){
+	//Doing this to get an index between 0 and 5 for the reactions
+	let search = Math.floor(Math.random() * 6);
+
+	//Found and Not Found do the same thing here, only with other indexes
+	let notFound = Math.floor(Math.random() * 4);
+	let found = Math.floor(Math.random() * 3);
+
+	bot.createMessage(message.channel.id, searchReactions[search]);
+
+	const res = await youtube.search.list({
+		part: "id,snippet",
+		q: query,
+	});
+	
+	let data = res.data;
+
+	if(data.pageInfo.totalResults == 0){
+		bot.createMessage(message.channel.id, notFoundReactions[notFound]);
+	}
+	else{
+		bot.createMessage(message.channel.id, foundReactions[found]);
+
+		let embed = new DiscordEmbed();
+
+		embed.setColor(color);
+		embed.setTitle(data.items[0].snippet.title);
+		embed.setUrl("https://www.youtube.com/watch?v=" + data.items[0].id.videoId);
+		embed.setDescription(`${data.items[0].snippet.description}`);
+		embed.setThumbnail(data.items[0].snippet.thumbnails.high.url);
+		embed.setAuthor(`Youtube search for '${query}'`);
+		
+        bot.createMessage(message.channel.id, embed.getEmbed());
+	}
+}
+
+bot.on("messageCreate", async (message) => {
 	if(message.author.bot)
 		return;
+
+	if(message.content.toLowerCase().includes("discord.gg") && !(message.member.permission.json.manageMessages))
+		message.delete();
+
+	let googleRegex = /((?:Hey\s)?Kurisu (?:could you\s)?(?:please\s)?look up)\s([a-zA-Z0-1].*)/gi;
+	let result = googleRegex.exec(message.content);
+
+	if(result){
+		if(result.length >= 3){
+			let query = result[2];
+
+			//Remove punctuation from the end of the string
+			query = query.replace(/\.|\?|\!|\,$/, "");
+
+			if(query.toLowerCase().endsWith("on youtube")){
+				//Look stuff up on youtube;
+				query = query.replace(/\son youtube$/i, "");
+				youtubeSearch(query, message);
+			}
+			else{
+				//do the google
+				googleSearch(query, message);
+			}
+		}
+	}
+
+
+	
 
     let user = await db.UserLevels.findOrCreate(
     { 
@@ -122,6 +253,8 @@ bot.on("messageCreate", async (message) => {
 	if(custom){
 		bot.createMessage(message.channel.id, custom.commandtext);        
 	}
+
+	if(message.channel.guild.id != "331573354291265548") return;
 
 	let now = new Date();
 	let xpGain = getRandomInt(15, 26);

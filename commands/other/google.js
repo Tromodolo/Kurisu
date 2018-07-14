@@ -4,6 +4,7 @@ const client = require("../../bot.js").client,
       color = require("../../bot.js").kurisuColour,
       google = require("googleapis").google,
 	  customSearch = google.customsearch("v1"),
+	  
 	  DiscordEmbed = require("../../utility/DiscordEmbed").DiscordEmbed;
 
 exports.function = async (msg, args) => {
