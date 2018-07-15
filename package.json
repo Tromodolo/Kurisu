@@ -131,6 +131,8 @@
       "resolved": "https://registry.npmjs.org/bufferutil/-/bufferutil-3.0.3.tgz",
       "version": "3.0.3"
     },
+    "canvas": "^2.0.0-alpha.12",
+    "canvas-multiline-text": "^1.0.3",
     "caseless": {
       "integrity": "sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=",
       "resolved": "https://registry.npmjs.org/caseless/-/caseless-0.12.0.tgz",
@@ -1026,6 +1028,7 @@
       "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz",
       "version": "5.1.1"
     },
+    "seedrandom": "^2.4.3",
     "semver": {
       "integrity": "sha512-WfG/X9+oATh81XtllIo/I8gOiY9EXRdv1cQdyykeXK17YcUW3EXUAi2To4pcH6nZtJPr7ZOpM5OMyWJZm+8Rsg==",
       "resolved": "https://registry.npmjs.org/semver/-/semver-5.4.1.tgz",
