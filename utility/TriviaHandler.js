@@ -2,10 +2,10 @@
 
 module.exports = class TriviaHandler{
     constructor(guildID, channelID){
-        this.active = false;
+        this.active = true;
         this.guildID = guildID;
         this.channelID = channelID;
-/*         this.token; */
+        this.token;
         this.currentQuestion = null;
         this.categoryChoices = [
             12, //Music
@@ -16,7 +16,7 @@ module.exports = class TriviaHandler{
         ]
     }
 
-/*      getToken(){
+     getToken(){
         return new Promise((resolve) => {
             request({
                 url: "https://opentdb.com/api_token.php?command=request",
@@ -25,8 +25,8 @@ module.exports = class TriviaHandler{
                 this.token = body.token;
                 resolve(body.token);
             })
-        })    
-    }  */
+        })
+    } 
 
     setInactive(){
         this.active = false;
@@ -34,15 +34,15 @@ module.exports = class TriviaHandler{
 
     getQuestion(){
         return new Promise(async (resolve) => {
-/*             if(!this.token) await this.getToken();*/
+            if(!this.token) await this.getToken();
             let category = Math.floor(Math.random() * this.categoryChoices.length);
 
             request({
-                url: `https://opentdb.com/api.php?amount=1&category=${this.categoryChoices[category]}&type=multiple`,
+                url: `https://opentdb.com/api.php?amount=1&category=${this.categoryChoices[category]}&type=multiple&token=${this.token}`,
                 json: true
             }, async (error, resp, body) => {
                 if(body.response_code == 4){
-                    /* await this.getToken(); */
+                    await this.getToken();
                     resolve(await this.getQuestion());
                 }
                 else{

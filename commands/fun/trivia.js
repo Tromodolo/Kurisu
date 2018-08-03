@@ -6,11 +6,20 @@ const DiscordEmbed = require("../../utility/DiscordEmbed");
 const Colour = require("../../bot").kurisuColour;
 const addTrivia = require("../../bot").addTrivia;
 const htmlToText = require('html-to-text');
+let triviaList = require("../../bot").triviaList;
 
 exports.function = async (msg, args) => {
-    let trivia = new TriviaHandler(msg.channel.guild.id, msg.channel.id);
+    let trivia = triviaList.find(x => x.triviaHandler.guildID = msg.channel.guild.id);
+    let question;
+    if(trivia){
+        trivia = trivia.triviaHandler;
+        question = await trivia.getQuestion();
+    }
+    else{
+        trivia = new TriviaHandler(msg.channel.guild.id, msg.channel.id);
+        question = await trivia.getQuestion();
+    }
     let embed = new DiscordEmbed();
-    let question = await trivia.getQuestion();
 
     let answers = [];
 
@@ -43,7 +52,7 @@ exports.function = async (msg, args) => {
                                **4.** ${htmlToText.fromString(answers[3].text, {})}`, false);
 
     client.createMessage(msg.channel.id, embed.getEmbed());
-    addTrivia(trivia, answers);
+    addTrivia(trivia, answers, msg.channel.guild.id);
 };
 
 exports.description = "Rolls a number from 0 to 100 or a custom max if you specify";

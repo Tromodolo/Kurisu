@@ -27,15 +27,29 @@ exports.config          = config,
 exports.client          = bot,
 exports.kurisuColour    = color;
 exports.commandList     = commandList;
-exports.addTrivia 		= (triviaHandler, answers) => {
-	triviaList.push({
-		triviaHandler: triviaHandler,
-		answers: answers,
-		lastAnswerTimer: null,
-		firstAnswer: null,
-		usersAnswered: []
-	});
+exports.addTrivia 		= (triviaHandler, answers, guildID) => {
+	let existingIndex;
+	for(let index in triviaList){
+		if(triviaList[index].triviaHandler.guildID == guildID) existingIndex = index;
+	}
+
+	if(!existingIndex){
+		triviaList.push({
+			triviaHandler: triviaHandler,
+			answers: answers,
+			lastAnswerTimer: null,
+			firstAnswer: null,
+			usersAnswered: []
+		});
+		return;
+	}
+	else{
+		triviaList[existingIndex].answers = answers;
+		triviaList[existingIndex].triviaHandler.active = true;
+		return;
+	}
 }
+exports.triviaList = triviaList;
 
 //This reads all the commands from the /commands/ folder and adds them to the bot
 fs.readdir("./commands/", (err, folders) => {
@@ -212,7 +226,7 @@ bot.on("messageCreate", async (message) => {
 	let triviaIndex;
 
 	for(let i in triviaList){
-		if(triviaList[i].triviaHandler.guildID == message.channel.guild.id && triviaList[i].triviaHandler.channelID == message.channel.id) {
+		if(triviaList[i].triviaHandler.guildID == message.channel.guild.id && triviaList[i].triviaHandler.channelID == message.channel.id && triviaList[i].triviaHandler.active) {
 			triviaIndex = i
 			break;
 		}
@@ -241,7 +255,11 @@ bot.on("messageCreate", async (message) => {
 						else if(correctUsers.length > 1){
 							bot.createMessage(triviaList[triviaIndex].triviaHandler.channelID, `Several people got it right, but ${triviaList[triviaIndex].firstAnswer.mention} was fastest`);
 						}
-						triviaList.splice(triviaIndex, 1);
+						triviaList[triviaIndex].answers = null;
+						triviaList[triviaIndex].lastAnswerTimer = null;
+						triviaList[triviaIndex].firstAnswer = null;
+						triviaList[triviaIndex].usersAnswered = [];
+						triviaList[triviaIndex].triviaHandler.active = false;
 					}, 15000);
 				}
 
