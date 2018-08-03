@@ -36,9 +36,6 @@ const AssignRoles = sequelize.define("assignroles", {
 	},
 	description: {
 		type: Sequelize.STRING(2000)
-	},
-	order:{
-		type: Sequelize.INTEGER
 	}
 });
 

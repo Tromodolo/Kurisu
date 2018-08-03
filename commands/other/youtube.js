@@ -7,7 +7,7 @@ const client = require("../../bot.js").client,
 	      version: "v3",
     	  auth: "AIzaSyD_f_HdZSjRuWsMZNPImhGy71NyLxUoi0A"
 	  }),
-	  DiscordEmbed = require("../../utility/Utility").DiscordEmbed;
+	  DiscordEmbed = require("../../utility/DiscordEmbed");
 
 exports.function = async (msg, args) => {
     if(args.length > 0){

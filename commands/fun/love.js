@@ -130,6 +130,6 @@ exports.function = async (msg, args) => {
 	}); 
 };
 
-exports.description = "Rolls a number from 0 to 100 or a custom max if you specify";
-exports.fullDescription = "Rolls a number from 0 to 100 or a custom max if you specify";
-exports.usage = "<max>";
+exports.description = "Gets compatibility between people";
+exports.fullDescription = "Gets compatibility between two specified people";
+exports.usage = "[Person 1] [Person 2]";

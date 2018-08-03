@@ -2,7 +2,7 @@ var exports = module.exports = {};
 
 const client = require("../../bot.js").client,
 	  color = require("../../bot.js").kurisuColour,
-	  DiscordEmbed = require("../../utility/Utility").DiscordEmbed,
+	  DiscordEmbed = require("../../utility/DiscordEmbed"),
 	  getUserByMessage = require("../../utility/Utility").getUserByMessage;
 	
 exports.function = async (msg, args) => {
@@ -10,15 +10,17 @@ exports.function = async (msg, args) => {
 	embed.setTimestamp(new Date(Date.now()).toISOString());
 	embed.setColor(color);
 
-	if(args[0].toLowerCase() == "server" || args[0].toLowerCase() == "guild"){
-		//Get the server
-		embed.setTitle(`Avatar for ${msg.channel.guild.name}`);
-
-		let guildAvatar = msg.channel.guild.iconURL.replace("jpg", "png");
-		guildAvatar = guildAvatar.replace("?size=128", "?size=1024");
-
-		embed.setUrl(guildAvatar);
-		embed.setImage(guildAvatar);
+	if(args[0]){
+		if(args[0].toLowerCase() == "server" || args[0].toLowerCase() == "guild"){
+			//Get the server
+			embed.setTitle(`Avatar for ${msg.channel.guild.name}`);
+	
+			let guildAvatar = msg.channel.guild.iconURL.replace("jpg", "png");
+			guildAvatar = guildAvatar.replace("?size=128", "?size=1024");
+	
+			embed.setUrl(guildAvatar);
+			embed.setImage(guildAvatar);
+		}
 	}
 	else{
 		let user;

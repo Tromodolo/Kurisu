@@ -5,7 +5,7 @@ const client = require("../../bot.js").client,
       google = require("googleapis").google,
 	  customSearch = google.customsearch("v1"),
 	  
-	  DiscordEmbed = require("../../utility/Utility").DiscordEmbed;
+	  DiscordEmbed = require("../../utility/DiscordEmbed");
 
 exports.function = async (msg, args) => {
     if(args.length > 0){

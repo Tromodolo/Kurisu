@@ -2,7 +2,7 @@ var exports = module.exports = {};
 
 const client = require("../../bot.js").client,
 	  color = require("../../bot.js").kurisuColour,
-	  DiscordEmbed = require("../../utility/Utility").DiscordEmbed,
+	  DiscordEmbed = require("../../utility/DiscordEmbed"),
 	  getUserByMessage = require("../../utility/Utility").getUserByMessage,
 	  moment = require("moment");
 	
@@ -15,6 +15,8 @@ exports.function = async (msg, args) => {
 	user = getUserByMessage(msg, args);
 
 	if(!user) return "User not found";
+
+	console.log(user);
 	
 	let userAvatar = user.avatarURL.replace("jpg", "png");
 	userAvatar = userAvatar.replace("?size=128", "?size=1024");

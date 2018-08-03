@@ -8,8 +8,6 @@ const client = require("../../bot.js").client,
 	  getUserByMessage = require("../../utility/Utility").getUserByMessage;
 	
 exports.function = async (msg, args) => {
-	let embed = new DiscordEmbed();
-
 	let user;
 
 	user = getUserByMessage(msg, args);

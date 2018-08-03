@@ -3,7 +3,7 @@ var exports = module.exports = {};
 const client = require("../../bot.js").client,
 	  color = require("../../bot.js").kurisuColour,
 	  XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
-	  DiscordEmbed = require("../../utility/Utility").DiscordEmbed;
+	  DiscordEmbed = require("../../utility/DiscordEmbed");
 
 exports.function = async (msg, args) => {
 	let emoteText = args[0];
