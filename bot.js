@@ -10,7 +10,7 @@ const	eris = require("eris"),
 			version: "v3",
 			auth: "AIzaSyD_f_HdZSjRuWsMZNPImhGy71NyLxUoi0A"
 		}),
-		DiscordEmbed = require("./utility/Utility").DiscordEmbed;
+		DiscordEmbed = require("./utility/DiscordEmbed");
 
 let bot = new eris.CommandClient(config.botToken, { getAllUsers: true }, {
 	description: "A bot made with Eris",
@@ -21,11 +21,21 @@ let bot = new eris.CommandClient(config.botToken, { getAllUsers: true }, {
 
 var exports = module.exports = {};
 let messageTimers = [];
-	
+let triviaList = [];
+
 exports.config          = config,
 exports.client          = bot,
 exports.kurisuColour    = color;
 exports.commandList     = commandList;
+exports.addTrivia 		= (triviaHandler, answers) => {
+	triviaList.push({
+		triviaHandler: triviaHandler,
+		answers: answers,
+		lastAnswerTimer: null,
+		firstAnswer: null,
+		usersAnswered: []
+	});
+}
 
 //This reads all the commands from the /commands/ folder and adds them to the bot
 fs.readdir("./commands/", (err, folders) => {
@@ -177,7 +187,7 @@ bot.on("messageCreate", async (message) => {
 	if(message.content.toLowerCase().includes("discord.gg") && !(message.member.permission.json.manageMessages))
 		message.delete();
 
-	let googleRegex = /((?:Hey\s)?Kurisu (?:could you\s)?(?:please\s)?look up)\s([a-zA-Z0-1].*)/gi;
+	let googleRegex = /((?:Hey\s)?Kurisu (?:could you\s)?(?:please\s)?look up)\s([a-zA-Z0-9åäö].*)/gi;
 	let result = googleRegex.exec(message.content);
 
 	if(result){
@@ -199,8 +209,54 @@ bot.on("messageCreate", async (message) => {
 		}
 	}
 
+	let triviaIndex;
 
+	for(let i in triviaList){
+		if(triviaList[i].triviaHandler.guildID == message.channel.guild.id && triviaList[i].triviaHandler.channelID == message.channel.id) {
+			triviaIndex = i
+			break;
+		}
+	}
 	
+	if(triviaIndex){
+		switch(message.content){
+			case "1":
+			case "2":
+			case "3":
+			case "4":
+				let answerIndex;
+				for(var i in triviaList[triviaIndex].answers){
+					if(triviaList[triviaIndex].answers[i].realAnswer == true) answerIndex = i;
+				}
+				if(!triviaList[triviaIndex].lastAnswerTimer){
+					triviaList[triviaIndex].lastAnswerTimer = setTimeout(() => {
+						bot.createMessage(triviaList[triviaIndex].triviaHandler.channelID, "Time's up");
+						let correctUsers = triviaList[triviaIndex].usersAnswered.filter(x => x.answer == answerIndex);
+						if(correctUsers.length == 0){
+							bot.createMessage(triviaList[triviaIndex].triviaHandler.channelID, "No one got the answer right");
+						}
+						else if(correctUsers.length == 1){
+							bot.createMessage(triviaList[triviaIndex].triviaHandler.channelID, `Only one person got it right, and it was ${triviaList[triviaIndex].firstAnswer.mention}.`);
+						}
+						else if(correctUsers.length > 1){
+							bot.createMessage(triviaList[triviaIndex].triviaHandler.channelID, `Several people got it right, but ${triviaList[triviaIndex].firstAnswer.mention} was fastest`);
+						}
+						triviaList.splice(triviaIndex, 1);
+					}, 15000);
+				}
+
+				if(!triviaList[triviaIndex].firstAnswer && (parseInt(message.content) - 1) == answerIndex) triviaList[triviaIndex].firstAnswer = message.member
+
+				triviaList[triviaIndex].usersAnswered.push({
+					user: message.member,
+					answer: parseInt(message.content) - 1
+				})
+			default:
+				break;
+		}
+	} 
+
+
 
     let user = await db.UserLevels.findOrCreate(
     { 
@@ -320,6 +376,11 @@ bot.on("messageReactionRemove", async (message, emoji, userID) =>{
 		let rolescommand = await db.AssignRoles.findAll({
 			raw: true
 		});
+
+		let member = message.channel.guild.members.find(x => x.id == userID);
+		if(member.bot || !member){
+			return;
+		}
 
 		let role = rolescommand.find(x => x.emoteid == emoji.id);
 		if(!role){
