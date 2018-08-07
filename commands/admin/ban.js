@@ -4,8 +4,22 @@ const client = require("../../bot.js").client,
 	  color = require("../../bot.js").kurisuColour,
       DiscordEmbed = require("../../utility/DiscordEmbed"),
       getUserByMessage = require("../../utility/Utility").getUserByMessage,
-      getHighestRole = require("../../utility/Utility").getHighestRole;
-	
+      getHighestRole = require("../../utility/Utility").getHighestRole;    
+      
+exports.aliases = [
+    "b",
+    "banboozle"
+];
+exports.description = "Bans a user";
+exports.fullDescription = "Bans a specified user";
+exports.usage = "ban tromo";
+
+exports.requirements = {
+    permissions: {
+        "banMembers": true
+    }
+}
+
 exports.function = async (msg, args) => {
     let botMember = msg.channel.guild.members.get(client.user.id);
 
@@ -49,13 +63,3 @@ exports.function = async (msg, args) => {
         return "Something went wrong when banning"
     }
 };
-
-exports.requirements = {
-    permissions: {
-        "banMembers": true
-    }
-}
-
-exports.description = "Bans a user";
-exports.fullDescription = "Bans a user";
-exports.usage = "<emote>";

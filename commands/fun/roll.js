@@ -2,6 +2,17 @@ var exports = module.exports = {};
 
 const client = require("../../bot.js").client;
 
+exports.aliases = [
+	"random",
+	"rng"
+]
+exports.description = "Rolls a number from 0 to 100 or a custom max if you specify";
+exports.fullDescription = "Rolls a number from 0 to 100 or a custom max if you specify";
+exports.usage = "roll 781";
+exports.requirements = {
+
+};
+
 exports.function = async (msg, args) => {
 	if(args.length > 0){
 		let maxNum = parseInt(args[0]);
@@ -19,7 +30,3 @@ exports.function = async (msg, args) => {
 		return `:game_die:${randomNum}`;
 	}
 };
-
-exports.description = "Rolls a number from 0 to 100 or a custom max if you specify";
-exports.fullDescription = "Rolls a number from 0 to 100 or a custom max if you specify";
-exports.usage = "<max>";

@@ -5,7 +5,19 @@ const client = require("../../bot.js").client,
 	  DiscordEmbed = require("../../utility/DiscordEmbed"),
 	  getUserByMessage = require("../../utility/Utility").getUserByMessage,
 	  moment = require("moment");
+
+exports.aliases = [
+	"userinfo",
+	"whois",
+	"info"
+]
+exports.description = "Gets your or another person's information";
+exports.fullDescription = "Gets your or another person's information";
+exports.usage = "user tromo";
+exports.requirements = {
 	
+}
+
 exports.function = async (msg, args) => {
 	let embed = new DiscordEmbed();
 	embed.setColor(color);
@@ -62,7 +74,3 @@ exports.function = async (msg, args) => {
 	client.createMessage(msg.channel.id, embed.getEmbed());
 	return;
 };
-
-exports.description = "Gets your or another person's information";
-exports.fullDescription = "Gets your or another person's information";
-exports.usage = "<emote>";

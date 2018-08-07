@@ -5,7 +5,20 @@ const client = require("../../bot.js").client,
       DiscordEmbed = require("../../utility/DiscordEmbed"),
       getUserByMessage = require("../../utility/Utility").getUserByMessage,
       getHighestRole = require("../../utility/Utility").getHighestRole;
-	
+
+exports.aliases = [
+    "k"
+];
+exports.description = "Kicks a user";
+exports.fullDescription = "Kicks a specified user";
+exports.usage = "kick tromo";
+
+exports.requirements = {
+    permissions: {
+        "kickMembers": true
+    }
+}
+
 exports.function = async (msg, args) => {
     let botMember = msg.channel.guild.members.get(client.user.id);
 
@@ -49,13 +62,3 @@ exports.function = async (msg, args) => {
         return "Something went wrong when kick"
     }
 };
-
-exports.requirements = {
-    permissions: {
-        "kickMembers": true
-    }
-}
-
-exports.description = "Kicks a user";
-exports.fullDescription = "Kicks a user";
-exports.usage = "<emote>";

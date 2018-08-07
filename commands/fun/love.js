@@ -7,10 +7,18 @@ const client = require("../../bot.js").client,
 	  seedrandom = require('seedrandom'),
 	  moment = require("moment"),
 	  download = require("image-downloader");
-
 const { createCanvas, loadImage, Image, registerFont } = require('canvas');
-
 registerFont("./data/Love/VCR_OSD_MONO_1.001.ttf", { family: 'VCR' });
+
+exports.aliases = [
+	"ship"
+];
+exports.description = "Gets compatibility between people";
+exports.fullDescription = "Gets love compatibility between two specified people";
+exports.usage = "love person1 person2";
+exports.requirements = {
+
+}
 
 exports.function = async (msg, args) => {
 	let users = getLoveUsers(msg, args);
@@ -129,7 +137,3 @@ exports.function = async (msg, args) => {
 		msg.channel.createMessage("", { file: data, name: "love.png" });
 	}); 
 };
-
-exports.description = "Gets compatibility between people";
-exports.fullDescription = "Gets compatibility between two specified people";
-exports.usage = "[Person 1] [Person 2]";

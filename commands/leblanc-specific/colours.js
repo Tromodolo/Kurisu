@@ -3,6 +3,16 @@ var exports = module.exports = {};
 const client = require("../../bot.js").client,
 	  db = require("../../db");
 
+exports.aliases = [
+	"colors"
+]
+exports.description = "Shows colour assignment menu";
+exports.fullDescription = "Shows colour assignment menu";
+exports.usage = "colours";
+exports.requirements = {
+	
+}
+
 exports.function = async (msg, args) => {
 	let description = "**List of Colour Roles:\n**\n";
 
@@ -36,7 +46,3 @@ exports.function = async (msg, args) => {
 	});
 
 }
-
-exports.description = "Shows colour assignment menu";
-exports.fullDescription = "Shows colour assignment menu";
-exports.usage = "";

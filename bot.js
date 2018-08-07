@@ -61,14 +61,17 @@ fs.readdir("./commands/", (err, folders) => {
 					{
 						name: commandName,
 						description: props.fullDescription,
-						usage: props.usage
+						usage: config.commandPrefix + props.usage,
+						aliases: props.aliases,
+						requirements: props.requirements
 					});
 				bot.registerCommand(commandName, props.function, 
 					{
+						aliases: props.aliases,
 						description: props.description,
 						fullDescription: props.fullDescription,
 						requirements: props.requirements,
-						usage: props.usage,
+						usage: config.commandPrefix + props.usage,
 					});
 			});
 			commandList.push(commandModule);

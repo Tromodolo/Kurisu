@@ -4,6 +4,16 @@ const fs = require("fs"),
 	  client = require("../../bot.js").client,
 	  db = require("../../db");
 
+exports.aliases = [
+
+];
+exports.description = "Custom Command Menu";
+exports.fullDescription = "Command used to create, edit or remove custom commands.";
+exports.usage = "custom [create | edit | remove | list] commandname <commandtext>";
+exports.requirements = {
+
+};
+
 exports.function = async (msg, args) => {
 	if(msg.member.permission.json.manageGuild || msg.member.id == 123184215423582208){
 		let choice = args[0],
@@ -78,7 +88,3 @@ exports.function = async (msg, args) => {
 		return "The current custom commands are: " + listArr.sort().join(", ");
 	}
 }
-
-	exports.description = "Custom Command Menu";
-	exports.fullDescription = "Command used to create, edit or remove custom commands";
-	exports.usage = "[create | edit | remove | list] commandname <commandtext>";

@@ -5,6 +5,19 @@ const client = require("../../bot.js").client,
 	  DiscordEmbed = require("../../utility/DiscordEmbed"),
 	  getUserByMessage = require("../../utility/Utility").getUserByMessage;
 	
+
+exports.aliases = [
+	"ava",
+	"pfp",
+	"profilepicture"
+];
+exports.description = "Shows your, the server's or another person's avatar";
+exports.fullDescription = "Shows your, the server's or another person's avatar";
+exports.usage = "avatar [username | server]";
+exports.requirements = {
+
+};
+
 exports.function = async (msg, args) => {
 	let embed = new DiscordEmbed();
 	embed.setTimestamp(new Date(Date.now()).toISOString());
@@ -41,7 +54,3 @@ exports.function = async (msg, args) => {
 	client.createMessage(msg.channel.id, embed.getEmbed());
 	return;
 };
-
-exports.description = "Shows your, the server's or another person's avatar";
-exports.fullDescription = "Shows your, the server's or another person's avatar";
-exports.usage = "<emote>";

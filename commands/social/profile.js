@@ -7,6 +7,16 @@ const client = require("../../bot.js").client,
 	  download = require("image-downloader"),
 	  getUserByMessage = require("../../utility/Utility").getUserByMessage;
 	
+exports.aliases = [
+
+];
+exports.description = "Shows your or another user's profile";
+exports.fullDescription = "Shows your or another user's profile";
+exports.usage = "profile username";
+exports.requirements = {
+
+};
+
 exports.function = async (msg, args) => {
 	let user;
 
@@ -30,6 +40,3 @@ exports.function = async (msg, args) => {
 	
 };
 
-exports.description = "Shows your or another user's profile";
-exports.fullDescription = "Shows your or another user's profile";
-exports.usage = "<emote>";

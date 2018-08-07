@@ -8,6 +8,16 @@ const addTrivia = require("../../bot").addTrivia;
 const htmlToText = require('html-to-text');
 let triviaList = require("../../bot").triviaList;
 
+exports.aliases = [
+
+];
+exports.description = "Starts a trivia question";
+exports.fullDescription = "Starts a trivia game that gets a random question from an api.";
+exports.usage = "trivia";
+exports.requirements = {
+
+}
+
 exports.function = async (msg, args) => {
     let trivia = triviaList.find(x => x.triviaHandler.guildID = msg.channel.guild.id);
     let question;
@@ -54,11 +64,6 @@ exports.function = async (msg, args) => {
     client.createMessage(msg.channel.id, embed.getEmbed());
     addTrivia(trivia, answers, msg.channel.guild.id);
 };
-
-exports.description = "Starts a trivia question";
-exports.fullDescription = "Starts a trivia question";
-exports.usage = "<max>";
-
 //https://www.w3resource.com/javascript-exercises/javascript-array-exercise-17.php
 function shuffle(arra1) {
     var ctr = arra1.length, temp, index;

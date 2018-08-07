@@ -5,6 +5,16 @@ const client = require("../../bot.js").client,
 	  XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
 	  DiscordEmbed = require("../../utility/DiscordEmbed");
 
+exports.aliases = [
+	"e"
+];
+exports.description = "Shows info about a discord emote";
+exports.fullDescription = "Shows information about a custom discord emote";
+exports.usage = "emote :SataniaGun:";
+exports.requirements = {
+
+};
+
 exports.function = async (msg, args) => {
 	let emoteText = args[0];
 	let emoteRegex = /:(\d.*?[0-9])>/;
@@ -35,11 +45,6 @@ exports.function = async (msg, args) => {
 
 	client.createMessage(msg.channel.id, embed.getEmbed());
 };
-
-exports.description = "Shows info about a discord emote";
-exports.fullDescription = "Shows information about a custom discord emote";
-exports.usage = "<emote>";
-
 
 function imageExists(image_url){
 	let http = new XMLHttpRequest();
