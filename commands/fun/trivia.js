@@ -6,6 +6,7 @@ const DiscordEmbed = require("../../utility/DiscordEmbed");
 const Colour = require("../../bot").kurisuColour;
 const addTrivia = require("../../bot").addTrivia;
 const htmlToText = require('html-to-text');
+const fs = require("fs");
 let triviaList = require("../../bot").triviaList;
 
 exports.aliases = [
@@ -51,7 +52,7 @@ exports.function = async (msg, args) => {
     questionText.replace("\n", "");
 
     embed.setColor(Colour);
-    embed.setThumbnail("https://tro.moe/u/_6udfof502.png"); //Confused Chen image
+    embed.setThumbnail("attachment://chen.png"); //Confused Chen image
     embed.addField("Difficulty", question.difficulty.charAt(0).toUpperCase() + question.difficulty.substr(1), true);
     embed.addField("Category", question.category, true);
     embed.addField("Question", questionText, false);
@@ -61,7 +62,10 @@ exports.function = async (msg, args) => {
                                **3.** ${htmlToText.fromString(answers[2].text, {})}
                                **4.** ${htmlToText.fromString(answers[3].text, {})}`, false);
 
-    client.createMessage(msg.channel.id, embed.getEmbed());
+    fs.readFile(`./data/ChenConfused.png`, function (err, data ) {
+        client.createMessage(msg.channel.id, embed.getEmbed(), { file: data, name: "chen.png" });
+    });
+
     addTrivia(trivia, answers, msg.channel.guild.id);
 };
 //https://www.w3resource.com/javascript-exercises/javascript-array-exercise-17.php
