@@ -41,7 +41,7 @@ exports.function = async (msg, args) => {
     questionText.replace("\n", "");
 
     embed.setColor(Colour);
-    embed.setThumbnail("https://tro.moe/u/_6udfof502.png");
+    embed.setThumbnail("https://tro.moe/u/_6udfof502.png"); //Confused Chen image
     embed.addField("Difficulty", question.difficulty.charAt(0).toUpperCase() + question.difficulty.substr(1), true);
     embed.addField("Category", question.category, true);
     embed.addField("Question", questionText, false);

@@ -7,6 +7,7 @@ const config = require("../../bot.js").config,
 exports.function = async (msg, args) => {
 	if(msg.author.id == config.ownerId){
 		await client.createMessage(msg.channel.id, "Shutting down..");
+		//This is very much hardcoded to use pm2
 		cmd.run("pm2 stop Kurisu"); 
 	}
 };

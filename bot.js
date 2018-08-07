@@ -4,18 +4,11 @@ const	eris = require("eris"),
 	  	config = require("./config.json"),
 	  	color = 0xd83e3e,
 	    commandList = [],
-		google = require("googleapis").google,
-		customSearch = google.customsearch("v1"),
-		youtube = google.youtube({
-			version: "v3",
-			auth: "AIzaSyD_f_HdZSjRuWsMZNPImhGy71NyLxUoi0A"
-		}),
-		DiscordEmbed = require("./utility/DiscordEmbed");
+		DiscordEmbed = require("./utility/DiscordEmbed"),
+		util = require("./utility/Utility");
 
 let bot = new eris.CommandClient(config.botToken, { getAllUsers: true }, {
-	description: "A bot made with Eris",
-	owner: config.ownerName,
-	prefix: "!",
+	prefix: config.commandPrefix,
 	defaultHelpCommand: false
 });
 
@@ -93,145 +86,49 @@ fs.readdir("./commands/", (err, folders) => {
 
 bot.on("ready", () => { // When the bot is ready
 	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
-	bot.editStatus({ name: "!help to see all commands"});
+	bot.editStatus({ name: config.commandPrefix + "help to see all commands"});
 });
-
-let searchReactions = 
-[
-	"Sure, give me a second.",
-	"I'll see what I can do.",
-	"This better not be something perverted.",
-	"Why do I always have to do stuff for you, ugh. Just wait, I'll look.",
-	"I'm not doing this for you, I'm just bored okay.",
-	"Fine, but you owe me a drink.",
-	"I'm not doing this cause I like you okay, you owe me."
-]
-
-let foundReactions = 
-[
-	"Hey something came up, is this it?",
-	"Here you go, have fun.",
-	"Found it, look here"
-]
-
-let notFoundReactions = 
-[
-	"Look, I tried the best I could, but nothing came up.",
-	"What was it about, cause nothing came up when I searched for it.",
-	"Nullpo, couldn't find it.",
-	"It came up with nothing, don't tell me this is one of your delusions again."
-]
-
-async function googleSearch(query, message){
-	//Doing this to get an index between 0 and 5 for the reactions
-	let search = Math.floor(Math.random() * 7);
-
-	//Found and Not Found do the same thing here, only with other indexes
-	let notFound = Math.floor(Math.random() * 4);
-	let found = Math.floor(Math.random() * 3);
-
-	bot.createMessage(message.channel.id, searchReactions[search]);
-
-	const res = await customSearch.cse.list({
-		cx: "000495943812474214127:uwgvp2yysyc",
-		q: query,
-		auth: "AIzaSyD_f_HdZSjRuWsMZNPImhGy71NyLxUoi0A"
-	});
-
-	data = res.data;
-
-	if(data.searchInformation.totalResults == 0){
-		bot.createMessage(message.channel.id, notFoundReactions[notFound]);
-	}
-	else{
-		bot.createMessage(message.channel.id, foundReactions[found]);
-
-		let embed = new DiscordEmbed();
-
-		embed.setColor(color);
-		embed.setTitle(data.items[0].title);
-		embed.setUrl(data.items[0].formattedUrl);
-		embed.setDescription(`${data.items[0].snippet.replace("\n", " ")}`);
-		embed.setAuthor(`Google Search for '${query}'`);
-
-        bot.createMessage(message.channel.id, embed.getEmbed())
-	}
-}
-
-async function youtubeSearch(query, message){
-	//Doing this to get an index between 0 and 5 for the reactions
-	let search = Math.floor(Math.random() * 6);
-
-	//Found and Not Found do the same thing here, only with other indexes
-	let notFound = Math.floor(Math.random() * 4);
-	let found = Math.floor(Math.random() * 3);
-
-	bot.createMessage(message.channel.id, searchReactions[search]);
-
-	const res = await youtube.search.list({
-		part: "id,snippet",
-		q: query,
-	});
-	
-	let data = res.data;
-
-	if(data.pageInfo.totalResults == 0){
-		bot.createMessage(message.channel.id, notFoundReactions[notFound]);
-	}
-	else{
-		bot.createMessage(message.channel.id, foundReactions[found]);
-
-		let embed = new DiscordEmbed();
-
-		embed.setColor(color);
-		embed.setTitle(data.items[0].snippet.title);
-		embed.setUrl("https://www.youtube.com/watch?v=" + data.items[0].id.videoId);
-		embed.setDescription(`${data.items[0].snippet.description}`);
-		embed.setThumbnail(data.items[0].snippet.thumbnails.high.url);
-		embed.setAuthor(`Youtube search for '${query}'`);
-		
-        bot.createMessage(message.channel.id, embed.getEmbed());
-	}
-}
 
 bot.on("messageCreate", async (message) => {
 	if(message.author.bot)
 		return;
 
-	if(message.content.toLowerCase().includes("discord.gg") && !(message.member.permission.json.manageMessages))
+	//Server specific stuff
+	if(message.channel.guild.id == "331573354291265548"){
+		if(message.content.toLowerCase().includes("discord.gg") && !(message.member.permission.json.manageMessages))
 		message.delete();
 
-	let googleRegex = /((?:Hey\s)?Kurisu (?:could you\s)?(?:please\s)?look up)\s([a-zA-Z0-9åäö].*)/gi;
-	let result = googleRegex.exec(message.content);
+		let googleRegex = /((?:Hey\s)?Kurisu (?:could you\s)?(?:please\s)?look up)\s([a-zA-Z0-9åäö].*)/gi;
+		let result = googleRegex.exec(message.content);
 
-	if(result){
-		if(result.length >= 3){
-			let query = result[2];
+		if(result){
+			if(result.length >= 3){
+				let query = result[2];
 
-			//Remove punctuation from the end of the string
-			query = query.replace(/\.|\?|\!|\,$/, "");
+				//Remove punctuation from the end of the string
+				query = query.replace(/\.|\?|\!|\,$/, "");
 
-			if(query.toLowerCase().endsWith("on youtube")){
-				//Look stuff up on youtube;
-				query = query.replace(/\son youtube$/i, "");
-				youtubeSearch(query, message);
-			}
-			else{
-				//do the google
-				googleSearch(query, message);
+				if(query.toLowerCase().endsWith("on youtube")){
+					//Look stuff up on youtube;
+					query = query.replace(/\son youtube$/i, "");
+					util.youtubeLookup(bot, message, query, true);
+				}
+				else{
+					//do the google
+					util.googleLookup(bot, message, query, true);
+				}
 			}
 		}
 	}
 
+	//Trivia handling
 	let triviaIndex;
-
 	for(let i in triviaList){
 		if(triviaList[i].triviaHandler.guildID == message.channel.guild.id && triviaList[i].triviaHandler.channelID == message.channel.id && triviaList[i].triviaHandler.active) {
 			triviaIndex = i
 			break;
 		}
 	}
-	
 	if(triviaIndex){
 		switch(message.content){
 			case "1":
@@ -272,10 +169,9 @@ bot.on("messageCreate", async (message) => {
 			default:
 				break;
 		}
-	} 
+	}
 
-
-
+	//Xp handling
     let user = await db.UserLevels.findOrCreate(
     { 
         raw: true,
@@ -286,14 +182,11 @@ bot.on("messageCreate", async (message) => {
             userid: message.author.id,
             username: message.author.username,
             discriminator: message.author.discriminator,
-            avatarurl: message.author.avatarURL,
             totalxp: 0,
             currentxp: 0,
-            level: 0,
-            guildjoindate: message.member.joinedAt,
-            countfromdate: message.member.joinedAt
+            level: 0
         }
-    });
+	});
 	//This is just to make sure it exists in the other database too since I'm too lazy to do it properly atm fuck it
 	await db.ProfileData.findOrCreate(
 	{ 
@@ -311,6 +204,19 @@ bot.on("messageCreate", async (message) => {
 		}
 	});
 
+	await db.GuildScores.findOrCreate(
+		{ 
+			raw: true,
+			where:{
+				userid: message.author.id
+			},
+			defaults:{
+				userid: message.author.id,
+				guildid: message.channel.guild.id,
+				score: 0
+			}
+		});
+
     await db.ProfileData.update({
         messagessent: db.sequelize.literal(`messagessent + 1`),
         guildjoindate: message.member.joinedAt
@@ -327,8 +233,6 @@ bot.on("messageCreate", async (message) => {
 	if(custom){
 		bot.createMessage(message.channel.id, custom.commandtext);        
 	}
-
-	if(message.channel.guild.id != "331573354291265548") return;
 
 	let now = new Date();
 	let xpGain = getRandomInt(15, 26);
@@ -466,8 +370,6 @@ function getRandomInt(min, max) {
 }
 
 async function addExp(user, message, xpGain){
-	
-
 	user = user[0];
 
 	let currentlevel = user.level;
@@ -509,6 +411,17 @@ async function addExp(user, message, xpGain){
 				userid: message.author.id
 			}
 		});
+
+		await db.GuildScores.update(
+		{
+			score: db.sequelize.literal(`score + ${xpGain}`),
+		}, 
+		{
+			where: {
+				userid: message.author.id
+			}
+		});
+
 		//await bot.createMessage(message.channel.id, message.author.mention + " just achieved level **" + user.level + "**!");                         
 	}
 	else{		
@@ -536,6 +449,16 @@ async function addExp(user, message, xpGain){
 				userid: message.author.id
 			}
 		});
+
+		await db.GuildScores.update(
+			{
+				score: db.sequelize.literal(`score + ${xpGain}`),
+			}, 
+			{
+				where: {
+					userid: message.author.id
+				}
+			});
 	}
 }
 

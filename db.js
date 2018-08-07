@@ -1,10 +1,11 @@
 var exports = module.exports = {};
 
 const Sequelize = require("sequelize");
+const config = require("./config.json");
 
-const sequelize = new Sequelize("kurisu", "tromodolo", "Mitsuka123", {
-	host: "tromo.me",
-	dialect: "mysql",
+const sequelize = new Sequelize(config.databaseName, config.databaseUsername, config.databasePassword, {
+	host: config.databaseHost,
+	dialect: config.databaseType,
 	operatorsAliases: false,
 
 	pool: {
@@ -77,6 +78,19 @@ const UserLevels = sequelize.define("userlevels", {
 	}
 });
 
+const GuildScores = sequelize.define("guildscores", {
+	userid: {
+		type: Sequelize.STRING,
+		primaryKey: true
+	},
+	guildid: {
+		type: Sequelize.STRING,
+	},
+	score: {
+		type: Sequelize.INTEGER
+	}
+})
+
 const ProfileData = sequelize.define("profiledata", {
 	userid: {
 		type: Sequelize.STRING,
@@ -119,7 +133,7 @@ const ProfileData = sequelize.define("profiledata", {
     }
 });
 
-
+//This one really isn't needed if you're somehow self-hosting this.
 const Config = sequelize.define("config", {
 	id:{
 		type: Sequelize.INTEGER,
@@ -147,10 +161,13 @@ const CustomCommands = sequelize.define("customcommands",{
 	}
 });
 
+GuildScores.sync();
+
 exports.sequelize = sequelize;
 exports.AssignRoles = AssignRoles;
 exports.ColourRoles = ColourRoles;
 exports.Config = Config;
 exports.UserLevels = UserLevels;
+exports.GuildScores = GuildScores;
 exports.ProfileData = ProfileData;
 exports.CustomCommands = CustomCommands;

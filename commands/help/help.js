@@ -19,6 +19,8 @@ exports.function = (msg, args) => {
 	commands.forEach(function(commandModule){
 		if(commandModule.name == "owner") return;
 
+		if(commandModule.name == "leblanc-specific" && msg.channel.guild.id != "331573354291265548") return;
+
 		let field = { name: (commandModule.name.charAt(0).toUpperCase() + commandModule.name.slice(1)), value: "" };
 		for(let i in commandModule.commands){
 			field.value += `**${commandModule.commands[i].name}** - ${commandModule.commands[i].description}\n`;
