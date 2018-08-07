@@ -1,1 +1,1 @@
-KurisuJS
+## This is meant in no way shape or form to be self-hosted atm so don't expect any help if you're gonna try. It shouldn't be super hard but be prepared there's a lot of code specific to my own discord server in it.
