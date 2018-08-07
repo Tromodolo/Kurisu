@@ -50,6 +50,12 @@ exports.function = async (msg, args) => {
     }
 };
 
-exports.description = "Shows your or another user's profile";
-exports.fullDescription = "Shows your or another user's profile";
+exports.requirements = {
+    permissions: {
+        "banMembers": true
+    }
+}
+
+exports.description = "Bans a user";
+exports.fullDescription = "Bans a user";
 exports.usage = "<emote>";

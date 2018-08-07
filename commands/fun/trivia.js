@@ -55,8 +55,8 @@ exports.function = async (msg, args) => {
     addTrivia(trivia, answers, msg.channel.guild.id);
 };
 
-exports.description = "Rolls a number from 0 to 100 or a custom max if you specify";
-exports.fullDescription = "Rolls a number from 0 to 100 or a custom max if you specify";
+exports.description = "Starts a trivia question";
+exports.fullDescription = "Starts a trivia question";
 exports.usage = "<max>";
 
 //https://www.w3resource.com/javascript-exercises/javascript-array-exercise-17.php

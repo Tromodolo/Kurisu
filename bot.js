@@ -67,6 +67,7 @@ fs.readdir("./commands/", (err, folders) => {
 					{
 						description: props.description,
 						fullDescription: props.fullDescription,
+						requirements: props.requirements,
 						usage: props.usage,
 					});
 			});

@@ -50,6 +50,12 @@ exports.function = async (msg, args) => {
     }
 };
 
-exports.description = "Kicks another user";
-exports.fullDescription = "Shows your or another user's profile";
+exports.requirements = {
+    permissions: {
+        "kickMembers": true
+    }
+}
+
+exports.description = "Kicks a user";
+exports.fullDescription = "Kicks a user";
 exports.usage = "<emote>";
