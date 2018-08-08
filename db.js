@@ -130,7 +130,19 @@ const ProfileData = sequelize.define("profiledata", {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0
-    }
+    },	
+	primarycolour: {
+		type: Sequelize.STRING,
+		allowNull: false 
+	},
+	secondarycolour: {
+		type: Sequelize.STRING,
+		allowNull: false
+	},
+	countrycode: {
+		type: Sequelize.STRING,
+		defaultValue: null
+	}
 });
 
 //This one really isn't needed if you're somehow self-hosting this.
