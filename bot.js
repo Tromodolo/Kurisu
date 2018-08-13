@@ -325,7 +325,7 @@ bot.on("messageReactionRemove", async (message, emoji, userID) =>{
 			return;
 		}
 		else{
-			let role = rolescommand.find(x => x.emoteid == emoji.id);
+			let role = colours.find(x => x.emoteid == emoji.id);
 			member.removeRole(role.roleid, "Removal of colour Command");
 		}
 	}
