@@ -231,8 +231,9 @@ bot.on("messageCreate", async (message) => {
 	user[0].username = message.author.username;
 	user[0].discriminator = message.author.discriminator;
 
-	let customCommandList = await db.CustomCommands.findAll({ raw: true });
-	
+	let customCommandList = [];
+	customCommandList = await db.CustomCommands.findAll({ where: { guildid: message.channel.guild.id }, raw: true});
+
 	let custom = customCommandList.find(x => x.commandname == message.content);
 	if(custom){
 		bot.createMessage(message.channel.id, custom.commandtext);        

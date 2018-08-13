@@ -164,12 +164,20 @@ const Config = sequelize.define("config", {
 });
 
 const CustomCommands = sequelize.define("customcommands",{
+
 	commandname:{
-		type: Sequelize.STRING,
-		primaryKey: true
+		type: Sequelize.STRING
 	},
 	commandtext: {
 		type: Sequelize.STRING(2000)
+	},
+	guildid: {
+		type: Sequelize.STRING
+	},
+	id: {
+		type: Sequelize.INTEGER,
+		primaryKey: true,
+		allowNull: false
 	}
 });
 

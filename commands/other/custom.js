@@ -35,6 +35,7 @@ exports.function = async (msg, args) => {
 					return "You need to enter command text";
 				}
 				await db.CustomCommands.create({
+					guildid: msg.channel.guild.id,
 					commandname: commandname,
 					commandtext: commandtext
 				});
@@ -48,6 +49,7 @@ exports.function = async (msg, args) => {
 					return "You need to enter what to change text to for the edited command";
 				}
 				await db.CustomCommands.upsert({
+					guildid: msg.channel.guild.id,
 					commandname: commandname,
 					commandtext: commandtext
 				})
@@ -59,19 +61,20 @@ exports.function = async (msg, args) => {
 				}
 				await db.CustomCommands.destroy({
 					where: {
-						commandname: commandname
+						commandname: commandname,
+						guildid: msg.channel.guild.id
 					}
 				})
 				break;
 			case 'list':
 			case 'List':
-				let list = await db.CustomCommands.findAll({ raw: true });
+				let list = await db.CustomCommands.findAll({ where: { guildid: msg.channel.guild.id }},{ raw: true });
 				let listArr = [];
 				list.forEach(command => {
 					listArr.push(command.commandname);
 				});
 
-				return "The current custom commands are: " + listArr.sort().join(", ");
+				return "The current custom commands for this server are: " + listArr.sort().join(", ");
 
 			default:
 				return "You need to choose one for the available options. Usage of command is: `[create | edit | remove | list] commandname <commandtext>`"
@@ -79,12 +82,12 @@ exports.function = async (msg, args) => {
 		}
 	}
 	else{
-		let list = await db.CustomCommands.findAll({ raw: true });
+		let list = await db.CustomCommands.findAll({ where: { guildid: msg.channel.guild.id }},{ raw: true });
 		let listArr = [];
 		list.forEach(command => {
 			listArr.push(command.commandname);
 		});
 
-		return "The current custom commands are: " + listArr.sort().join(", ");
+		return "The current custom commands for this server are: " + listArr.sort().join(", ");
 	}
 }
