@@ -121,7 +121,7 @@ exports.function = async (msg, args) => {
 			else ctx.fillStyle = darkFont;
 			ctx.fillText(`Lvl ${userLevel.level}`, 205, 108);
 		}
-		catch{
+		catch(e) {
 			if(primaryDark) ctx.fillStyle = lightFont;
 			else ctx.fillStyle = darkFont;
 			ctx.fillText(`Lvl ${userLevel.level}`, 170, 108);
