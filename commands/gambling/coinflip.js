@@ -6,13 +6,12 @@ const client = require("../../bot.js").client,
 	  getUserByMessage = require("../../utility/Utility").getUserByMessage;
 
 exports.aliases = [
-	"cash",
-	"dollars",
-	"bucks"
+	"cf",
+	"coin"
 ]
-exports.description = "Gets your or another person's money balance";
-exports.fullDescription = "Gets your or another person's money balance";
-exports.usage = "money (tromo)";
+exports.description = "Bets money on a coin flip";
+exports.fullDescription = "Bets money on a coin flip";
+exports.usage = "coinflip h|heads|t|tails";
 exports.requirements = {
 	
 }
@@ -37,7 +36,7 @@ exports.function = async (msg, args) => {
     let moneyBet;
     if(args[1]){
         moneyBet = parseInt(args[1]);
-        
+
         if(userData.money < moneyBet) return "You can't afford that bet";
 
         await db.ProfileData.update(
