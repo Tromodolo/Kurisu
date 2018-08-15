@@ -410,7 +410,7 @@ async function addExp(user, message, xpGain){
 			username: user.username,
 			discriminator: user.discriminator,
 			avatarurl: message.author.avatarURL,
-			money: db.sequelize.literal(`money + ${Math.round(xpGain / 5)}`)
+			money: db.sequelize.literal(`money + ${Math.round(xpGain / 10)}`)
 		}, 
 		{
 			where: {
@@ -428,7 +428,7 @@ async function addExp(user, message, xpGain){
 			}
 		});
 
-		//await bot.createMessage(message.channel.id, message.author.mention + " just achieved level **" + user.level + "**!");                         
+		await bot.createMessage(message.channel.id, message.author.mention + " just achieved level **" + user.level + "**!");                         
 	}
 	else{		
 		await db.UserLevels.update(
@@ -449,7 +449,7 @@ async function addExp(user, message, xpGain){
 			username: user.username,
 			discriminator: user.discriminator,
 			avatarurl: message.author.avatarURL,
-			money: db.sequelize.literal(`money + ${Math.round(xpGain / 5)}`)
+			money: db.sequelize.literal(`money + ${Math.round(xpGain / 10)}`)
 		}, 
 		{
 			where: {
