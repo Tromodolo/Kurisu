@@ -30,3 +30,8 @@ node_modules
 *.sqlite
 
 config\.json
+
+data/tmp/avatars/*.png
+data/tmp/discordavatars/*.png
+data/tmp/love/*.png
+data/tmp/*.png
