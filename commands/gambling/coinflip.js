@@ -22,7 +22,7 @@ exports.function = async (msg, args) => {
     let sideChoice;
     if(!args[0]) return "You need to choose heads or tails."
 
-    switch(args[0]){
+    switch(args[0].toLowerCase()){
         case "h":
         case "heads":
             sideChoice = 0;
@@ -31,6 +31,8 @@ exports.function = async (msg, args) => {
         case "tails":
             sideChoice = 1;
             break;
+        default:
+            return "You either need to choose heads or tails";
     }
 
     let moneyBet;
@@ -45,7 +47,7 @@ exports.function = async (msg, args) => {
         }, 
         {
             where: {
-                userid: message.author.id
+                userid: msg.author.id
             }
         });
     }
@@ -62,7 +64,7 @@ exports.function = async (msg, args) => {
             }, 
             {
                 where: {
-                    userid: message.author.id
+                    userid: msg.author.id
                 }
             });
             return `You got it right. You won 1.${winRng}x your bet, ${winnings}`;
