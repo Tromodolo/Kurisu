@@ -112,13 +112,20 @@ exports.function = async (msg, args) => {
 			}
 		});
 	
-		let flagImg = new Image();
-		flagImg.src = fs.readFileSync(`./data/flags/${profileData.countrycode}.png`);
-		ctx.drawImage(flagImg, 167, 84, 32, 32);
-
-		if(primaryDark) ctx.fillStyle = lightFont;
-		else ctx.fillStyle = darkFont;
-		ctx.fillText(`Lvl ${userLevel.level}`, 205, 108);
+		try{
+			let flagImg = new Image();
+			flagImg.src = fs.readFileSync(`./data/flags/${profileData.countrycode}.png`);
+			ctx.drawImage(flagImg, 167, 84, 32, 32);
+	
+			if(primaryDark) ctx.fillStyle = lightFont;
+			else ctx.fillStyle = darkFont;
+			ctx.fillText(`Lvl ${userLevel.level}`, 205, 108);
+		}
+		catch{
+			if(primaryDark) ctx.fillStyle = lightFont;
+			else ctx.fillStyle = darkFont;
+			ctx.fillText(`Lvl ${userLevel.level}`, 170, 108);
+		}
 	}
 	else{
 		if(primaryDark) ctx.fillStyle = lightFont;
