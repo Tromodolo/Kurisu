@@ -142,6 +142,11 @@ const ProfileData = sequelize.define("profiledata", {
 	countrycode: {
 		type: Sequelize.STRING,
 		defaultValue: null
+	},
+	money: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0,
+		allowNull: false
 	}
 });
 

@@ -409,7 +409,8 @@ async function addExp(user, message, xpGain){
 		{
 			username: user.username,
 			discriminator: user.discriminator,
-			avatarurl: message.author.avatarURL
+			avatarurl: message.author.avatarURL,
+			money: db.sequelize.literal(`money + ${Math.round(xpGain / 5)}`)
 		}, 
 		{
 			where: {
@@ -447,7 +448,8 @@ async function addExp(user, message, xpGain){
 		{
 			username: user.username,
 			discriminator: user.discriminator,
-			avatarurl: message.author.avatarURL
+			avatarurl: message.author.avatarURL,
+			money: db.sequelize.literal(`money + ${Math.round(xpGain / 5)}`)
 		}, 
 		{
 			where: {
