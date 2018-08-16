@@ -133,11 +133,13 @@ const ProfileData = sequelize.define("profiledata", {
     },	
 	primarycolour: {
 		type: Sequelize.STRING,
-		allowNull: false 
+		allowNull: false,
+		defaultValue: "#d6d6d6"
 	},
 	secondarycolour: {
 		type: Sequelize.STRING,
-		allowNull: false
+		allowNull: false,
+		defaultValue: "#5b5b5b"
 	},
 	countrycode: {
 		type: Sequelize.STRING,
