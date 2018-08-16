@@ -15,11 +15,22 @@ let bot = new eris.CommandClient(config.botToken, { getAllUsers: true }, {
 var exports = module.exports = {};
 let messageTimers = [];
 let triviaList = [];
+let blackjackList = [];
 
 exports.config          = config,
 exports.client          = bot,
 exports.kurisuColour    = color;
+exports.blackjackList 	= blackjackList;
 exports.commandList     = commandList;
+exports.triviaList = triviaList;
+exports.addBlackjack 	= (blackjackHandler) => {
+	blackjackList.push(blackjackHandler);
+};
+exports.removeBlackjack = (deckId) => {
+	for(let i in blackjackList){
+		if(blackjackList[i].deckId == deckId) blackjackList.splice(i, 1);
+	}
+}
 exports.addTrivia 		= (triviaHandler, answers, guildID) => {
 	let existingIndex;
 	for(let index in triviaList){
@@ -42,7 +53,6 @@ exports.addTrivia 		= (triviaHandler, answers, guildID) => {
 		return;
 	}
 }
-exports.triviaList = triviaList;
 
 //This reads all the commands from the /commands/ folder and adds them to the bot
 fs.readdir("./commands/", (err, folders) => {
@@ -428,7 +438,7 @@ async function addExp(user, message, xpGain){
 			}
 		});
 
-		await bot.createMessage(message.channel.id, message.author.mention + " just achieved level **" + user.level + "**!");                         
+		//await bot.createMessage(message.channel.id, message.author.mention + " just achieved level **" + user.level + "**!");                         
 	}
 	else{		
 		await db.UserLevels.update(
