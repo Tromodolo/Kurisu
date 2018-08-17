@@ -26,10 +26,11 @@ exports.triviaList = triviaList;
 exports.addBlackjack 	= (blackjackHandler) => {
 	blackjackList.push(blackjackHandler);
 };
-exports.removeBlackjack = (deckId) => {
+exports.removeBlackjack = (blackjackHandler) => {
 	for(let i in blackjackList){
-		if(blackjackList[i].deckId == deckId) blackjackList.splice(i, 1);
+		if(blackjackList[i].deckId == blackjackHandler.deckId) blackjackList.splice(i, 1);
 	}
+	console.log(blackjackList);
 }
 exports.addTrivia 		= (triviaHandler, answers, guildID) => {
 	let existingIndex;
@@ -184,6 +185,8 @@ bot.on("messageCreate", async (message) => {
 				break;
 		}
 	}
+
+	if(!config.xpMoneyEnabled) return;
 
 	//Xp handling
     let user = await db.UserLevels.findOrCreate(
