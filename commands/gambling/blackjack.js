@@ -10,17 +10,30 @@ exports.aliases = [
 	"cf",
 	"coin"
 ]
-exports.description = "Bets money on a coin flip";
-exports.fullDescription = "Bets money on a coin flip";
-exports.usage = "coinflip h|heads|t|tails";
+exports.description = "Bets money on a blackjack session";
+exports.fullDescription = "Bets money on a blackjack session";
+exports.usage = "blackjack 10";
 exports.requirements = {
 	
 }
 
 exports.function = async (msg, args) => {
-    let blackjack = new Blackjack(msg.member, args[0], msg.channel.id, client);
-    blackjack.registerEvent();
-    addBlackjack(blackjack);
+    let userData = await db.ProfileData.find({ where: { userid: msg.member.id }, raw: true });
+    if(args[0]){
+        moneyBet = parseInt(args[0]);
+
+        if(userData.money < moneyBet) return "You can't afford that bet";
+        if(moneyBet < 0) return "You can't bet a negative amount";
+
+        let blackjack = new Blackjack(msg.member, moneyBet, msg.channel.id, client);
+        blackjack.registerEvent();
+        addBlackjack(blackjack);
+    }
+    else{
+        let blackjack = new Blackjack(msg.member, 0, msg.channel.id, client);
+        blackjack.registerEvent();
+        addBlackjack(blackjack);
+    }
 };
 
 function randomIntFromInterval(min,max)
