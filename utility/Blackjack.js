@@ -383,8 +383,9 @@ module.exports = class Blackjack{
         return new Promise(async resolve => {
             //doubles bet
             this.players[this.playerTurn].bet = this.players[this.playerTurn].bet * 2;
-            this.drawCard(false, this.players[this.playerTurn].user.id);
-            this.nextPlayer();
+            await this.drawCard(false, this.players[this.playerTurn].user.id);
+            await this.updateHands();
+            await this.nextPlayer();
         });
     }
 
