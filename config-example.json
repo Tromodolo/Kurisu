@@ -9,5 +9,6 @@
 	"databaseName": "",
 	"databaseUsername": "",
 	"databasePassword": "",
-	"databaseType": ""
+	"databaseType": "",
+	"xpMoneyEnabled": true
 }
