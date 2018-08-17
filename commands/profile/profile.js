@@ -148,10 +148,14 @@ exports.function = async (msg, args) => {
 	percentage = Math.round(percentage * 100);
 	
 	if(currentXp > 1000){
-		currentXp = currentXp / 10 + "K";
+		currentXp = currentXp / 1000;
+		currentXp = currentXp.toFixed(1);
+		currentXp = currentXp + "K";
 	}
 	if(levelXp > 1000){
-		levelXp = levelXp / 10 + "K";
+		levelXp = levelXp / 1000;
+		levelXp = levelXp.toFixed(1);
+		levelXp = levelXp + "K";
 	}
 	
 	ctx.fillText(`Level ${userLevel.level}`, 440, 40);
