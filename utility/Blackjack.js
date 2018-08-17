@@ -88,21 +88,6 @@ module.exports = class Blackjack{
                         secondHand: [],
                         secondValue: 0
                     });
-/*         this.players.push({
-            user: member.user,
-            turnOrder: 0,
-            bet: bet,
-            doubledUp: false,
-            firstHand: [],
-            value: 0,
-            blackjack: false,
-            soft: false,
-            aces: 0,
-            //Only used if split
-            secondHand: [],
-            secondValue: 0
-        }); */
-
                 }
             }
         }
