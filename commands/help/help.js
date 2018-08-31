@@ -34,8 +34,8 @@ exports.function = (msg, args) => {
 			if(commandModule.name == "leblanc-specific" && msg.channel.guild.id != "331573354291265548") return;
 	
 			let field = { name: (commandModule.name.charAt(0).toUpperCase() + commandModule.name.slice(1)), value: "" };
-			for(let i in commandModule.commands){
-				field.value += `**${commandModule.commands[i].name}** - ${commandModule.commands[i].description}\n`;
+			for(let command of commandModule.commands){
+				field.value += `**${command.name}** - ${command.description}\n`;
 			}
 			embed.embed.fields.push(field);
 		});

@@ -27,18 +27,23 @@ exports.addBlackjack 	= (blackjackHandler) => {
 	blackjackList.push(blackjackHandler);
 };
 exports.removeBlackjack = (blackjackHandler) => {
-	for(let i in blackjackList){
-		if(blackjackList[i].deckId == blackjackHandler.deckId) blackjackList.splice(i, 1);
+	let index = 0;
+	for(let blackjack of blackjackList){
+		if(blackjack.deckId == blackjackHandler.deckId) blackjackList.splice(index, 1);
+		index++;
 	}
-	console.log(blackjackList);
 }
+
 exports.addTrivia 		= (triviaHandler, answers, guildID) => {
-	let existingIndex;
-	for(let index in triviaList){
-		if(triviaList[index].triviaHandler.guildID == guildID) existingIndex = index;
+	let index = null;
+	for(let trivia of triviaList){
+		if(!index) index = 0;
+
+		if(trivia.triviaHandler.guildID == guildID) break;
+		index++
 	}
 
-	if(!existingIndex){
+	if(!index){
 		triviaList.push({
 			triviaHandler: triviaHandler,
 			answers: answers,
@@ -49,8 +54,8 @@ exports.addTrivia 		= (triviaHandler, answers, guildID) => {
 		return;
 	}
 	else{
-		triviaList[existingIndex].answers = answers;
-		triviaList[existingIndex].triviaHandler.active = true;
+		triviaList[index].answers = answers;
+		triviaList[index].triviaHandler.active = true;
 		return;
 	}
 }
@@ -138,12 +143,18 @@ bot.on("messageCreate", async (message) => {
 
 	//Trivia handling
 	let triviaIndex;
-	for(let i in triviaList){
-		if(triviaList[i].triviaHandler.guildID == message.channel.guild.id && triviaList[i].triviaHandler.channelID == message.channel.id && triviaList[i].triviaHandler.active) {
+	for(let trivia of triviaList){
+		if(!triviaIndex) triviaIndex = 0;
+
+		if(trivia.triviaHandler.guildID == message.channel.guild.id && trivia.triviaHandler.channelID == message.channel.id && trivia.triviaHandler.active) {
 			triviaIndex = i
 			break;
 		}
+		else{
+			triviaIndex++;
+		}
 	}
+
 	if(triviaIndex){
 		switch(message.content){
 			case "1":
@@ -151,8 +162,13 @@ bot.on("messageCreate", async (message) => {
 			case "3":
 			case "4":
 				let answerIndex;
-				for(var i in triviaList[triviaIndex].answers){
-					if(triviaList[triviaIndex].answers[i].realAnswer == true) answerIndex = i;
+				for(var i of triviaList[triviaIndex].answers){
+					if(!answerIndex) answerIndex = 0;
+
+					if(triviaList[triviaIndex].answers[i].realAnswer == true) break;
+					else{
+						answerIndex++;
+					}
 				}
 				if(!triviaList[triviaIndex].lastAnswerTimer){
 					triviaList[triviaIndex].lastAnswerTimer = setTimeout(() => {

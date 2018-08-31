@@ -42,11 +42,11 @@ exports.function = async (msg, args) => {
 
 	let firstUserValue = 0, secondUservalue = 0;
 
-	for(let i in users.first.username){
-		firstUserValue += parseInt(users.first.username.toLowerCase().charCodeAt(i));
+	for(let char of users.first.username){
+		firstUserValue += parseInt(char.toLowerCase().charCodeAt(0));
 	}
-	for(let i in users.second.username){
-		secondUservalue += parseInt(users.second.username.toLowerCase().charCodeAt(i));
+	for(let char of users.second.username){
+		secondUservalue += parseInt(char.toLowerCase().charCodeAt(0));
 	}
 
 	var rng = seedrandom(firstUserValue + secondUservalue + moment(Date.now()).dayOfYear());

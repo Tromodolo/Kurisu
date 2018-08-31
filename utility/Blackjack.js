@@ -170,10 +170,14 @@ module.exports = class Blackjack{
                 }
                 else{
                     let index;
-                    for(let i in this.players){
-                        if(this.players[i].user.id == playerId){
-                            index = i; 
-                            break;  
+                    for(let player of this.players){
+                        if(!index) index = 0;
+
+                        if(player.user.id == playerId){ 
+                            break;
+                        }
+                        else{
+                            index++;
                         }
                     }
                     this.players[index].firstHand.push(card);
@@ -478,33 +482,33 @@ module.exports = class Blackjack{
                     let winnerList = "";
                     let noLossList = "";
 
-                    for(let i in winners){
-                        winnerList += `<@${winners[i].user.id}>`;
-                        if(winners[i].blackjack){
+                    for(let winner of winners){
+                        winnerList += `<@${winner.user.id}>`;
+                        if(winner.blackjack){
                             await db.ProfileData.update(
                             {
                                 money: db.sequelize.literal(`money + ${Math.round(winners[i].bet * 1.5)}`)
                             }, 
                             {
                                 where: {
-                                    userid: winners[i].user.id
+                                    userid: winner.user.id
                                 }
                             });
                         }
                         else{
                             await db.ProfileData.update(
                             {
-                                money: db.sequelize.literal(`money + ${winners[i].bet * 1}`)
+                                money: db.sequelize.literal(`money + ${winner.bet * 1}`)
                             }, 
                             {
                                 where: {
-                                    userid: winners[i].user.id
+                                    userid: winner.user.id
                                 }
                             });
                         }
                     }
-                    for(let i in noLoss){
-                        noLossList += `<@${noLoss[i].user.id}>`;
+                    for(let user of noLoss){
+                        noLossList += `<@${user.user.id}>`;
                     }
 
                     if(winners.length > 0) this.botClient.createMessage(this.channelId, `The players who won their bets are:\n${winnerList}`);
