@@ -5,7 +5,8 @@ const client = require("../../bot.js").client,
 
 exports.aliases = [
     "setdescription",
-    "setdesc"
+    "setdesc",
+    "description"
 ];
 exports.description = "Sets your profile description";
 exports.fullDescription = "Sets your profile description to a specified text";
@@ -18,9 +19,9 @@ exports.function = async (msg, args) => {
     if(args.length < 1) return "You need to specify a a description";
 
     db.ProfileData.update({
-        profiledescription: args[0]
+        profiledescription: args.join(" ")
     }, {
         where: { userid: msg.author.id }
     });
-    return "Your secondary description has been updated";
+    return "Your description has been updated";
 };

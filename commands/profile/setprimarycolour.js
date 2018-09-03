@@ -5,7 +5,10 @@ const client = require("../../bot.js").client,
 
 exports.aliases = [
     "setprimarycolor",
-    "setprimary"
+    "setprimary",
+    "primary",
+    "primarycolour",
+    "primarycolor"
 ];
 exports.description = "Edits your primary profile colour";
 exports.fullDescription = "Sets your primary profile colour to a specified hexcode";
@@ -17,7 +20,7 @@ exports.requirements = {
 exports.function = async (msg, args) => {
     let hexCheck  = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i;
 
-    if(args.length < 1) return "You need to specify a colour in hexcode";
+    if(args.length < 1) return "You need to specify a colour in hexcode. If you don't know what that is, you can pick a colour from here: **https://htmlcolorcodes.com/**";
 
     let result = hexCheck.exec(args[0]);
 
