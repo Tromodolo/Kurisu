@@ -4,6 +4,12 @@
         "tslint:recommended"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+		"indent": [true, "tabs", 4],
+		"semicolon": [true, "always"],
+		"eofline": false,
+		"no-console": false,
+		"interface-name": false
+	},
     "rulesDirectory": []
 }
