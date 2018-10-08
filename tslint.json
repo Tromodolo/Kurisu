@@ -10,7 +10,8 @@
 		"eofline": false,
 		"no-console": false,
 		"interface-name": false,
-		"one-line": false
+		"one-line": false,
+		"object-literal-sort-keys": false
 	},
     "rulesDirectory": []
 }
