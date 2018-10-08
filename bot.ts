@@ -33,9 +33,12 @@ fs.readdir("./commands/", (folderErr, folders) => {
 					{
 						aliases: props.aliases,
 						description: props.description,
+						fullDescription: props.fullDescription,
 						function: props.commandFunc,
 						name: commandName,
 						usage: config.commandPrefix + props.usage,
+						requirements: props.requirements,
+						deleteCommand: props.deleteCommand,
 					});
 				console.log(props);
 				if (index + 1 === files.length) {
