@@ -16,7 +16,13 @@ interface CommandModule {
 	commands: Command[];
 }
 
+interface UserTimer {
+	userid: string;
+	time: number;
+}
+
 export {
 	Command,
 	CommandModule,
+	UserTimer,
 };
