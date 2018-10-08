@@ -4,15 +4,12 @@
 	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 	"version": "0.2.0",
 	"configurations": [
+
 		{
 			"type": "node",
 			"request": "launch",
 			"name": "Kurisu",
-			"runtimeArgs": [
-				"-r",
-				"ts-node/register"
-			],
-			"args": [
-				"${workspaceFolder}/bot.ts"
-			]
+			"program": "${workspaceFolder}/bot.js"
 		}
+	]
+}
