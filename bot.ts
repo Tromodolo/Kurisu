@@ -7,7 +7,7 @@ import { Command, CommandModule, UserTimer } from "./types";
 const bot = new eris.Client(config.botToken, { getAllUsers: true });
 const moduleList: CommandModule[] = [];
 // The string here is the userid of the user
-let xpTimers: Map<string, UserTimer> = new Map<string, UserTimer>();
+const xpTimers: Map<string, UserTimer> = new Map<string, UserTimer>();
 
 ////////////////////////////////////////////////////////////
 //                                                        //
@@ -98,7 +98,7 @@ bot.on("messageCreate", async (message) => {
 	}
 	else{
 		// Do other non-command stuff
-		await handleExperience(message.author, message, db);
+		await handleExperience(message.author, message);
 	}
 });
 
@@ -136,7 +136,10 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 	}
 }
 
-async function handleExperience(user: eris.User, message: eris.Message, database: any){
+async function handleExperience(user: eris.User, message: eris.Message){
+	// This is a really dumb way of adding 15 to it so it ranges from 16-25 in xpGain
+	const xpGain = (Math.floor(Math.random() * 10) + 1) + 15;
+
 	// Gets timer to see if it exists
 	const userTimer = xpTimers.get(user.id);
 	if (userTimer){
@@ -151,12 +154,12 @@ async function handleExperience(user: eris.User, message: eris.Message, database
 
 			// Upserts userxp to the database. Upsert meaning insert or update depending on if it exists or not
 			await db.UserLevels.upsert({
-				currentxp: db.sequelize.literal("currentxp + 1"),
+				currentxp: db.sequelize.literal(`currentxp + ${xpGain}`),
 				userid: user.id,
 				discriminator: user.discriminator,
 				username: user.username,
 				level: db.sequelize.literal("level"),
-				totalxp: db.sequelize.literal("totalxp + 1"),
+				totalxp: db.sequelize.literal(`totalxp + ${xpGain}`),
 			}, {});
 
 			// Check to see if message.member is undefined. This should only happen if the user isn't cached
@@ -166,7 +169,7 @@ async function handleExperience(user: eris.User, message: eris.Message, database
 			await db.GuildScores.upsert({
 				userid: user.id,
 				guildid: message.member.guild.id,
-				score: db.sequelize.literal("score + 1"),
+				score: db.sequelize.literal(`score + ${xpGain}`),
 			});
 		}
 	}
@@ -177,12 +180,12 @@ async function handleExperience(user: eris.User, message: eris.Message, database
 
 		// Upserts userxp to the database. Upsert meaning insert or update depending on if it exists or not
 		await db.UserLevels.upsert({
-			currentxp: db.sequelize.literal("currentxp + 1"),
+			currentxp: db.sequelize.literal(`currentxp + ${xpGain}`),
 			userid: user.id,
 			discriminator: user.discriminator,
 			username: user.username,
 			level: db.sequelize.literal("level"),
-			totalxp: db.sequelize.literal("totalxp + 1"),
+			totalxp: db.sequelize.literal(`totalxp + ${xpGain}`),
 		}, {});
 
 		// Check to see if message.member is undefined. This should only happen if the user isn't cached
@@ -192,7 +195,7 @@ async function handleExperience(user: eris.User, message: eris.Message, database
 		await db.GuildScores.upsert({
 			userid: user.id,
 			guildid: message.member.guild.id,
-			score: db.sequelize.literal("score + 1"),
+			score: db.sequelize.literal(`score + ${xpGain}`),
 		});
 	}
 }
