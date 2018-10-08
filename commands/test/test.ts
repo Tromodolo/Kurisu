@@ -4,7 +4,11 @@ import { bot } from "../../bot";
 const commandName: string = "test";
 const aliases: string[] = [];
 const description: string = "";
+const fullDescription: string "";
 const usage: string = "";
+//const requirements: new Object();
+const requirements: null;
+const deleteCommand: false;
 
 function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
@@ -16,7 +20,10 @@ function commandFunc(message: Message, args: string[]) {
 export {
 	aliases,
 	description,
+	fullDescription,
 	commandFunc,
 	commandName,
 	usage,
+	requirements,
+	deleteCommand,
 };
