@@ -13,10 +13,10 @@ function commandFunc(message: Message, args: string[]) {
 	});
 }
 
-export default {
+export {
 	aliases,
 	description,
-	function: commandFunc,
-	name: commandName,
+	commandFunc,
+	commandName,
 	usage,
-}
+};

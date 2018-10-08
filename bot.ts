@@ -18,7 +18,6 @@ fs.readdir("./commands/", (folderErr, folders) => {
 			};
 			let index = 0;
 			files.forEach((file) => {
-
 				const commandName = file.split(".")[0];
 				const props = require(`./commands/${folderName}/${file}`);
 				loadedFiles++;
@@ -26,10 +25,11 @@ fs.readdir("./commands/", (folderErr, folders) => {
 					{
 						aliases: props.aliases,
 						description: props.description,
-						function: props.function,
+						function: props.commandFunc,
 						name: commandName,
 						usage: config.commandPrefix + props.usage,
 					});
+				console.log(props);
 				if (index + 1 === files.length) {
 					moduleList.push(commandModule);
 					return;
@@ -67,21 +67,36 @@ bot.on("messageCreate", async (message) => {
 	}
 	const messageArgs = message.content.split(" ");
 	// Check if there are any commands that match this message
-	moduleList.forEach((module) => {
-		for (const command of module.commands){
-			if (command.name === messageArgs[0]){
-				console.log(command);
-				// command.function does not exist too late to bugfix
-				command.function(message, messageArgs);
-				return;
-			}
-		}
-		return;
-	});
+	if (checkCommand(message, messageArgs, moduleList)){
+		// This means a command was ran, so update database accordingly
+		// There is no custom command system in place, but eventually adding that somehow is good
+	}
+	else{
+		// Do other non-command stuff
+	}
 });
 
 bot.connect();
 
+// Returns true or false depending on whether a command was ran
+async function checkCommand(message: eris.Message, args: string[], modules: CommandModule[]){
+	if (message.content.startsWith(config.commandPrefix)){
+		// Starting at 1 index so that it takes away the prefix
+		// This makes it easier to later allow custom prefixes for servers, and just check for those too in the if case above
+		args[0] = args[0].substring(1);
+		modules.forEach(async (module) => {
+			for (const command of module.commands){
+				if (command.name === args[0]){
+					await command.function(message, args);
+					return true;
+				}
+			}
+			return false;
+		});
+	}
+}
+
 export {
 	bot,
+	moduleList,
 };
