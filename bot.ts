@@ -1,10 +1,13 @@
 import * as eris from "eris";
 import * as fs from "fs";
 import config from "./config.json";
-import { Command, CommandModule } from "./types";
+import * as db from "./db";
+import { Command, CommandModule, UserTimer } from "./types";
 
 const bot = new eris.Client(config.botToken, { getAllUsers: true });
 const moduleList: CommandModule[] = [];
+// The string here is the userid of the user
+let xpTimers: Map<string, UserTimer> = new Map<string, UserTimer>();
 
 ////////////////////////////////////////////////////////////
 //                                                        //
@@ -40,7 +43,6 @@ fs.readdir("./commands/", (folderErr, folders) => {
 						requirements: props.requirements,
 						deleteCommand: props.deleteCommand,
 					});
-				console.log(props);
 				if (index + 1 === files.length) {
 					moduleList.push(commandModule);
 					return;
@@ -66,7 +68,7 @@ fs.readdir("./commands/", (folderErr, folders) => {
 
 ////////////////////////////////////////////////////////////
 //                                                        //
-//                     Prepare Bot                        //
+//                     Bot Events                         //
 //                                                        //
 ////////////////////////////////////////////////////////////
 
@@ -90,12 +92,13 @@ bot.on("messageCreate", async (message) => {
 	}
 	const messageArgs = message.content.split(" ");
 	// Check if there are any commands that match this message
-	if (checkCommand(message, messageArgs, moduleList)){
+	if (await checkCommand(message, messageArgs, moduleList)){
 		// This means a command was ran, so update database accordingly
 		// There is no custom command system in place, but eventually adding that somehow is good
 	}
 	else{
 		// Do other non-command stuff
+		await handleExperience(message.author, message, db);
 	}
 });
 
@@ -126,6 +129,70 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 				}
 			}
 			return false;
+		});
+	}
+	else{
+		return false;
+	}
+}
+
+async function handleExperience(user: eris.User, message: eris.Message, database: any){
+	// Gets timer to see if it exists
+	const userTimer = xpTimers.get(user.id);
+	if (userTimer){
+		// This would mean a minute has passed
+		if (Date.now() - userTimer.time < 60000){
+			return;
+		}
+		else{
+			// Because a minute has passed, you can add xp to the database
+			const newTimer: UserTimer = { userid: user.id, time: Date.now() };
+			xpTimers.set(user.id, newTimer);
+
+			// Upserts userxp to the database. Upsert meaning insert or update depending on if it exists or not
+			await db.UserLevels.upsert({
+				currentxp: db.sequelize.literal("currentxp + 1"),
+				userid: user.id,
+				discriminator: user.discriminator,
+				username: user.username,
+				level: db.sequelize.literal("level"),
+				totalxp: db.sequelize.literal("totalxp + 1"),
+			}, {});
+
+			// Check to see if message.member is undefined. This should only happen if the user isn't cached
+			if (!message.member){
+				return;
+			}
+			await db.GuildScores.upsert({
+				userid: user.id,
+				guildid: message.member.guild.id,
+				score: db.sequelize.literal("score + 1"),
+			});
+		}
+	}
+	else {
+		// Because the timer doesn't exist, add one to the list and then add xp
+		const newTimer: UserTimer = { userid: user.id, time: Date.now() };
+		xpTimers.set(user.id, newTimer);
+
+		// Upserts userxp to the database. Upsert meaning insert or update depending on if it exists or not
+		await db.UserLevels.upsert({
+			currentxp: db.sequelize.literal("currentxp + 1"),
+			userid: user.id,
+			discriminator: user.discriminator,
+			username: user.username,
+			level: db.sequelize.literal("level"),
+			totalxp: db.sequelize.literal("totalxp + 1"),
+		}, {});
+
+		// Check to see if message.member is undefined. This should only happen if the user isn't cached
+		if (!message.member){
+			return;
+		}
+		await db.GuildScores.upsert({
+			userid: user.id,
+			guildid: message.member.guild.id,
+			score: db.sequelize.literal("score + 1"),
 		});
 	}
 }
