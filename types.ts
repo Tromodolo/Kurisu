@@ -7,7 +7,7 @@ interface Command {
 	function: (message: Message, args: string[]) => Promise<{}>;
 	usage: string;
 	aliases: string[];
-	requirements: Object;
+	requirements: object;
 	deleteCommand: boolean;
 }
 
