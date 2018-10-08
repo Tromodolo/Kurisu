@@ -4,11 +4,11 @@ import { bot } from "../../bot";
 const commandName: string = "test";
 const aliases: string[] = [];
 const description: string = "";
-const fullDescription: string "";
+const fullDescription: string = "";
 const usage: string = "";
-//const requirements: new Object();
-const requirements: null;
-const deleteCommand: false;
+// const requirements: new Object();
+const requirements: object = {};
+const deleteCommand: boolean = false;
 
 function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
