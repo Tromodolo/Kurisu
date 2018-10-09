@@ -11,5 +11,6 @@
 	"databasePassword": "",
 	"databaseType": "",
 	"xpMoneyEnabled": true,
-	"kurisuApiKey": ""
+	"kurisuApiKey": "",
+	"apiEndpoint": ""
 }
