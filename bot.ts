@@ -112,9 +112,9 @@ bot.connect();
 
 /**
  * Returns true or false depending on whether a command was ran
- * @param {Message} message - An erisjs message object
- * @param {Array} args - The message as an array of strings
- * @param {Array} modules - An array of all the loaded commmand modules
+ * @param {Message} message An erisjs message object
+ * @param {Array} args The message as an array of strings
+ * @param {Array} modules An array of all the loaded commmand modules
  */
 async function checkCommand(message: eris.Message, args: string[], modules: CommandModule[]){
 	if (message.content.startsWith(config.commandPrefix)){
@@ -136,6 +136,13 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 	}
 }
 
+/**
+ * Handles adding experience for users
+ *
+ * @param {eris.User} user user that triggered event
+ * @param {eris.Message} message message sent with the triggered event
+ * @returns {void}
+ */
 async function handleExperience(user: eris.User, message: eris.Message){
 	// This is a really dumb way of adding 15 to it so it ranges from 16-25 in xpGain
 	const xpGain = (Math.floor(Math.random() * 10) + 1) + 15;
