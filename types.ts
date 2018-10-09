@@ -17,10 +17,10 @@ interface Command {
 	description: string;
 	fullDescription: string;
 	/**
-	* @arg {Message} message The message sent
-	* @arg {String[]} args Array of all the args sent with the command
-	* @returns {void}
-	*/
+	 * @arg {Message} message The message sent
+	 * @arg {String[]} args Array of all the args sent with the command
+	 * @returns {Promise<{}>}
+	 */
 	function: (message: Message, args: string[]) => Promise<{}>;
 	usage: string;
 	aliases: string[];
