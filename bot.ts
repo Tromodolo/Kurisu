@@ -1,3 +1,4 @@
+import Axios from "axios";
 import * as eris from "eris";
 import * as fs from "fs";
 import config from "./config.json";
@@ -146,6 +147,7 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 async function handleExperience(user: eris.User, message: eris.Message){
 	// This is a really dumb way of adding 15 to it so it ranges from 16-25 in xpGain
 	const xpGain = (Math.floor(Math.random() * 10) + 1) + 15;
+	let willUpdate = false;
 
 	// Gets timer to see if it exists
 	const userTimer = xpTimers.get(user.id);
@@ -158,53 +160,49 @@ async function handleExperience(user: eris.User, message: eris.Message){
 			// Because a minute has passed, you can add xp to the database
 			const newTimer: UserTimer = { userid: user.id, time: Date.now() };
 			xpTimers.set(user.id, newTimer);
-
-			// Upserts userxp to the database. Upsert meaning insert or update depending on if it exists or not
-			await db.UserLevels.upsert({
-				currentxp: db.sequelize.literal(`currentxp + ${xpGain}`),
-				userid: user.id,
-				discriminator: user.discriminator,
-				username: user.username,
-				level: db.sequelize.literal("level"),
-				totalxp: db.sequelize.literal(`totalxp + ${xpGain}`),
-			}, {});
-
-			// Check to see if message.member is undefined. This should only happen if the user isn't cached
-			if (!message.member){
-				return;
-			}
-			await db.GuildScores.upsert({
-				userid: user.id,
-				guildid: message.member.guild.id,
-				score: db.sequelize.literal(`score + ${xpGain}`),
-			});
+			willUpdate = true;
 		}
 	}
 	else {
 		// Because the timer doesn't exist, add one to the list and then add xp
 		const newTimer: UserTimer = { userid: user.id, time: Date.now() };
 		xpTimers.set(user.id, newTimer);
-
-		// Upserts userxp to the database. Upsert meaning insert or update depending on if it exists or not
-		await db.UserLevels.upsert({
-			currentxp: db.sequelize.literal(`currentxp + ${xpGain}`),
-			userid: user.id,
-			discriminator: user.discriminator,
-			username: user.username,
-			level: db.sequelize.literal("level"),
-			totalxp: db.sequelize.literal(`totalxp + ${xpGain}`),
-		}, {});
-
-		// Check to see if message.member is undefined. This should only happen if the user isn't cached
-		if (!message.member){
-			return;
-		}
-		await db.GuildScores.upsert({
-			userid: user.id,
-			guildid: message.member.guild.id,
-			score: db.sequelize.literal(`score + ${xpGain}`),
-		});
+		willUpdate = true;
 	}
+	if (willUpdate){
+		// Check to see if message.member is undefined. This should only happen if the user isn't cached
+		// If member is undefined, the guildid won't be sent through meaning only profile xp will increase
+		if (!message.member){
+			Axios.post(`${config.apiEndpoint}/api/user/exp`, {
+				apiKey: config.kurisuApiKey,
+				userId: message.author.id,
+				username: message.author.username,
+				discriminator: message.author.discriminator,
+				xpGain,
+			}).then((result) => {
+				if (result.data.leveledUp){
+					// TODO handle level up messages with a toggle if server owners don't want it
+					return;
+				}
+			});
+		}
+		else{
+			Axios.post(`${config.apiEndpoint}/api/user/exp`, {
+				apiKey: config.kurisuApiKey,
+				userId: message.author.id,
+				username: message.author.username,
+				discriminator: message.author.discriminator,
+				guildId: message.member.guild.id,
+				xpGain,
+			}).then((result) => {
+				if (result.data.leveledUp){
+					// TODO handle level up messages with a toggle if server owners don't want it
+					return;
+				}
+			});
+		}
+	}
+	return;
 }
 
 export {
