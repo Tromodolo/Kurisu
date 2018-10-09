@@ -41,11 +41,11 @@ interface CommandModule {
 }
 
 /**
- * Interface for object that represents {TODO}
+ * Interface for object that stores the last times a user got experience in memory.
  *
  * @interface UserTimer
- * @prop {string} userid {TODO}
- * @prop {number} time {TODO}
+ * @prop {string} userid The user ID of a user
+ * @prop {number} time The last time they got experience, should be 60 seconds between every time
  */
 interface UserTimer {
 	userid: string;
