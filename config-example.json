@@ -1,0 +1,16 @@
+{
+	"ownerName": "",
+	"ownerId": "",
+	"botToken": "",
+	"commandPrefix": "!",
+	"googleApiKey": "",
+	"googleCustomSearchId": "",
+	"databaseHost": "",
+	"databaseName": "",
+	"databaseUsername": "",
+	"databasePassword": "",
+	"databaseType": "",
+	"xpMoneyEnabled": true,
+	"kurisuApiKey": "",
+	"apiEndpoint": ""
+}
