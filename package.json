@@ -16,6 +16,7 @@
     "tslint": "^5.11.0"
   },
   "scripts": {
+    "start": "ts-node bot.ts",
     "bot": "ts-node bot.ts"
   },
   "repository": {
