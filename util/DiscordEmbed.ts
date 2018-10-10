@@ -21,9 +21,9 @@ import { Embed } from "eris";
  * @prop { string } color 
  * @prop { string } timestamp 
  * @prop { Footer } footer
- * @prop { object } thumbnail
- * @prop { object } image
- * @prop { object } author 
+ * @prop { Thumbnail } thumbnail
+ * @prop { Image } image
+ * @prop { Author } author 
  * @prop { Field[] } fields
  */
 class DiscordEmbed{
@@ -36,6 +36,7 @@ class DiscordEmbed{
     thumbnail:Thumbnail;
     image:Image;
     author:Author;
+    //fields:Field[];
     fields:Field[];
 
     /**
@@ -98,8 +99,41 @@ class DiscordEmbed{
     }
 
     /**
+     * @param url set the url of the thumbnail image
+     */
+    setThumbnail(url:string) {
+        this.thumbnail = {"url":url};
+    }
+
+    /**
+     * @param url set the url of the image
+     */
+    setImage(url:string) {
+        this.image = { "url":url };
+    }
+
+    /**
+     * @param name set the title field of the author section
+     * @param url add a link to the author text
+     * @param icon_url add a image next to the author texT
+     */
+    setAuthor(name:string, url:string, icon_url:string) {
+        this.author = { "name":name, "url":url, "icon_url":icon_url };
+    }
+
+    /**
+     * Might change this later to take in a (name[], value[], inline[])
+     * 
+     * @param fields An array of Field objects
+     */
+    setFields(fields:Field[]) {
+        this.fields = fields;
+    }
+
+    /**
      * get the Embed object
-     * @returns an embed object
+     * 
+     * @returns An Embed object
      */
     getEmbed(){
 		let embed:EmbedObject = {};
