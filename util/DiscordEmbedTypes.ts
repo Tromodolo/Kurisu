@@ -1,3 +1,5 @@
+import { description } from "../commands/test/test";
+
 /*
  * DiscordEmbedTypes.ts
  * 
@@ -5,6 +7,34 @@
  * 
  * Last Edit - Oct 10, 2018 by Elias
  */
+
+ /**
+ * Represents a Footer of an Embed
+ * 
+ * @interface Footer
+ * @prop { string } title
+ * @prop { string } description
+ * @prop { string } url
+ * @prop { string } color
+ * @prop { string } timestamp
+ * @prop { Footer } footer
+ * @prop { Thumbnail } thumbnail
+ * @prop { Image } image
+ * @prop { Author } author
+ * @prop { Field[] } field
+ */
+ interface Embed {
+    title?:string,
+    description?:string,
+    url?:string,
+    color?:string,
+    timestamp?:string,
+    footer?:Footer,
+    thumbnail?:Thumbnail,
+    image?:Image,
+    author?:Author,
+    fields?:Field[],
+ }
 
 /**
  * Represents a Footer of an Embed
@@ -14,8 +44,8 @@
  * @prop { object } fields
  */
  interface Footer {
-    icon_url:string,
-    text:string
+    icon_url?:string,
+    text?:string
  }
 
 /**
@@ -25,7 +55,7 @@
  * @prop { string } url The url of the thumbnail
  */
  interface Thumbnail {
-    url:string
+    url?:string
  }
 
  /**
@@ -35,7 +65,7 @@
  * @prop { string } url The url of the image
  */
  interface Image {
-    url:string
+    url?:string
  }
 
  /**
@@ -47,9 +77,9 @@
  * @prop { string } icon_url Url of the icon next to the author name
  */
  interface Author {
-    name:string,
-    url:string,
-    icon_url:string
+    name?:string,
+    url?:string,
+    icon_url?:string
  }
 
   /**
@@ -61,9 +91,9 @@
  * @prop { string } inline Determines whether the section is inline or a block
  */
  interface Field {
-    name:string,
-    value:string,
-    inline:boolean
+    name?:string,
+    value?:string,
+    inline?:boolean
  }
 
  export {
@@ -71,5 +101,6 @@
     Thumbnail,
     Image,
     Author,
-    Field
+    Field,
+    Embed
  }
