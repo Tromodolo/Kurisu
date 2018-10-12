@@ -18,7 +18,7 @@ interface Command {
 	fullDescription: string;
 	/**
 	 * @arg {Message} message The message sent
-	 * @arg {String[]} args Array of all the args sent with the command
+	 * @arg {string[]} args Array of all the args sent with the command
 	 * @returns {Promise<{}>}
 	 */
 	function: (message: Message, args: string[]) => Promise<{}>;
