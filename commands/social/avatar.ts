@@ -20,27 +20,27 @@ const requirements: object = {};
 const deleteCommand: boolean = false;
 
 async function commandFunc(message: any, args: string[]) {
-	const user = Util.getUserByMessage(message, args);
-	const embed = new DiscordEmbed();
-
-	embed.setTimestamp(new Date(Date.now()).toISOString());
-	embed.setColor(config.color);
-
-	if (!user) {
-		return "User not found";
-	}
-
-	embed.setTitle(`Avatar for ${user.username}#${user.discriminator}`);
-
-	let userAvatar = user.avatarURL.replace("jpg", "png");
-	userAvatar = userAvatar.replace("?size=128", "?size=1024");
-
-	embed.setUrl(userAvatar);
-	embed.setImage(userAvatar);
-
 	return new Promise(async (resolve) => {
+		const user = Util.getUserByMessage(message, args);
+		const embed = new DiscordEmbed();
+
+		embed.setTimestamp(new Date(Date.now()).toISOString());
+		embed.setColor(config.color);
+
+		if (!user) {
+			return "User not found";
+		}
+
+		embed.setTitle(`Avatar for ${user.username}#${user.discriminator}`);
+
+		let userAvatar = user.avatarURL.replace("jpg", "png");
+		userAvatar = userAvatar.replace("?size=128", "?size=1024");
+
+		embed.setUrl(userAvatar);
+		embed.setImage(userAvatar);
+
 		await bot.createMessage(message.channel.id, embed.getEmbed());
-		resolve();
+		return resolve();
 	});
 }
 
