@@ -62,14 +62,6 @@ function commandFunc(message: Message, args: string[]) {
 	});
 }
 
-function imageExists(image_url: string){
-	const http: XMLHttpRequest = new XMLHttpRequest();
-
-	http.open("HEAD", image_url, false);
-	http.send();
-	return http.status === 200;
-}
-
 export {
 	aliases,
 	description,
