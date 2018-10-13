@@ -1,12 +1,10 @@
-import { description } from "../commands/test/test";
-
 /*
- * DiscordEmbedTypes.ts
- *
- * Contains the object definitions of the types used within DiscordEmbded.ts
- *
- * Last Edit - Oct 10, 2018 by Elias
- */
+* DiscordEmbedTypes.ts
+*
+* Contains the object definitions of the types used within DiscordEmbded.ts
+*
+* Last Edit - Oct 12, 2018 by Elias
+*/
 
 /**
  * Represents a Footer of an Embed
