@@ -3,6 +3,7 @@
 	"ownerId": "",
 	"botToken": "",
 	"commandPrefix": "!",
+	"color": "",
 	"googleApiKey": "",
 	"googleCustomSearchId": "",
 	"databaseHost": "",
