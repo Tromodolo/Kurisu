@@ -129,6 +129,28 @@ class DiscordEmbed{
 	}
 
 	/**
+	 * Adds a field to the current embed instance
+	 *
+	 * @param name Name of field
+	 * @param value Value of field
+	 * @param inline Whether or not the field should be inline
+	 */
+	public addField(name: string, value: string, inline?: boolean) {
+		const newField: Field = { name, value };
+
+		if (inline){
+			if (inline === true){
+				newField.inline = true;
+			}
+			else{
+				newField.inline = false;
+			}
+		}
+
+		this.fields.push(newField);
+	}
+
+	/**
 	 * get the Embed object
 	 *
 	 * @returns An Embed object
