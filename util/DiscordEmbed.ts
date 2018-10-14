@@ -2,9 +2,7 @@
  * DiscordEmbed.js
  *
  * Contains the DiscordEmbed class which can be used for making embeded text messages
- * TODO - Class function need to have error checking added
  *
- * Last Edit - Oct 10, 2018 by Elias
  */
 
 import { Author, Embed as EmbedObject, Field, Footer, Image, Thumbnail } from "./DiscordEmbedTypes";
@@ -54,66 +52,66 @@ class DiscordEmbed{
 	}
 
 	/**
-	 * @param title set the title field
+	 * @param { string } title set the title field
 	 */
 	public setTitle(title: string) {
 		this.title = title;
 	}
 
 	/**
-	 * @param description set the description field
+	 * @param { string } description set the description field
 	 */
 	public  setDesciption(description: string) {
 		this.description = description;
 	}
 
 	/**
-	 * @param url set the url field
+	 * @param { string } url set the url field
 	 */
 	public  setUrl(url: string) {
 		this.url = url;
 	}
 
 	/**
-	 * @param color set the color field
+	 * @param { string } color set the color field
 	 */
 	public  setColor(color: number) {
 		this.color = color;
 	}
 
 	/**
-	 * @param timestamp set the timestamp field
+	 * @param { string } timestamp set the timestamp field
 	 */
 	public  setTimestamp(timestamp: string) {
 		this.timestamp = timestamp;
 	}
 
 	/**
-	 * @param icon_url set the icon_url of a footer
-	 * @param text set the text field of the footer
+	 * @param { string } icon_url set the icon_url of a footer
+	 * @param { string } text set the text field of the footer
 	 */
 	public setFooter(icon_url: string, text: string) {
 		this.footer = { icon_url: `${icon_url}`, text: `${text}` };
 	}
 
 	/**
-	 * @param url set the url of the thumbnail image
+	 * @param { string } url set the url of the thumbnail image
 	 */
 	public setThumbnail(url: string) {
 		this.thumbnail = {url: `${url}`};
 	}
 
 	/**
-	 * @param url set the url of the image
+	 * @param { string } url set the url of the image
 	 */
 	public  setImage(url: string) {
 		this.image = { url: `${url}` };
 	}
 
 	/**
-	 * @param name set the title field of the author section
-	 * @param url add a link to the author text
-	 * @param icon_url add a image next to the author text
+	 * @param { string } name set the title field of the author section
+	 * @param { string } url add a link to the author text
+	 * @param { string } icon_url add a image next to the author text
 	 */
 	public  setAuthor(name: string, url: string, icon_url: string) {
 	this.author = { name: `${name}`, url: `${url}`, icon_url: `${icon_url}` };
@@ -122,7 +120,7 @@ class DiscordEmbed{
 	/**
 	 * Might change this later to take in a (name[], value[], inline[])
 	 *
-	 * @param fields An array of Field objects
+	 * @param { Field[] } fields An array of Field objects
 	 */
 	public setFields(fields: Field[]) {
 		this.fields = fields;
@@ -131,9 +129,9 @@ class DiscordEmbed{
 	/**
 	 * Adds a field to the current embed instance
 	 *
-	 * @param name Name of field
-	 * @param value Value of field
-	 * @param inline Whether or not the field should be inline
+	 * @param { string } name Name of field
+	 * @param { string } value Value of field
+	 * @param { boolean } [ inline ] inline Whether or not the field should be inline
 	 */
 	public addField(name: string, value: string, inline?: boolean) {
 		const newField: Field = { name, value };
@@ -153,7 +151,7 @@ class DiscordEmbed{
 	/**
 	 * get the Embed object
 	 *
-	 * @returns An Embed object
+	 * @returns { EmbedObject }An Embed object
 	 */
 	public getEmbed(){
 		const embed: EmbedObject = {};
