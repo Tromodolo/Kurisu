@@ -12,7 +12,8 @@
 		"interface-name": false,
 		"one-line": false,
 		"object-literal-sort-keys": false,
-		"variable-name": [true, "allow-snake-case"]
+		"variable-name": [true, "allow-snake-case"],
+		"radix": false
 	},
     "rulesDirectory": []
 }
