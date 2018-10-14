@@ -96,8 +96,7 @@ bot.on("messageCreate", async (message) => {
 	if (await checkCommand(message, messageArgs, moduleList)){
 		// This means a command was ran, so update database accordingly
 		// There is no custom command system in place, but eventually adding that somehow is good
-	}
-	else{
+	}else if (config.xpMoneyEnabled === true){
 		// Do other non-command stuff
 		await handleExperience(message.author, message);
 	}
