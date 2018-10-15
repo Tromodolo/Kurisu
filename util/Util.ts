@@ -15,7 +15,7 @@ import { Guild, Member, Message, Role } from "eris";
  * @param args args in the message sent by the user
  * @returns returns the user that sent the message, or the first person mentioned in the message
  */
-function getUserByMessage(msg: Message, args: string[]) {
+function getUserByMessage(msg: Message, args: string[]): Member | undefined {
 	let user: Member | undefined;
 
 	// if no args were passed with command
@@ -23,15 +23,28 @@ function getUserByMessage(msg: Message, args: string[]) {
 		user = msg.member;
 		return user;
 	}
-
 	// if args are passed with command
 	if (msg.mentions.length > 0) {
 		const channel: any = msg.channel;
 		user = channel.guild.members.find((x: Member) => x.id === msg.mentions[0].id);
 		return user;
 	}
+	if (args.length === 2) {
+		const guild: Guild | undefined = msg.member ? msg.member.guild : undefined;
 
-	return null;
+		if (!guild){
+			user = undefined;
+			return user;
+		}
+		else {
+			user = guild.members.find((x: Member) => x.id === args[1]) ||
+				   guild.members.find((x: Member) => x.username.toLowerCase().includes(args[1])) ||
+				   guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[1]) : false);
+			return user;
+		}
+	}
+
+	return undefined;
 }
 
 /**
@@ -59,7 +72,7 @@ function getHighestRole(guild: Guild, member: Member) {
 	return highestRole;
 }
 
-export default{
+export {
 	getUserByMessage,
 	getHighestRole,
 };
