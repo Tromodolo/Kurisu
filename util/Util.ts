@@ -48,6 +48,47 @@ function getUserByMessage(msg: Message, args: string[]): Member | undefined {
 }
 
 /**
+ * Grabs two users that are mentioned or specified in the message
+ *
+ * @param msg a message object sent by a user
+ * @param args args in the message sent by the user
+ * @returns returns two members that are mentioned or specified in args
+ */
+function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: Member }{
+	const users: { first?: Member, second?: Member } = {};
+	const guild: Guild | undefined = msg.member ? msg.member.guild : undefined;
+	const mentionCheck: RegExp = /<!?@[0-9]*>/g;
+
+	if (!guild){
+		return users;
+	}
+
+	if (args[1]){
+		if (args[1].match(mentionCheck)){
+			users.first = guild.members.find((x: Member) => x.id === msg.mentions[0].id);
+		}
+		else {
+			users.first = guild.members.find((x: Member) => x.id === args[1]) ||
+						  guild.members.find((x: Member) => x.username.toLowerCase().includes(args[1])) ||
+						  guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[1]) : false);
+		}
+	}
+
+	if (args[2]){
+		if (args[2].match(mentionCheck)){
+			users.second = guild.members.find((x: Member) => x.id === msg.mentions[1].id);
+		}
+		else {
+			users.second = guild.members.find((x: Member) => x.id === args[2]) ||
+						   guild.members.find((x: Member) => x.username.toLowerCase().includes(args[2])) ||
+						   guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[2]) : false);
+		}
+	}
+
+	return users;
+}
+
+/**
  * Gets the highest role that is assigned to a user
  *
  * @param guild the guild that the user is in
@@ -74,5 +115,6 @@ function getHighestRole(guild: Guild, member: Member) {
 
 export {
 	getUserByMessage,
+	getLoveUsers,
 	getHighestRole,
 };
