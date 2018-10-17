@@ -10,6 +10,7 @@ const bot = new eris.Client(config.botToken, { getAllUsers: true });
 const moduleList: CommandModule[] = [];
 // The string here is the userid of the user
 const xpTimers: Map<string, UserTimer> = new Map<string, UserTimer>();
+let triviaGames: TriviaHandler[] = [];
 let loadedFiles = 0;
 
 ////////////////////////////////////////////////////////////
@@ -206,7 +207,48 @@ async function handleExperience(user: eris.User, message: eris.Message){
 	return;
 }
 
+////////////////////////////////////////////////////////////
+//                                                        //
+//                   Trivia Functions                     //
+//                                                        //
+////////////////////////////////////////////////////////////
+
+/**
+ * Adds a TriviaHandler to array. Returns false if channel id already exists
+ * @param {Array} handler TriviaHandler to add to array
+ */
+function addTrivia(handler: TriviaHandler){
+	const found = triviaGames.find((x) => x.token === handler.token);
+	// Means there already is an ongoing game in the channel
+	if (found){
+		return false;
+	}
+	else{
+		triviaGames.push(handler);
+		return true;
+	}
+}
+
+/**
+ * Removes a TriviaHandler from array
+ * @param {Array} handler TriviaHandler to remove from array
+ */
+function removeTrivia(handler: TriviaHandler){
+	let index = 0;
+	for (const triv of triviaGames){
+		if (triv.token === handler.token){
+			break;
+		}
+		else{
+			index++;
+		}
+	}
+	triviaGames = triviaGames.splice(index, 1);
+}
+
 export {
 	bot,
 	moduleList,
+	addTrivia,
+	removeTrivia,
 };
