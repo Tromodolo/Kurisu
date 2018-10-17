@@ -4,11 +4,14 @@ import * as fs from "fs";
 import config from "./config.json";
 import * as db from "./db";
 import { Command, CommandModule, UserTimer } from "./types";
+import TriviaHandler from "./util/TriviaHandler";
 
 const bot = new eris.Client(config.botToken, { getAllUsers: true });
 const moduleList: CommandModule[] = [];
 // The string here is the userid of the user
 const xpTimers: Map<string, UserTimer> = new Map<string, UserTimer>();
+let triviaGames: TriviaHandler[] = [];
+let loadedFiles = 0;
 
 ////////////////////////////////////////////////////////////
 //                                                        //
@@ -20,7 +23,6 @@ const xpTimers: Map<string, UserTimer> = new Map<string, UserTimer>();
  * This block of code loads all the command modules within the command/ dir
  */
 fs.readdir("./commands/", (folderErr, folders) => {
-	let loadedFiles = 0;
 	folders.forEach((folderName) => {
 		fs.readdir(`./commands/${folderName}`, (fileErr, files) => {
 			const commands: Command[] = [];
@@ -32,7 +34,7 @@ fs.readdir("./commands/", (folderErr, folders) => {
 			files.forEach((file) => {
 				const commandName = file.split(".")[0];
 				const props = require(`./commands/${folderName}/${file}`);
-				loadedFiles++;
+				loadedFiles = loadedFiles + 1;
 				commandModule.commands.push(
 					{
 						aliases: props.aliases,
@@ -52,7 +54,6 @@ fs.readdir("./commands/", (folderErr, folders) => {
 					index++;
 				}
 			});
-			console.log(`Loaded ${loadedFiles} commands in module ${folderName}`);
 
 			moduleList.sort((a: CommandModule, b: CommandModule) => {
 				if (a.name < b.name) {
@@ -77,6 +78,8 @@ fs.readdir("./commands/", (folderErr, folders) => {
  * Prepare the bot to be turned on.
  */
 bot.on("ready", async () => {
+	console.log(`Loaded ${loadedFiles} commands`);
+
 	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
 	let statusMessage: string;
 	statusMessage = `${config.commandPrefix}help to get command list`;
@@ -204,7 +207,48 @@ async function handleExperience(user: eris.User, message: eris.Message){
 	return;
 }
 
+////////////////////////////////////////////////////////////
+//                                                        //
+//                   Trivia Functions                     //
+//                                                        //
+////////////////////////////////////////////////////////////
+
+/**
+ * Adds a TriviaHandler to array. Returns false if channel id already exists
+ * @param {Array} handler TriviaHandler to add to array
+ */
+function addTrivia(handler: TriviaHandler){
+	const found = triviaGames.find((x) => x.token === handler.token);
+	// Means there already is an ongoing game in the channel
+	if (found){
+		return false;
+	}
+	else{
+		triviaGames.push(handler);
+		return true;
+	}
+}
+
+/**
+ * Removes a TriviaHandler from array
+ * @param {Array} handler TriviaHandler to remove from array
+ */
+function removeTrivia(handler: TriviaHandler){
+	let index = 0;
+	for (const triv of triviaGames){
+		if (triv.token === handler.token){
+			break;
+		}
+		else{
+			index++;
+		}
+	}
+	triviaGames = triviaGames.splice(index, 1);
+}
+
 export {
 	bot,
 	moduleList,
+	addTrivia,
+	removeTrivia,
 };
