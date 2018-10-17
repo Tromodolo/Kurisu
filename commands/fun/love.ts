@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { Message, Member } from "eris";
+import { Member, Message } from "eris";
 import { bot } from "../../bot";
 import * as config from "../../config.json";
 import { getLoveUsers, getUserByMessage } from "../../util/Util";
