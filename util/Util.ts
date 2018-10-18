@@ -15,7 +15,7 @@ import { Guild, Member, Message, Role } from "eris";
  * @param args args in the message sent by the user
  * @returns returns the user that sent the message, or the first person mentioned in the message
  */
-function getUserByMessage(msg: Message, args: string[]) {
+function getUserByMessage(msg: Message, args: string[]): Member | undefined {
 	let user: Member | undefined;
 
 	// if no args were passed with command
@@ -23,15 +23,69 @@ function getUserByMessage(msg: Message, args: string[]) {
 		user = msg.member;
 		return user;
 	}
-
 	// if args are passed with command
 	if (msg.mentions.length > 0) {
 		const channel: any = msg.channel;
 		user = channel.guild.members.find((x: Member) => x.id === msg.mentions[0].id);
 		return user;
 	}
+	if (args.length === 2) {
+		const guild: Guild | undefined = msg.member ? msg.member.guild : undefined;
 
-	return null;
+		if (!guild){
+			user = undefined;
+			return user;
+		}
+		else {
+			user = guild.members.find((x: Member) => x.id === args[1]) ||
+				   guild.members.find((x: Member) => x.username.toLowerCase().includes(args[1])) ||
+				   guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[1]) : false);
+			return user;
+		}
+	}
+
+	return undefined;
+}
+
+/**
+ * Grabs two users that are mentioned or specified in the message
+ *
+ * @param msg a message object sent by a user
+ * @param args args in the message sent by the user
+ * @returns returns two members that are mentioned or specified in args
+ */
+function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: Member }{
+	const users: { first?: Member, second?: Member } = {};
+	const guild: Guild | undefined = msg.member ? msg.member.guild : undefined;
+	const mentionCheck: RegExp = /<!?@[0-9]*>/g;
+
+	if (!guild){
+		return users;
+	}
+
+	if (args[1]){
+		if (args[1].match(mentionCheck)){
+			users.first = guild.members.find((x: Member) => x.id === msg.mentions[0].id);
+		}
+		else {
+			users.first = guild.members.find((x: Member) => x.id === args[1]) ||
+						  guild.members.find((x: Member) => x.username.toLowerCase().includes(args[1])) ||
+						  guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[1]) : false);
+		}
+	}
+
+	if (args[2]){
+		if (args[2].match(mentionCheck)){
+			users.second = guild.members.find((x: Member) => x.id === msg.mentions[1].id);
+		}
+		else {
+			users.second = guild.members.find((x: Member) => x.id === args[2]) ||
+						   guild.members.find((x: Member) => x.username.toLowerCase().includes(args[2])) ||
+						   guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[2]) : false);
+		}
+	}
+
+	return users;
 }
 
 /**
@@ -59,7 +113,8 @@ function getHighestRole(guild: Guild, member: Member) {
 	return highestRole;
 }
 
-export{
+export {
 	getUserByMessage,
+	getLoveUsers,
 	getHighestRole,
 };
