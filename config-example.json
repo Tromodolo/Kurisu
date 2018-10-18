@@ -2,16 +2,17 @@
 	"ownerName": "",
 	"ownerId": "",
 	"botToken": "",
+	"libraryVersion": "",
 	"commandPrefix": "!",
 	"color": "",
+	"kurisuApiKey": "",
+	"apiEndpoint": "",
 	"googleApiKey": "",
 	"googleCustomSearchId": "",
+	"xpMoneyEnabled": true,
 	"databaseHost": "",
 	"databaseName": "",
 	"databaseUsername": "",
 	"databasePassword": "",
-	"databaseType": "",
-	"xpMoneyEnabled": true,
-	"kurisuApiKey": "",
-	"apiEndpoint": ""
+	"databaseType": ""
 }
