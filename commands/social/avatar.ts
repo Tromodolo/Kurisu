@@ -1,31 +1,32 @@
 /**
- * avatar.js
+ * avatar.ts
  *
- * get the avatar of a user
+ * Gets avatar of another user
  *
- * Last Edit - Oct 12, 2018 by Elias
+ * Last Edit - Oct 18, 2018 by Tromo
  */
 
+import { Message } from "eris";
 import { bot } from "../../bot";
 import config from "../../config.json";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
-import Util from "../../util/Util";
+import { getUserByMessage } from "../../util/Util";
 
-const commandName: string = "test";
+const commandName: string = "avatar";
 const aliases: string[] = ["ava", "pfp", "proflepicture"];
-const description: string = "";
-const fullDescription: string = "";
-const usage: string = "";
+const description: string = "Gets avatar for a user";
+const fullDescription: string = "Gets avatar for a user, or your own if unspecified";
+const usage: string = "avatar [user]";
 const requirements: object = {};
 const deleteCommand: boolean = false;
 
-async function commandFunc(message: any, args: string[]) {
+async function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
-		const user = Util.getUserByMessage(message, args);
+		const user = getUserByMessage(message, args);
 		const embed = new DiscordEmbed();
 
 		embed.setTimestamp(new Date(Date.now()).toISOString());
-		embed.setColor(config.color);
+		embed.setColor(parseInt(config.color));
 
 		if (!user) {
 			return "User not found";
