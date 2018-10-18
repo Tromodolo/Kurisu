@@ -136,9 +136,13 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 							return false;
 						}
 					}
-
 					args = args.splice(0, 1);
 					await command.function(message, args);
+
+					if (message.delete){
+						await message.delete();
+					}
+
 					return true;
 				}
 			}
