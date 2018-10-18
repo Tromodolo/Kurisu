@@ -1,6 +1,9 @@
 {
 	"ownerName": "",
 	"ownerId": "",
+	"developers": [
+		""
+	],
 	"botToken": "",
 	"commandPrefix": "!",
 	"googleApiKey": "",
