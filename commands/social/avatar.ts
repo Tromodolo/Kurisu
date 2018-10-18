@@ -17,7 +17,7 @@ const aliases: string[] = ["ava", "pfp", "proflepicture"];
 const description: string = "Gets avatar for a user";
 const fullDescription: string = "Gets avatar for a user, or your own if unspecified";
 const usage: string = "avatar [user]";
-const requirements: object = {};
+const requirements: string[] = [];
 const deleteCommand: boolean = false;
 
 async function commandFunc(message: Message, args: string[]) {

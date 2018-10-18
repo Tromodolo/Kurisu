@@ -19,7 +19,7 @@ const aliases: string[] = [
 const description: string = "Gets information about a user";
 const fullDescription: string = "Gets information about a user or yourself if unspecified";
 const usage: string = "avatar [user]";
-const requirements: object = {};
+const requirements: string[] = [];
 const deleteCommand: boolean = false;
 
 async function commandFunc(message: Message, args: string[]) {

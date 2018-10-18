@@ -7,7 +7,7 @@ const description: string = "";
 const fullDescription: string = "";
 const usage: string = "";
 // const requirements: new Object();
-const requirements: object = {};
+const requirements: string[] = [];
 const deleteCommand: boolean = false;
 
 function commandFunc(message: Message, args: string[]) {

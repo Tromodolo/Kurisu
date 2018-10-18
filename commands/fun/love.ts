@@ -15,7 +15,7 @@ const fullDescription: string = "Love tests two people and generates image";
 const usage: string = "love {First-Person} {Second-Person}";
 
 // const requirements: new Object();
-const requirements: object = {};
+const requirements: string[] = [];
 const deleteCommand: boolean = false;
 
 function commandFunc(message: Message, args: string[]) {

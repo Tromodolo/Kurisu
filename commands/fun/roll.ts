@@ -11,7 +11,7 @@ const fullDescription: string = "Rolls a random number up to 100 or a specified 
 const usage: string = "roll [maxnumber]";
 
 // const requirements: new Object();
-const requirements: object = {};
+const requirements: string[] = [];
 const deleteCommand: boolean = false;
 
 function commandFunc(message: Message, args: string[]) {

@@ -10,7 +10,7 @@ const fullDescription: string = "Shows full image of emote, and displays general
 const usage: string = "emote :OhISee:";
 
 // const requirements: new Object();
-const requirements: object = {};
+const requirements: string[] = [];
 const deleteCommand: boolean = false;
 
 function commandFunc(message: Message, args: string[]) {
