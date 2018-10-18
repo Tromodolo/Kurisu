@@ -4,6 +4,7 @@
 	"developers": [
 		""
 	],
+	"inviteLink": "",
 	"botToken": "",
 	"commandPrefix": "!",
 	"googleApiKey": "",
