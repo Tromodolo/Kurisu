@@ -63,7 +63,7 @@ class DiscordEmbed{
 	/**
 	 * @param description set the description field
 	 */
-	public  setDesciption(description: string) {
+	public  setDescription(description: string) {
 		this.description = description;
 	}
 
