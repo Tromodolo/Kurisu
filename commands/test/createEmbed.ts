@@ -8,7 +8,7 @@ const aliases: string[] = [];
 const description: string = "";
 const fullDescription: string = "";
 const usage: string = "";
-const requirements: object = {};
+const requirements: string[] = [];
 const deleteCommand: boolean = false;
 
 async function commandFunc(message: Message, args: string[]) {
@@ -18,7 +18,7 @@ async function commandFunc(message: Message, args: string[]) {
 
 	embed.setAuthor("Elias Mawa", "https://www.sawol.moe", "https://avatars0.githubusercontent.com/u/23219284?s=460&v=4");
 	embed.setColor(5043693);
-	embed.setDesciption("All hail LORD Tachanka");
+	embed.setDescription("All hail LORD Tachanka");
 
 	fields[0] = { name: "Big tiddy goth gf", value: "HELL YA BROTHER", inline: false };
 	embed.setFields(fields);

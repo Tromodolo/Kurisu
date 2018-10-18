@@ -1,6 +1,10 @@
 {
 	"ownerName": "",
 	"ownerId": "",
+	"developers": [
+		""
+	],
+	"inviteLink": "",
 	"botToken": "",
 	"commandPrefix": "!",
 	"googleApiKey": "",

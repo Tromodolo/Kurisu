@@ -18,7 +18,7 @@ const aliases: string[] = [];
 const description: string = "Pets someone";
 const fullDescription: string = "Pets someone or gets petted if unspecified";
 const usage: string = "pet [user]";
-const requirements: object = {};
+const requirements: string[] = [];
 const deleteCommand: boolean = false;
 
 async function commandFunc(message: Message, args: string[]) {

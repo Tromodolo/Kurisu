@@ -11,7 +11,7 @@ const fullDescription: string = "Starts trivia game";
 const usage: string = "trivia";
 
 // const requirements: new Object();
-const requirements: object = {};
+const requirements: string[] = [];
 const deleteCommand: boolean = false;
 
 function commandFunc(message: Message, args: string[]) {

@@ -127,7 +127,23 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 		modules.forEach(async (module) => {
 			for (const command of module.commands){
 				if (command.name === args[0]){
+					if (!message.member){
+						return false;
+					}
+					for (const permission of command.requirements){
+						if (!message.member.permission.has(permission)){
+							bot.createMessage(message.channel.id, "You don't have permission to use this command");
+							return false;
+						}
+					}
+
+					args.shift();
 					await command.function(message, args);
+
+					if (command.deleteCommand === true){
+						await message.delete();
+					}
+
 					return true;
 				}
 			}
