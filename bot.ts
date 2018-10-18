@@ -127,6 +127,7 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 		modules.forEach(async (module) => {
 			for (const command of module.commands){
 				if (command.name === args[0]){
+					args = args.splice(0, 1);
 					await command.function(message, args);
 					return true;
 				}

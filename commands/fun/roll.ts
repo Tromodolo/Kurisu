@@ -17,8 +17,8 @@ const deleteCommand: boolean = false;
 function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
 		let randomNum: number = 0;
-		if (args[1]){
-			const maxNum: number = parseInt(args[1]);
+		if (args[0]){
+			const maxNum: number = parseInt(args[0]);
 			if (isNaN(maxNum)){
 				randomNum = Math.ceil(Math.random() * 100);
 			}

@@ -37,9 +37,9 @@ function getUserByMessage(msg: Message, args: string[]): Member | undefined {
 			return user;
 		}
 		else {
-			user = guild.members.find((x: Member) => x.id === args[1]) ||
-				   guild.members.find((x: Member) => x.username.toLowerCase().includes(args[1])) ||
-				   guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[1]) : false);
+			user = guild.members.find((x: Member) => x.id === args[0]) ||
+				   guild.members.find((x: Member) => x.username.toLowerCase().includes(args[0])) ||
+				   guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[0]) : false);
 			return user;
 		}
 	}
@@ -63,25 +63,25 @@ function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: 
 		return users;
 	}
 
-	if (args[1]){
-		if (args[1].match(mentionCheck)){
+	if (args[0]){
+		if (args[0].match(mentionCheck)){
 			users.first = guild.members.find((x: Member) => x.id === msg.mentions[0].id);
 		}
 		else {
-			users.first = guild.members.find((x: Member) => x.id === args[1]) ||
-						  guild.members.find((x: Member) => x.username.toLowerCase().includes(args[1])) ||
-						  guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[1]) : false);
+			users.first = guild.members.find((x: Member) => x.id === args[0]) ||
+						  guild.members.find((x: Member) => x.username.toLowerCase().includes(args[0])) ||
+						  guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[0]) : false);
 		}
 	}
 
-	if (args[2]){
-		if (args[2].match(mentionCheck)){
+	if (args[1]){
+		if (args[1].match(mentionCheck)){
 			users.second = guild.members.find((x: Member) => x.id === msg.mentions[1].id);
 		}
 		else {
-			users.second = guild.members.find((x: Member) => x.id === args[2]) ||
-						   guild.members.find((x: Member) => x.username.toLowerCase().includes(args[2])) ||
-						   guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[2]) : false);
+			users.second = guild.members.find((x: Member) => x.id === args[1]) ||
+						   guild.members.find((x: Member) => x.username.toLowerCase().includes(args[1])) ||
+						   guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[1]) : false);
 		}
 	}
 

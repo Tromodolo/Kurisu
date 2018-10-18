@@ -15,13 +15,13 @@ const deleteCommand: boolean = false;
 
 function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
-		if (!args[1]){
+		if (!args[0]){
 			await bot.createMessage(message.channel.id, "You need to specify an emote");
 			return resolve();
 		}
 
 		// Save potential emote to a string variable
-		const emoteArgs: string = args[1];
+		const emoteArgs: string = args[0];
 		// Regex that matches the emote markup of discord <:name:id> or <a:name:id> if animated
 		const emoteRegex: RegExp = /<(a?):(.*?):(\d.*?[0-9])>/i;
 
