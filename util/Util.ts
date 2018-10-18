@@ -59,7 +59,7 @@ function getHighestRole(guild: Guild, member: Member) {
 	return highestRole;
 }
 
-export default{
+export{
 	getUserByMessage,
 	getHighestRole,
 };
