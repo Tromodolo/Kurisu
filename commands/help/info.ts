@@ -45,7 +45,7 @@ async function commandFunc(message: Message, args: string[]) {
 		const megabytes = Math.round(memHeap / 1024 / 1024);
 
 		embed.addField("Memory usage", `${megabytes}MB`, true);
-		embed.addField("Shards", `${bot.shards.size}`, true)
+		embed.addField("Shards", `${bot.shards.size}`, true);
 		embed.addField("Server Count", `${bot.guilds.size}`, true);
 		embed.addField("User Count", `${bot.users.size}`, true);
 		embed.addField("Invite Link", `[Link](${config.inviteLink})`, true);
