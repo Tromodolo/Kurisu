@@ -49,7 +49,11 @@ fs.readdir("./commands/", (folderErr, folders) => {
  * Prepare the bot to be turned on.
  */
 bot.on("ready", async () => {
-	console.log(moduleList);
+	for (const module of moduleList){
+		loadedFiles += module.commands.length;
+	}
+	console.log(`Loaded ${loadedFiles} commands`);
+
 	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
 	let statusMessage: string;
 	statusMessage = `${config.commandPrefix}help to get command list`;
@@ -104,27 +108,27 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 				}
 			}
 
-			for (const command of module.commands){
-				if (command.commandName === args[0]){
-					for (const permission of command.requirements){
-						if (!message.member){
-							return false;
-						}
-						if (!message.member.permission.has(permission)){
-							bot.createMessage(message.channel.id, "You don't have permission to use this command");
-							return false;
-						}
+			const command = module.findCommand(args[0]);
+
+			if (command){
+				for (const permission of command.requirements){
+					if (!message.member){
+						return false;
 					}
-
-					if (command.deleteCommand === true){
-						await message.delete();
+					if (!message.member.permission.has(permission)){
+						bot.createMessage(message.channel.id, "You don't have permission to use this command");
+						return false;
 					}
-
-					args.shift();
-					await command.commandFunc(message, args);
-
-					return true;
 				}
+
+				if (command.deleteCommand === true){
+					await message.delete();
+				}
+
+				args.shift();
+				await command.commandFunc(message, args);
+
+				return true;
 			}
 			return false;
 		});
