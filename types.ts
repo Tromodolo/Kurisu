@@ -31,22 +31,33 @@ interface Command {
 /**
  * Interface for Command groups
  *
- * @interface CommandModule
+ * @class CommandModule
  * @prop {string} name The group that the particular command belongs to
  * @prop {Command[]} commands Array of all the commands within the command group
+ * @prop {string[]} permissions Array of all the different permissions needed
  */
 class CommandModule {
 	public name: string = "";
 	public commands: Command[] = [];
 	public permissions: string[] = [];
 
-	public checkPermissions(permissions: eris.Permission){
+	public checkPermissions(permissions: eris.Permission): boolean{
 		for (const perm of this.permissions){
 			if (!permissions.has(perm)){
 				return false;
 			}
 		}
 		return true;
+	}
+
+	public findCommand(name: string): undefined | Command {
+		let command;
+		for (const com of this.commands){
+			if (com.commandName === name){
+				command = com;
+			}
+		}
+		return command;
 	}
 }
 
