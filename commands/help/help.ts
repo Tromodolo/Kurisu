@@ -32,7 +32,7 @@ async function commandFunc(message: Message, args: string[]) {
 			embed.setDescription("If you want information about a specific command, type 'help command-name'");
 
 			moduleList.forEach((module) => {
-				const commands = module.commands.map((x) => x.name).join(", ");
+				const commands = module.commands.map((x) => x.commandName).join(", ");
 				embed.addField(module.name, commands, false);
 			});
 		}
@@ -41,7 +41,7 @@ async function commandFunc(message: Message, args: string[]) {
 
 			moduleList.forEach((commandModule) => {
 				for (const com of commandModule.commands){
-					if (com.name === args[0]){
+					if (com.commandName === args[0]){
 						command = com;
 					}
 				}
@@ -52,7 +52,7 @@ async function commandFunc(message: Message, args: string[]) {
 				return resolve();
 			}
 			else{
-				embed.setAuthor(`Help for command '${command.name}'`, bot.user.avatarURL, bot.user.avatarURL);
+				embed.setAuthor(`Help for command '${command.commandName}'`, bot.user.avatarURL, bot.user.avatarURL);
 
 				embed.addField("Description",  command.fullDescription, false);
 				embed.addField("Aliases", command.aliases.length > 0  ? command.aliases.join(", ").toString() : "**none**", true);
