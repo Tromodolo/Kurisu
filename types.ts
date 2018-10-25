@@ -1,4 +1,4 @@
-import { Message } from "eris";
+import eris from "eris";
 
 /**
  * Interface for a command object
@@ -13,7 +13,7 @@ import { Message } from "eris";
  * @prop {boolean} Flag used to determine wether to delete the uder message
  */
 interface Command {
-	name: string;
+	commandName: string;
 	description: string;
 	fullDescription: string;
 	/**
@@ -21,7 +21,7 @@ interface Command {
 	 * @arg {string[]} args Array of all the args sent with the command
 	 * @returns {Promise<{}>}
 	 */
-	function: (message: Message, args: string[]) => Promise<{}>;
+	commandFunc: (message: eris.Message, args: string[]) => Promise<{}>;
 	usage: string;
 	aliases: string[];
 	requirements: string[];
@@ -35,9 +35,19 @@ interface Command {
  * @prop {string} name The group that the particular command belongs to
  * @prop {Command[]} commands Array of all the commands within the command group
  */
-interface CommandModule {
-	name: string;
-	commands: Command[];
+class CommandModule {
+	public name: string = "";
+	public commands: Command[] = [];
+	public permissions: string[] = [];
+
+	public checkPermissions(permissions: eris.Permission){
+		for (const perm of this.permissions){
+			if (!permissions.has(perm)){
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
 /**
