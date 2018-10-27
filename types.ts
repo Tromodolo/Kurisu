@@ -1,4 +1,6 @@
 import eris from "eris";
+import fs from "fs";
+import path from "path";
 
 /**
  * Interface for a command object
@@ -40,6 +42,20 @@ class CommandModule {
 	public name: string = "";
 	public commands: Command[] = [];
 	public permissions: string[] = [];
+
+	constructor(name: string, permissions: string[], commandPath: string){
+		this.name = name;
+		this.permissions = permissions;
+
+		fs.readdir(path.join(commandPath, "./"), (folderErr, files) => {
+			for (const file of files){
+				if (!(file === "index.ts")){
+					const command: Command = require(path.join(commandPath, `/${file}`));
+					this.commands.push(command);
+				}
+			}
+		});
+	}
 
 	public checkPermissions(permissions: eris.Permission): boolean{
 		for (const perm of this.permissions){

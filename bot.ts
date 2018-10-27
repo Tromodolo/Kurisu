@@ -27,12 +27,12 @@ fs.readdir("./commands/", (folderErr, folders) => {
 		try{
 			const props = require(`./commands/${folderName}`);
 			if (props){
-				const module = new props.Module();
-				moduleList.push(module);
+				moduleList.push(props.default);
 			}
 			return;
 		}
 		catch (ex){
+			console.log(ex);
 			return;
 		}
 
@@ -49,8 +49,8 @@ fs.readdir("./commands/", (folderErr, folders) => {
  * Prepare the bot to be turned on.
  */
 bot.on("ready", async () => {
-	for (const module of moduleList){
-		loadedFiles += module.commands.length;
+	for (const commandModule of moduleList){
+		loadedFiles += commandModule.commands.length;
 	}
 	console.log(`Loaded ${loadedFiles} commands`);
 
