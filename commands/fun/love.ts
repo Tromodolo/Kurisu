@@ -2,6 +2,7 @@ import Axios from "axios";
 import { Member, Message } from "eris";
 import { bot } from "../../bot";
 import * as config from "../../config.json";
+import { Command } from "../../types";
 import { getLoveUsers, getUserByMessage } from "../../util/Util";
 
 const commandName: string = "love";
@@ -50,13 +51,15 @@ function commandFunc(message: Message, args: string[]) {
 	});
 }
 
-export {
-	aliases,
+const command = new Command(
+	commandName,
 	description,
 	fullDescription,
-	commandFunc,
-	commandName,
 	usage,
+	aliases,
 	requirements,
 	deleteCommand,
-};
+	commandFunc,
+);
+
+export default command;

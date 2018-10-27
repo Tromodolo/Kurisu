@@ -10,6 +10,7 @@ import { Message } from "eris";
 import moment from "moment";
 import { bot } from "../../bot";
 import * as config from "../../config.json";
+import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
 
 const commandName: string = "info";
@@ -55,13 +56,15 @@ async function commandFunc(message: Message, args: string[]) {
 	});
 }
 
-export {
-	aliases,
+const command = new Command(
+	commandName,
 	description,
 	fullDescription,
-	commandFunc,
-	commandName,
 	usage,
+	aliases,
 	requirements,
 	deleteCommand,
-};
+	commandFunc,
+);
+
+export default command;

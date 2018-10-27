@@ -24,47 +24,18 @@ let loadedFiles = 0;
  */
 fs.readdir("./commands/", (folderErr, folders) => {
 	folders.forEach((folderName) => {
-		fs.readdir(`./commands/${folderName}`, (fileErr, files) => {
-			const commands: Command[] = [];
-			const commandModule = {
-				commands,
-				name: folderName,
-			};
-			let index = 0;
-			files.forEach((file) => {
-				const commandName = file.split(".")[0];
-				const props = require(`./commands/${folderName}/${file}`);
-				loadedFiles = loadedFiles + 1;
-				commandModule.commands.push(
-					{
-						aliases: props.aliases,
-						description: props.description,
-						fullDescription: props.fullDescription,
-						function: props.commandFunc,
-						name: commandName,
-						usage: config.commandPrefix + props.usage,
-						requirements: props.requirements,
-						deleteCommand: props.deleteCommand,
-					});
-				if (index + 1 === files.length) {
-					moduleList.push(commandModule);
-					return;
-				}
-				else{
-					index++;
-				}
-			});
+		try{
+			const props = require(`./commands/${folderName}`);
+			if (props){
+				moduleList.push(props.default);
+			}
+			return;
+		}
+		catch (ex){
+			console.log(ex);
+			return;
+		}
 
-			moduleList.sort((a: CommandModule, b: CommandModule) => {
-				if (a.name < b.name) {
-					return -1;
-				}
-				if (a.name > b.name) {
-					return 1;
-				}
-				return 0;
-			});
-		});
 	});
 });
 
@@ -78,6 +49,9 @@ fs.readdir("./commands/", (folderErr, folders) => {
  * Prepare the bot to be turned on.
  */
 bot.on("ready", async () => {
+	for (const commandModule of moduleList){
+		loadedFiles += commandModule.commands.length;
+	}
 	console.log(`Loaded ${loadedFiles} commands`);
 
 	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
@@ -125,29 +99,31 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 		// This makes it easier to later allow custom prefixes for servers, and just check for those too in the if case above
 		args[0] = args[0].substring(1);
 		modules.forEach(async (module) => {
-			for (const command of module.commands){
-				if (command.name === args[0]){
-					if (!message.member){
-						return false;
-					}
-					for (const permission of command.requirements){
-						if (!message.member.permission.has(permission)){
-							bot.createMessage(message.channel.id, "You don't have permission to use this command");
-							return false;
-						}
-					}
-
-					args.shift();
-					await command.function(message, args);
-
-					if (command.deleteCommand === true){
-						await message.delete();
-					}
-
-					return true;
-				}
+			if (!message.member){
+				return;
 			}
-			return false;
+			if (!module.checkPermissions(message.member.permission)){
+				bot.createMessage(message.channel.id, "You don't have permission to use this command");
+			}
+			const command = module.findCommand(args[0]);
+
+			if (command){
+				if (!command.checkPermissions(message.member.permission)){
+					bot.createMessage(message.channel.id, "You don't have permission to use this command");
+				}
+
+				if (command.deleteCommand === true){
+					await message.delete();
+				}
+
+				args.shift();
+				await command.commandFunc(message, args);
+
+				return true;
+			}
+			else{
+				return false;
+			}
 		});
 	}
 	else{
