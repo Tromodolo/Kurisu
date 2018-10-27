@@ -99,26 +99,17 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 		// This makes it easier to later allow custom prefixes for servers, and just check for those too in the if case above
 		args[0] = args[0].substring(1);
 		modules.forEach(async (module) => {
-			for (const modulePermission of module.permissions){
-				if (!message.member){
-					return false;
-				}
-				if (!module.checkPermissions(message.member.permission)){
-					bot.createMessage(message.channel.id, "You don't have permission to use this command");
-				}
+			if (!message.member){
+				return;
 			}
-
+			if (!module.checkPermissions(message.member.permission)){
+				bot.createMessage(message.channel.id, "You don't have permission to use this command");
+			}
 			const command = module.findCommand(args[0]);
 
 			if (command){
-				for (const permission of command.requirements){
-					if (!message.member){
-						return false;
-					}
-					if (!message.member.permission.has(permission)){
-						bot.createMessage(message.channel.id, "You don't have permission to use this command");
-						return false;
-					}
+				if (!command.checkPermissions(message.member.permission)){
+					bot.createMessage(message.channel.id, "You don't have permission to use this command");
 				}
 
 				if (command.deleteCommand === true){
@@ -130,7 +121,9 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 
 				return true;
 			}
-			return false;
+			else{
+				return false;
+			}
 		});
 	}
 	else{
