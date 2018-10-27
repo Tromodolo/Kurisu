@@ -8,6 +8,7 @@
 
 import { Message } from "eris";
 import { bot } from "../../bot";
+import { Command } from "../../types";
 import { getUserByMessage } from "../../util/Util";
 
 const commandName: string = "highfive";
@@ -33,13 +34,15 @@ async function commandFunc(message: Message, args: string[]) {
 	});
 }
 
-export {
-	aliases,
+const command = new Command(
+	commandName,
 	description,
 	fullDescription,
-	commandFunc,
-	commandName,
 	usage,
+	aliases,
 	requirements,
 	deleteCommand,
-};
+	commandFunc,
+);
+
+export default command;

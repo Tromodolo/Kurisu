@@ -1,5 +1,6 @@
 import { Message } from "eris";
 import { bot } from "../../bot";
+import { Command } from "../../types";
 
 const commandName: string = "test";
 const aliases: string[] = [];
@@ -17,13 +18,15 @@ function commandFunc(message: Message, args: string[]) {
 	});
 }
 
-export {
-	aliases,
+const command = new Command(
+	commandName,
 	description,
 	fullDescription,
-	commandFunc,
-	commandName,
 	usage,
+	aliases,
 	requirements,
 	deleteCommand,
-};
+	commandFunc,
+);
+
+export default command;

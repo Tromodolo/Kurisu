@@ -37,28 +37,28 @@ async function commandFunc(message: Message, args: string[]) {
 			});
 		}
 		else{
-			let command: Command | undefined;
+			let helpCommand: Command | undefined;
 
 			moduleList.forEach((commandModule) => {
 				for (const com of commandModule.commands){
 					if (com.commandName === args[0]){
-						command = com;
+						helpCommand = com;
 					}
 				}
 			});
 
-			if (!command){
+			if (!helpCommand){
 				await bot.createMessage(message.channel.id, "Command was not found.");
 				return resolve();
 			}
 			else{
-				embed.setAuthor(`Help for command '${command.commandName}'`, bot.user.avatarURL, bot.user.avatarURL);
+				embed.setAuthor(`Help for command '${helpCommand.commandName}'`, bot.user.avatarURL, bot.user.avatarURL);
 
-				embed.addField("Description",  command.fullDescription, false);
-				embed.addField("Aliases", command.aliases.length > 0  ? command.aliases.join(", ").toString() : "**none**", true);
-				embed.addField("Usage",  command.usage, true);
-				embed.addField("Auto-delete", command.deleteCommand ? "true" : "false", true);
-				embed.addField("Requirements",  command.requirements.length > 0 ? command.requirements.join(",\n").toString() : "**none**", true);
+				embed.addField("Description",  helpCommand.fullDescription, false);
+				embed.addField("Aliases", helpCommand.aliases.length > 0  ? helpCommand.aliases.join(", ").toString() : "**none**", true);
+				embed.addField("Usage",  helpCommand.usage, true);
+				embed.addField("Auto-delete", helpCommand.deleteCommand ? "true" : "false", true);
+				embed.addField("Requirements",  helpCommand.requirements.length > 0 ? helpCommand.requirements.join(",\n").toString() : "**none**", true);
 			}
 		}
 		await bot.createMessage(message.channel.id, embed.getEmbed());
@@ -66,13 +66,15 @@ async function commandFunc(message: Message, args: string[]) {
 	});
 }
 
-export {
-	aliases,
+const command = new Command(
+	commandName,
 	description,
 	fullDescription,
-	commandFunc,
-	commandName,
 	usage,
+	aliases,
 	requirements,
 	deleteCommand,
-};
+	commandFunc,
+);
+
+export default command;

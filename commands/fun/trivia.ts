@@ -1,5 +1,6 @@
 import { Member, Message } from "eris";
 import { bot } from "../../bot";
+import { Command } from "../../types";
 import TriviaHandler from "../../util/TriviaHandler";
 
 const commandName: string = "trivia";
@@ -22,13 +23,15 @@ function commandFunc(message: Message, args: string[]) {
 	});
 }
 
-export {
-	aliases,
+const command = new Command(
+	commandName,
 	description,
 	fullDescription,
-	commandFunc,
-	commandName,
 	usage,
+	aliases,
 	requirements,
 	deleteCommand,
-};
+	commandFunc,
+);
+
+export default command;
