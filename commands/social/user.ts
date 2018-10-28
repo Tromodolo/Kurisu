@@ -8,7 +8,6 @@
 
 import { Message } from "eris";
 import moment from "moment";
-import { bot } from "../../bot";
 import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
 import { getUserByMessage } from "../../util/Util";
@@ -77,7 +76,7 @@ async function commandFunc(message: Message, args: string[]) {
 			false,
 		);
 
-		bot.createMessage(message.channel.id, embed.getEmbed());
+		message.channel.createMessage(embed.getEmbed());
 
 		return resolve();
 	});

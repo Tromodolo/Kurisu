@@ -1,5 +1,4 @@
 import { Message } from "eris";
-import { bot } from "../../bot";
 import * as config from "../../config.json";
 import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
@@ -17,7 +16,7 @@ const deleteCommand: boolean = false;
 function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
 		if (!args[0]){
-			await bot.createMessage(message.channel.id, "You need to specify an emote");
+			await message.channel.createMessage("You need to specify an emote");
 			return resolve();
 		}
 
@@ -30,7 +29,7 @@ function commandFunc(message: Message, args: string[]) {
 		let animated: string = "False";
 
 		if (!result){
-			await bot.createMessage(message.channel.id, ":exclamation: That's not a valid emote.");
+			await message.channel.createMessage(":exclamation: That's not a valid emote.");
 		}
 		else {
 			// First check of regex
@@ -56,7 +55,7 @@ function commandFunc(message: Message, args: string[]) {
 			embed.addField("Url", `[Here](${url})`, true);
 			embed.setThumbnail(url);
 
-			await bot.createMessage(message.channel.id, embed.getEmbed());
+			await message.channel.createMessage(embed.getEmbed());
 		}
 
 		return resolve();

@@ -8,7 +8,6 @@
 
 import { Message } from "eris";
 import fs from "fs";
-import { bot } from "../../bot";
 import * as config from "../../config.json";
 import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
@@ -50,7 +49,7 @@ async function commandFunc(message: Message, args: string[]) {
 			fs.readFile(`./data/pet/${randomFile}.gif`, (err2: Error, data: Buffer ) => {
 				embed.setDescription(embedMessage);
 				embed.setImage("attachment://pet.gif");
-				bot.createMessage(message.channel.id, embed.getEmbed(), { file: data, name: "pet.gif" });
+				message.channel.createMessage(embed.getEmbed(), { file: data, name: "pet.gif" });
 			});
 		});
 		return resolve();

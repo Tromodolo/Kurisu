@@ -51,7 +51,7 @@ async function commandFunc(message: Message, args: string[]) {
 		embed.addField("User Count", `${bot.users.size}`, true);
 		embed.addField("Invite Link", `[Link](${config.inviteLink})`, true);
 
-		await bot.createMessage(message.channel.id, embed.getEmbed());
+		await message.channel.createMessage(embed.getEmbed());
 		return resolve();
 	});
 }

@@ -1,9 +1,8 @@
 import Axios from "axios";
 import { Member, Message } from "eris";
-import { bot } from "../../bot";
 import * as config from "../../config.json";
 import { Command } from "../../types";
-import { getLoveUsers, getUserByMessage } from "../../util/Util";
+import { getLoveUsers } from "../../util/Util";
 
 const commandName: string = "love";
 const aliases: string[] = [
@@ -23,7 +22,7 @@ function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
 		const users: { first?: Member, second?: Member } = getLoveUsers(message, args);
 		if (!(users.first && users.second)){
-			await bot.createMessage(message.channel.id, "You need to specify two people.");
+			await message.channel.createMessage("You need to specify two people.");
 		}
 		else{
 			const firstAvatar = users.first.avatarURL.replace(".jpg", ".png");
@@ -44,7 +43,7 @@ function commandFunc(message: Message, args: string[]) {
 			},
 			).then(async (result) => {
 				const buffer = Buffer.from(result.data, "utf8");
-				await bot.createMessage(message.channel.id, "", { file: buffer, name: "love.png"});
+				await message.channel.createMessage("", { file: buffer, name: "love.png"});
 			});
 		}
 		return resolve();

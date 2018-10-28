@@ -48,7 +48,7 @@ async function commandFunc(message: Message, args: string[]) {
 			});
 
 			if (!helpCommand){
-				await bot.createMessage(message.channel.id, "Command was not found.");
+				await message.channel.createMessage("Command was not found.");
 				return resolve();
 			}
 			else{
@@ -61,7 +61,7 @@ async function commandFunc(message: Message, args: string[]) {
 				embed.addField("Requirements",  helpCommand.requirements.length > 0 ? helpCommand.requirements.join(",\n").toString() : "**none**", true);
 			}
 		}
-		await bot.createMessage(message.channel.id, embed.getEmbed());
+		await message.channel.createMessage(embed.getEmbed());
 		return resolve();
 	});
 }

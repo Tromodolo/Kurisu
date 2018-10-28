@@ -103,13 +103,13 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 				return;
 			}
 			if (!module.checkPermissions(message.member.permission)){
-				bot.createMessage(message.channel.id, "You don't have permission to use this command");
+				message.channel.createMessage("You don't have permission to use this command");
 			}
 			const command = module.findCommand(args[0]);
 
 			if (command){
 				if (!command.checkPermissions(message.member.permission)){
-					bot.createMessage(message.channel.id, "You don't have permission to use this command");
+					message.channel.createMessage("You don't have permission to use this command");
 				}
 
 				if (command.deleteCommand === true){

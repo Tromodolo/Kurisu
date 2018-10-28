@@ -1,6 +1,4 @@
-import fs from "fs";
-import path, { dirname } from "path";
-import { Command, CommandModule } from "../../types";
+import { CommandModule } from "../../types";
 
 const moduleName: string = "Help";
 const permissions: string[] = [];

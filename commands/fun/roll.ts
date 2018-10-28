@@ -1,5 +1,4 @@
 import { Message } from "eris";
-import { bot } from "../../bot";
 import { Command } from "../../types";
 
 const commandName: string = "roll";
@@ -30,7 +29,7 @@ function commandFunc(message: Message, args: string[]) {
 		else{
 			randomNum = Math.ceil(Math.random() * 100);
 		}
-		await bot.createMessage(message.channel.id, `:game_die:${randomNum}`);
+		await message.channel.createMessage(`:game_die:${randomNum}`);
 		return resolve();
 	});
 }

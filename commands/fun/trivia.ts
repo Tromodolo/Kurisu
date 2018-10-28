@@ -1,4 +1,4 @@
-import { Member, Message } from "eris";
+import { Message } from "eris";
 import { bot } from "../../bot";
 import { Command } from "../../types";
 import TriviaHandler from "../../util/TriviaHandler";

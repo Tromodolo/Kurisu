@@ -1,5 +1,4 @@
 import { Message } from "eris";
-import { bot } from "../../bot";
 import { Command } from "../../types";
 
 const commandName: string = "test";
@@ -13,7 +12,7 @@ const deleteCommand: boolean = false;
 
 function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
-		await bot.createMessage(message.channel.id, "Hi hello");
+		await message.channel.createMessage("Hi hello");
 		resolve();
 	});
 }

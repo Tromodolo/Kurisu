@@ -32,7 +32,7 @@ async function commandFunc(message: Message, args: string[]) {
 		embed.setTitle("Elias Mawa");
 		embed.setUrl("https://www.sawol.moe");
 
-		await bot.createMessage(message.channel.id, embed.getEmbed());
+		await message.channel.createMessage(embed.getEmbed());
 		return resolve();
 	});
 

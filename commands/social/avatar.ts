@@ -7,7 +7,6 @@
  */
 
 import { Message } from "eris";
-import { bot } from "../../bot";
 import config from "../../config.json";
 import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
@@ -41,7 +40,7 @@ async function commandFunc(message: Message, args: string[]) {
 		embed.setUrl(userAvatar);
 		embed.setImage(userAvatar);
 
-		await bot.createMessage(message.channel.id, embed.getEmbed());
+		await message.channel.createMessage(embed.getEmbed());
 		return resolve();
 	});
 }

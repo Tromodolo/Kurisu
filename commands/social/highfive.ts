@@ -7,7 +7,6 @@
  */
 
 import { Message } from "eris";
-import { bot } from "../../bot";
 import { Command } from "../../types";
 import { getUserByMessage } from "../../util/Util";
 
@@ -24,10 +23,10 @@ async function commandFunc(message: Message, args: string[]) {
 		const user = getUserByMessage(message, args);
 
 		if (user && message.member){
-			bot.createMessage(message.channel.id, `${message.member.mention}(✿･∀･)／＼(･∀･✿)${user.mention}`);
+			message.channel.createMessage(`${message.member.mention}(✿･∀･)／＼(･∀･✿)${user.mention}`);
 		}
 		else{
-			bot.createMessage(message.channel.id, "(✿･∀･)／＼(･∀･✿)");
+			message.channel.createMessage("(✿･∀･)／＼(･∀･✿)");
 		}
 
 		return resolve();
