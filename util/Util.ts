@@ -19,7 +19,7 @@ function getUserByMessage(msg: Message, args: string[]): Member | undefined {
 	let user: Member | undefined;
 
 	// if no args were passed with command
-	if (args.length === 1) {
+	if (args.length === 0) {
 		user = msg.member;
 		return user;
 	}
@@ -29,7 +29,7 @@ function getUserByMessage(msg: Message, args: string[]): Member | undefined {
 		user = channel.guild.members.find((x: Member) => x.id === msg.mentions[0].id);
 		return user;
 	}
-	if (args.length === 2) {
+	if (args.length === 1) {
 		const guild: Guild | undefined = msg.member ? msg.member.guild : undefined;
 
 		if (!guild){
@@ -97,17 +97,19 @@ function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: 
  */
 function getHighestRole(guild: Guild, member: Member) {
 	let highestRole: Role | undefined;
-	let role: Role;
 
 	member.roles.forEach((roleId) => {
-		role = guild.roles.get(roleId)!;
+		const role: Role | undefined = guild.roles.get(roleId);
 
-		if (!highestRole) {
-			highestRole = role;
+		if (role){
+			if (!highestRole) {
+				highestRole = role;
+			}
+			else if (role.position > highestRole.position) {
+				highestRole = role;
+			}
 		}
-		else if (!role.position) {
-			highestRole = role;
-		}
+
 	});
 
 	return highestRole;
