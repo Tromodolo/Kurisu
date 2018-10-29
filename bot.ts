@@ -2,8 +2,7 @@ import Axios from "axios";
 import * as eris from "eris";
 import * as fs from "fs";
 import config from "./config.json";
-import * as db from "./db";
-import { Command, CommandModule, UserTimer } from "./types";
+import { CommandModule, UserTimer } from "./types";
 import TriviaHandler from "./util/TriviaHandler";
 
 const bot = new eris.Client(config.botToken, { getAllUsers: true });
@@ -104,12 +103,14 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 			}
 			if (!module.checkPermissions(message.member.permission)){
 				message.channel.createMessage("You don't have permission to use this command");
+				return;
 			}
 			const command = module.findCommand(args[0]);
 
 			if (command){
 				if (!command.checkPermissions(message.member.permission)){
 					message.channel.createMessage("You don't have permission to use this command");
+					return;
 				}
 
 				if (command.deleteCommand === true){
