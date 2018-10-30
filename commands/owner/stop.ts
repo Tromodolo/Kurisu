@@ -1,5 +1,6 @@
 import { Message } from "eris";
 import pm2 from "pm2";
+import { bot } from "../../bot";
 import { Command } from "../../types";
 
 const commandName: string = "stop";
@@ -18,6 +19,7 @@ const deleteCommand: boolean = false;
 function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
 		message.channel.createMessage("Shutting down...");
+		bot.disconnect({ reconnect: false });
 		pm2.stop("Kurisu", (err) => {
 			if (err){
 				return;
