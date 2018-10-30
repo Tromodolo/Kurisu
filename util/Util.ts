@@ -57,7 +57,7 @@ function getUserByMessage(msg: Message, args: string[]): Member | undefined {
 function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: Member }{
 	const users: { first?: Member, second?: Member } = {};
 	const guild: Guild | undefined = msg.member ? msg.member.guild : undefined;
-	const mentionCheck: RegExp = /<!?@[0-9]*>/g;
+	const mentionCheck: RegExp = /<@!?[0-9]*>/g;
 
 	if (!guild){
 		return users;
