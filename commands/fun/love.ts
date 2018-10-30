@@ -28,7 +28,7 @@ function commandFunc(message: Message, args: string[]) {
 			const firstAvatar = users.first.avatarURL.replace(".jpg", ".png");
 			const secondAVatar = users.second.avatarURL.replace(".jpg", ".png");
 
-			Axios.post(`${config.apiEndpoint}/api/love`, {
+			Axios.post(`${config.apiEndpoint}/api/images/love`, {
 				apiKey: config.kurisuApiKey,
 				firstUser: {
 					username: users.first.username,
