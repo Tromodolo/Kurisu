@@ -2,6 +2,10 @@
 	"ownerName": "",
 	"ownerId": "",
 	"botToken": "",
+	"developers": [
+	],
+	"developerIds": [
+	],
 	"libraryVersion": "",
 	"commandPrefix": "!",
 	"color": "",

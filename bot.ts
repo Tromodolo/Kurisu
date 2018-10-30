@@ -105,6 +105,14 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 				message.channel.createMessage("You don't have permission to use this command");
 				return;
 			}
+			if (module.name.toLowerCase() === "owner"){
+				const devs: any = config.developerIds;
+				if (!devs.includes(message.author.id)){
+					console.log(1);
+					return;
+				}
+			}
+
 			const command = module.findCommand(args[0]);
 
 			if (command){
