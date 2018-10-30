@@ -108,7 +108,6 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 			if (module.name.toLowerCase() === "owner"){
 				const devs: any = config.developerIds;
 				if (!devs.includes(message.author.id)){
-					console.log(1);
 					return;
 				}
 			}

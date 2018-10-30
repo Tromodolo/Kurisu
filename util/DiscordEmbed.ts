@@ -114,7 +114,7 @@ class DiscordEmbed{
 	 * @param { string } icon_url add a image next to the author text
 	 */
 	public  setAuthor(name: string, url: string, icon_url: string) {
-	this.author = { name: `${name}`, url: `${url}`, icon_url: `${icon_url}` };
+		this.author = { name: `${name}`, url: `${url}`, icon_url: `${icon_url}` };
 	}
 
 	/**
