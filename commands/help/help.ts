@@ -32,6 +32,9 @@ async function commandFunc(message: Message, args: string[]) {
 			embed.setDescription("If you want information about a specific command, type 'help command-name'");
 
 			moduleList.forEach((module) => {
+				if (module.name.toLowerCase() === "owner"){
+					return;
+				}
 				const commands = module.commands.map((x) => x.commandName).join(", ");
 				embed.addField(module.name, commands, false);
 			});
@@ -40,10 +43,9 @@ async function commandFunc(message: Message, args: string[]) {
 			let helpCommand: Command | undefined;
 
 			moduleList.forEach((commandModule) => {
-				for (const com of commandModule.commands){
-					if (com.commandName === args[0]){
-						helpCommand = com;
-					}
+				const com = commandModule.findCommand(args[0]);
+				if (com){
+					helpCommand = com;
 				}
 			});
 
