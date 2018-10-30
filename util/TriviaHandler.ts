@@ -1,4 +1,4 @@
-import Axios, { AxiosResponse } from "Axios";
+import Axios, { AxiosResponse } from "axios";
 import { Client, Member, Message } from "eris";
 import fs from "fs";
 import htmlToText from "html-to-text";

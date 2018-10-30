@@ -4,6 +4,7 @@
   "description": "Discord Chat bot coded with eris.js",
   "main": "bot.ts",
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/html-to-text": "^1.4.31",
     "@types/node": "^10.11.4",
     "axios": "^0.18.0",
