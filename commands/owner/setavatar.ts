@@ -1,4 +1,4 @@
-import axios from "Axios";
+import axios from "axios";
 import { Message } from "eris";
 import { bot } from "../../bot";
 import { Command } from "../../types";
