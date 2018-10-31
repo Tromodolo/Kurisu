@@ -6,7 +6,7 @@ import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
 import { getHighestRole, getUserByMessage } from "../../util/Util";
 
-const commandName: string = "kick";
+const commandName: string = "ban";
 const aliases: string[] = [
 	"b",
 ];
