@@ -194,7 +194,6 @@ async function updateExperience(user: eris.User, message: eris.Message){
 	}
 
 	if (success){
-		console.log("sucess!");
 		Axios.post(`${config.apiEndpoint}api/user/expupdate`, {
 			apiKey: config.kurisuApiKey,
 			userId: message.author.id,
