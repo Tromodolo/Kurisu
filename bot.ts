@@ -2,13 +2,15 @@ import Axios from "axios";
 import * as eris from "eris";
 import * as fs from "fs";
 import config from "./config.json";
-import * as db from "./db";
-import { Command, CommandModule, UserTimer } from "./types";
+import { CommandModule, UserTimer } from "./types";
+import TriviaHandler from "./util/TriviaHandler";
 
 const bot = new eris.Client(config.botToken, { getAllUsers: true });
 const moduleList: CommandModule[] = [];
 // The string here is the userid of the user
 const xpTimers: Map<string, UserTimer> = new Map<string, UserTimer>();
+let triviaGames: TriviaHandler[] = [];
+let loadedFiles = 0;
 
 ////////////////////////////////////////////////////////////
 //                                                        //
@@ -20,50 +22,19 @@ const xpTimers: Map<string, UserTimer> = new Map<string, UserTimer>();
  * This block of code loads all the command modules within the command/ dir
  */
 fs.readdir("./commands/", (folderErr, folders) => {
-	let loadedFiles = 0;
 	folders.forEach((folderName) => {
-		fs.readdir(`./commands/${folderName}`, (fileErr, files) => {
-			const commands: Command[] = [];
-			const commandModule = {
-				commands,
-				name: folderName,
-			};
-			let index = 0;
-			files.forEach((file) => {
-				const commandName = file.split(".")[0];
-				const props = require(`./commands/${folderName}/${file}`);
-				loadedFiles++;
-				commandModule.commands.push(
-					{
-						aliases: props.aliases,
-						description: props.description,
-						fullDescription: props.fullDescription,
-						function: props.commandFunc,
-						name: commandName,
-						usage: config.commandPrefix + props.usage,
-						requirements: props.requirements,
-						deleteCommand: props.deleteCommand,
-					});
-				if (index + 1 === files.length) {
-					moduleList.push(commandModule);
-					return;
-				}
-				else{
-					index++;
-				}
-			});
-			console.log(`Loaded ${loadedFiles} commands in module ${folderName}`);
+		try{
+			const props = require(`./commands/${folderName}`);
+			if (props){
+				moduleList.push(props.default);
+			}
+			return;
+		}
+		catch (ex){
+			console.log(ex);
+			return;
+		}
 
-			moduleList.sort((a: CommandModule, b: CommandModule) => {
-				if (a.name < b.name) {
-					return -1;
-				}
-				if (a.name > b.name) {
-					return 1;
-				}
-				return 0;
-			});
-		});
 	});
 });
 
@@ -77,6 +48,11 @@ fs.readdir("./commands/", (folderErr, folders) => {
  * Prepare the bot to be turned on.
  */
 bot.on("ready", async () => {
+	for (const commandModule of moduleList){
+		loadedFiles += commandModule.commands.length;
+	}
+	console.log(`Loaded ${loadedFiles} commands`);
+
 	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
 	let statusMessage: string;
 	statusMessage = `${config.commandPrefix}help to get command list`;
@@ -96,8 +72,7 @@ bot.on("messageCreate", async (message) => {
 	if (await checkCommand(message, messageArgs, moduleList)){
 		// This means a command was ran, so update database accordingly
 		// There is no custom command system in place, but eventually adding that somehow is good
-	}
-	else{
+	}else if (config.xpMoneyEnabled === true){
 		// Do other non-command stuff
 		await handleExperience(message.author, message);
 	}
@@ -123,13 +98,40 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 		// This makes it easier to later allow custom prefixes for servers, and just check for those too in the if case above
 		args[0] = args[0].substring(1);
 		modules.forEach(async (module) => {
-			for (const command of module.commands){
-				if (command.name === args[0]){
-					await command.function(message, args);
-					return true;
+			if (!message.member){
+				return;
+			}
+			if (!module.checkPermissions(message.member.permission)){
+				message.channel.createMessage("You don't have permission to use this command");
+				return;
+			}
+			if (module.name.toLowerCase() === "owner"){
+				const devs: any = config.developerIds;
+				if (!devs.includes(message.author.id)){
+					return;
 				}
 			}
-			return false;
+
+			const command = module.findCommand(args[0]);
+
+			if (command){
+				if (!command.checkPermissions(message.member.permission)){
+					message.channel.createMessage("You don't have permission to use this command");
+					return;
+				}
+
+				if (command.deleteCommand === true){
+					await message.delete();
+				}
+
+				args.shift();
+				await command.commandFunc(message, args);
+
+				return true;
+			}
+			else{
+				return false;
+			}
 		});
 	}
 	else{
@@ -205,7 +207,48 @@ async function handleExperience(user: eris.User, message: eris.Message){
 	return;
 }
 
+////////////////////////////////////////////////////////////
+//                                                        //
+//                   Trivia Functions                     //
+//                                                        //
+////////////////////////////////////////////////////////////
+
+/**
+ * Adds a TriviaHandler to array. Returns false if channel id already exists
+ * @param {Array} handler TriviaHandler to add to array
+ */
+function addTrivia(handler: TriviaHandler){
+	const found = triviaGames.find((x) => x.token === handler.token);
+	// Means there already is an ongoing game in the channel
+	if (found){
+		return false;
+	}
+	else{
+		triviaGames.push(handler);
+		return true;
+	}
+}
+
+/**
+ * Removes a TriviaHandler from array
+ * @param {Array} handler TriviaHandler to remove from array
+ */
+function removeTrivia(handler: TriviaHandler){
+	let index = 0;
+	for (const triv of triviaGames){
+		if (triv.token === handler.token){
+			break;
+		}
+		else{
+			index++;
+		}
+	}
+	triviaGames = triviaGames.splice(index, 1);
+}
+
 export {
 	bot,
 	moduleList,
+	addTrivia,
+	removeTrivia,
 };
