@@ -5,10 +5,22 @@ import config from "./config.json";
 import { CommandModule, UserTimer } from "./types";
 import TriviaHandler from "./util/TriviaHandler";
 
+////////////////////////////////////////////////////////////
+//                                                        //
+//              		Variables		                  //
+//                                                        //
+////////////////////////////////////////////////////////////
+
+// bot instatance
 const bot = new eris.Client(config.botToken, { getAllUsers: true });
+
+// Command list
 const moduleList: CommandModule[] = [];
+
 // The string here is the userid of the user
-const xpTimers: Map<string, UserTimer> = new Map<string, UserTimer>();
+const msgTimer: Map<string, UserTimer> = new Map<string, UserTimer>();
+const minDeltaTime = 30000;
+
 let triviaGames: TriviaHandler[] = [];
 let loadedFiles = 0;
 
@@ -74,7 +86,7 @@ bot.on("messageCreate", async (message) => {
 		// There is no custom command system in place, but eventually adding that somehow is good
 	}else if (config.xpMoneyEnabled === true){
 		// Do other non-command stuff
-		await handleExperience(message.author, message);
+		await updateExperience(message.author, message);
 	}
 });
 
@@ -82,7 +94,7 @@ bot.connect();
 
 ////////////////////////////////////////////////////////////
 //                                                        //
-//                   Other Functions                      //
+//                   Helper Functions                     //
 //                                                        //
 ////////////////////////////////////////////////////////////
 
@@ -140,70 +152,68 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 }
 
 /**
+ * Event handler that runs everytime that a message is created
+ */
+bot.on("messageCreate", async (message) => {
+	if (message.author.bot) {
+		return;
+	}
+	await updateExperience(message.author, message);
+});
+
+bot.connect();
+
+/**
  * Handles adding experience for users
  *
  * @param {eris.User} user user that triggered event
  * @param {eris.Message} message message sent with the triggered event
  * @returns {void}
  */
-async function handleExperience(user: eris.User, message: eris.Message){
-	// This is a really dumb way of adding 15 to it so it ranges from 16-25 in xpGain
-	const xpGain = (Math.floor(Math.random() * 10) + 1) + 15;
-	let willUpdate = false;
+async function updateExperience(user: eris.User, message: eris.Message){
+	// Checks if timer for user exists
+	const userTime = msgTimer.get(user.id);
+	let success: boolean = false;
 
-	// Gets timer to see if it exists
-	const userTimer = xpTimers.get(user.id);
-	if (userTimer){
-		// This would mean a minute has passed
-		if (Date.now() - userTimer.time < 60000){
+	if (userTime){
+		const deltaTime = Date.now() - userTime.time < minDeltaTime;
+		if (deltaTime) {
 			return;
 		}
 		else{
-			// Because a minute has passed, you can add xp to the database
 			const newTimer: UserTimer = { userid: user.id, time: Date.now() };
-			xpTimers.set(user.id, newTimer);
-			willUpdate = true;
+			msgTimer.set(user.id, newTimer);
+			success = true;
 		}
 	}
 	else {
 		// Because the timer doesn't exist, add one to the list and then add xp
 		const newTimer: UserTimer = { userid: user.id, time: Date.now() };
-		xpTimers.set(user.id, newTimer);
-		willUpdate = true;
+		msgTimer.set(user.id, newTimer);
+		success = true;
 	}
-	if (willUpdate){
-		// Check to see if message.member is undefined. This should only happen if the user isn't cached
-		// If member is undefined, the guildid won't be sent through meaning only profile xp will increase
-		if (!message.member){
-			Axios.post(`${config.apiEndpoint}/api/user/exp`, {
-				apiKey: config.kurisuApiKey,
-				userId: message.author.id,
-				username: message.author.username,
-				discriminator: message.author.discriminator,
-				xpGain,
-			}).then((result) => {
-				if (result.data.leveledUp){
-					// TODO handle level up messages with a toggle if server owners don't want it
-					return;
-				}
-			});
-		}
-		else{
-			Axios.post(`${config.apiEndpoint}/api/user/exp`, {
-				apiKey: config.kurisuApiKey,
-				userId: message.author.id,
-				username: message.author.username,
-				discriminator: message.author.discriminator,
-				guildId: message.member.guild.id,
-				xpGain,
-			}).then((result) => {
-				if (result.data.leveledUp){
-					// TODO handle level up messages with a toggle if server owners don't want it
-					return;
-				}
-			});
-		}
+
+	const msg = {
+		apiKey: config.botToken,
+		id: message.author.id,
+		guild: message.member ? message.member.guild : undefined,
+		username: message.author.username,
+		discriminator: message.author.discriminator,
+		flag: success,
+	};
+
+	if (success){
+		Axios.post(`${config.apiEndpoint}api/user/expupdate`, {
+			msg: JSON.stringify(msg),
+		}).then((result) => {
+			if (result.data.leveledUp){
+				console.log(result.data);
+				// message.channel.createMessage("Leveled UP!"); // test message
+				return;
+			}
+		});
 	}
+
 	return;
 }
 
