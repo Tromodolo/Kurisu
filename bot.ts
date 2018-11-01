@@ -19,7 +19,7 @@ const moduleList: CommandModule[] = [];
 
 // The string here is the userid of the user
 const msgTimer: Map<string, UserTimer> = new Map<string, UserTimer>();
-const minDeltaTime = 60000;
+const minDeltaTime = 30000;
 
 let triviaGames: TriviaHandler[] = [];
 let loadedFiles = 0;
@@ -193,14 +193,22 @@ async function updateExperience(user: eris.User, message: eris.Message){
 		success = true;
 	}
 
+	const msg = {
+		apiKey: config.botToken,
+		id: message.author.id,
+		guild: message.member ? message.member.guild : undefined,
+		username: message.author.username,
+		discriminator: message.author.discriminator,
+		flag: success,
+	};
+
 	if (success){
 		Axios.post(`${config.apiEndpoint}api/user/expupdate`, {
-			apiKey: config.kurisuApiKey,
-			userId: message.author.id,
-			expGain: success,
+			msg: JSON.stringify(msg),
 		}).then((result) => {
 			if (result.data.leveledUp){
-				message.channel.createMessage("Leveled UP!"); // test message
+				console.log(result.data);
+				// message.channel.createMessage("Leveled UP!"); // test message
 				return;
 			}
 		});
