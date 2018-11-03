@@ -24,6 +24,11 @@ function commandFunc(message: Message, args: string[]) {
 		else{
 			text = args.join(" ");
 		}
+		if (message.mentions.length > 0){
+			for (const user of message.mentions){
+				text = text.replace(/<@!?[0-9]*>/, user.username);
+			}
+		}
 
 		Axios.post(`${config.apiEndpoint}api/images/deathnote`, {
 			apiKey: config.kurisuApiKey,
