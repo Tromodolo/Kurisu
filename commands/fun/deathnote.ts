@@ -25,7 +25,7 @@ function commandFunc(message: Message, args: string[]) {
 			text = args.join(" ");
 		}
 
-		Axios.post(`${config.apiEndpoint}/api/images/deathnote`, {
+		Axios.post(`${config.apiEndpoint}api/images/deathnote`, {
 			apiKey: config.kurisuApiKey,
 			text,
 		}, {
