@@ -17,7 +17,8 @@
 		"max-line-length": [true, 180],
 		"max-classes-per-file": false,
 		"align": false,
-		"no-eval": false
+		"no-eval": false,
+		"quotemark": false,
 	},
     "rulesDirectory": []
 }
