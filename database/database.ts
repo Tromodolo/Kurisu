@@ -12,7 +12,7 @@ const db =  new Sequelize({
 	host: databaseConfig.databaseHost,
 	dialect: databaseConfig.databaseType,
 	username: databaseConfig.databaseUsername,
-	password: databaseConfig.databaseUsername,
+	password: databaseConfig.databasePassword,
 	pool: {
 		max: 20,
 		min: 0,
