@@ -8,7 +8,7 @@
 
 import { Message } from "eris";
 import { bot, moduleList } from "../../bot";
-import * as config from "../../config.json";
+import { generalConfig } from "../../config/";
 import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
 
@@ -25,7 +25,7 @@ async function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
 		const embed = new DiscordEmbed();
 
-		embed.setColor(parseInt(config.color));
+		embed.setColor(parseInt(generalConfig.color));
 
 		if (!args[0]){
 			embed.setAuthor("List of commands", bot.user.avatarURL, bot.user.avatarURL);

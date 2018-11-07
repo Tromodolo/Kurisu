@@ -1,7 +1,8 @@
 import Axios from "axios";
 import { Message } from "eris";
-import * as config from "../../config.json";
+import { generalConfig } from "../../config/";
 import { Command } from "../../types";
+import { botSettings } from "../../bot";
 
 const commandName: string = "deathnote";
 const aliases: string[] = [
@@ -30,8 +31,8 @@ function commandFunc(message: Message, args: string[]) {
 			}
 		}
 
-		Axios.post(`${config.apiEndpoint}api/images/deathnote`, {
-			apiKey: config.kurisuApiKey,
+		Axios.post(`${generalConfig.apiEndpoint}api/images/deathnote`, {
+			apiKey: botSettings.kurisuApiKey,
 			text,
 		}, {
 			responseType: "arraybuffer",

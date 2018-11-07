@@ -28,10 +28,8 @@ const db =  new Sequelize({
 	modelPaths: [
 	  __dirname + '/models',
 	],
-	logging: false,
+	logging: console.log,
 });
-
-db.sync();
 
 /**
  * Creates a object from a mysql result

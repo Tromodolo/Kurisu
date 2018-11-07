@@ -1,7 +1,6 @@
 import { Member, Message, PrivateChannel } from "eris";
 import moment from "moment";
 import { bot } from "../../bot";
-import * as config from "../../config.json";
 import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
 import { getHighestRole, getUserByMessage } from "../../util/Util";

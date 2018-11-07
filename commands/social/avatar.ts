@@ -7,7 +7,7 @@
  */
 
 import { Message } from "eris";
-import config from "../../config.json";
+import { generalConfig } from "../../config/";
 import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
 import { getUserByMessage } from "../../util/Util";
@@ -26,7 +26,7 @@ async function commandFunc(message: Message, args: string[]) {
 		const embed = new DiscordEmbed();
 
 		embed.setTimestamp(new Date(Date.now()).toISOString());
-		embed.setColor(parseInt(config.color));
+		embed.setColor(parseInt(generalConfig.color));
 
 		if (!user) {
 			return "User not found";

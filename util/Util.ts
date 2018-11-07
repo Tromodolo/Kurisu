@@ -8,13 +8,22 @@
 
 import { Client, Guild, Member, Message, Role } from "eris";
 import { google } from "googleapis";
-import * as config from "../config.json";
+import { generalConfig } from "../config/";
 import { DiscordEmbed } from "./DiscordEmbed";
+import { db } from "../database/database";
+
+db.sync();
+
+let botSettings = {
+	googleApiKey: "",
+	googleCustomSearchId: "",
+}
+
 
 const customSearch = google.customsearch("v1");
 const youtube = google.youtube({
 	  version: "v3",
-	auth: config.googleApiKey,
+	auth: botSettings.googleApiKey,
 });
 
 /**
@@ -145,9 +154,9 @@ function googleLookup(bot: Client, message: Message, query: string, inMessage: b
 		}
 
 		const res = await customSearch.cse.list({
-			cx: config.googleCustomSearchId,
+			cx: botSettings.googleCustomSearchId,
 			q: query,
-			auth: config.googleApiKey,
+			auth: botSettings.googleApiKey,
 		});
 
 		const data = res.data;
@@ -168,7 +177,7 @@ function googleLookup(bot: Client, message: Message, query: string, inMessage: b
 
 			if (data.items){
 
-				embed.setColor(parseInt(config.color));
+				embed.setColor(parseInt(generalConfig.color));
 				embed.setTitle(data.items[0].title || "Unavailable");
 				embed.setUrl(data.items[0].formattedUrl || "https://google.com/");
 				embed.setDescription(`${data.items[0].snippet ? data.items[0].snippet.replace("\n", " ") : "Description unavailable"}`);

@@ -1,8 +1,9 @@
 import Axios from "axios";
 import { Member, Message } from "eris";
-import * as config from "../../config.json";
+import { generalConfig } from "../../config/";
 import { Command } from "../../types";
 import { getLoveUsers } from "../../util/Util";
+import { botSettings } from "../../bot";
 
 const commandName: string = "love";
 const aliases: string[] = [
@@ -28,8 +29,8 @@ function commandFunc(message: Message, args: string[]) {
 			const firstAvatar = users.first.avatarURL.replace(".jpg", ".png");
 			const secondAvatar = users.second.avatarURL.replace(".jpg", ".png");
 
-			Axios.post(`${config.apiEndpoint}api/images/love`, {
-				apiKey: config.kurisuApiKey,
+			Axios.post(`${generalConfig.apiEndpoint}api/images/love`, {
+				apiKey: botSettings.kurisuApiKey,
 				firstUser: {
 					username: users.first.username,
 					avatar: firstAvatar,

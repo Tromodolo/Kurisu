@@ -4,7 +4,7 @@ import fs from "fs";
 import htmlToText from "html-to-text";
 
 import { addTrivia, removeTrivia } from "../bot";
-import * as config from "../config.json";
+import { generalConfig } from "../config/";
 import { DiscordEmbed } from "../util/DiscordEmbed";
 
 class TriviaHandler{
@@ -58,7 +58,7 @@ class TriviaHandler{
 				const questionText = htmlToText.fromString(this.currentQuestion.question, {});
 				questionText.replace("\n", "");
 
-				embed.setColor(parseInt(config.color));
+				embed.setColor(parseInt(generalConfig.color));
 
 				// Confused Chen image
 				embed.setThumbnail("attachment://chen.png");
