@@ -193,18 +193,14 @@ async function updateExperience(user: eris.User, message: eris.Message){
 		success = true;
 	}
 
-	const msg = {
-		apiKey: config.botToken,
-		id: message.author.id,
-		guild: message.member ? message.member.guild : undefined,
-		username: message.author.username,
-		discriminator: message.author.discriminator,
-		flag: success,
-	};
-
 	if (success){
 		Axios.post(`${config.apiEndpoint}api/user/expupdate`, {
-			msg: JSON.stringify(msg),
+			apiKey: config.botToken,
+			id: message.author.id,
+			guild: message.member ? message.member.guild : undefined,
+			username: message.author.username,
+			discriminator: message.author.discriminator,
+			flag: success,
 		}).then((result) => {
 			if (result.data.leveledUp){
 				console.log(result.data);
