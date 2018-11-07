@@ -6,6 +6,8 @@
     "allowJs": true,                       /* Allow javascript files to be compiled. */
 	// "checkJs": true,                       /* Report errors in .js files. */
 
+	"experimentalDecorators": true, /* Needed for Sequelize-Typescript */
+
     /* Strict Type-Checking Options */
 	"strict": true,                           /* Enable all strict type-checking options. */
 
