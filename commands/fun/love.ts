@@ -26,17 +26,17 @@ function commandFunc(message: Message, args: string[]) {
 		}
 		else{
 			const firstAvatar = users.first.avatarURL.replace(".jpg", ".png");
-			const secondAVatar = users.second.avatarURL.replace(".jpg", ".png");
+			const secondAvatar = users.second.avatarURL.replace(".jpg", ".png");
 
-			Axios.post(`${config.apiEndpoint}/api/images/love`, {
+			Axios.post(`${config.apiEndpoint}api/images/love`, {
 				apiKey: config.kurisuApiKey,
 				firstUser: {
 					username: users.first.username,
 					avatar: firstAvatar,
 				},
 				secondUser: {
-					username: users.first.username,
-					avatar: secondAVatar,
+					username: users.second.username,
+					avatar: secondAvatar,
 				},
 			}, {
 				responseType: "arraybuffer",
