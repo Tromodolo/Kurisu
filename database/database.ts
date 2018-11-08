@@ -28,7 +28,7 @@ const db =  new Sequelize({
 	modelPaths: [
 	  __dirname + '/models',
 	],
-	logging: console.log,
+	logging: false,
 });
 
 /**
