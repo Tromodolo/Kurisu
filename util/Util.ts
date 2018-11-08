@@ -7,24 +7,29 @@
  */
 
 import { Client, Guild, Member, Message, Role } from "eris";
-import { google } from "googleapis";
+import { google, GoogleApis } from "googleapis";
 import { generalConfig } from "../config/";
 import { DiscordEmbed } from "./DiscordEmbed";
-import { db } from "../database/database";
+import { getBotSettings } from "../bot";
 
-db.sync();
-
-let botSettings = {
-	googleApiKey: "",
-	googleCustomSearchId: "",
-}
-
-
+let botSettings: any;
+let youtube: any;
 const customSearch = google.customsearch("v1");
-const youtube = google.youtube({
-	  version: "v3",
-	auth: botSettings.googleApiKey,
-});
+
+(async () => {
+    try {
+		var res: any = await getBotSettings();
+		botSettings = res;
+
+		youtube = google.youtube({
+			version: "v3",
+		  auth: botSettings.googleapikey,
+	  });
+    } catch (e) {
+		console.trace(e);
+        // Deal with the fact the chain failed
+    }
+})();
 
 /**
  * Grabs the user that sent a message if args == 1. Grabs first mentioned user if args > 1
@@ -154,9 +159,9 @@ function googleLookup(bot: Client, message: Message, query: string, inMessage: b
 		}
 
 		const res = await customSearch.cse.list({
-			cx: botSettings.googleCustomSearchId,
+			cx: botSettings.googlecustomsearchid,
 			q: query,
-			auth: botSettings.googleApiKey,
+			auth: botSettings.googleapikey,
 		});
 
 		const data = res.data;

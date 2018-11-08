@@ -3,7 +3,7 @@ import { Member, Message } from "eris";
 import { generalConfig } from "../../config/";
 import { Command } from "../../types";
 import { getLoveUsers } from "../../util/Util";
-import { botSettings } from "../../bot";
+import { db } from "../../database/database";
 
 const commandName: string = "love";
 const aliases: string[] = [
@@ -21,6 +21,8 @@ const deleteCommand: boolean = false;
 
 function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
+		let botSettings = await db.models.BotConfig.find({ where: { id: 1 }, raw: true });
+
 		const users: { first?: Member, second?: Member } = getLoveUsers(message, args);
 		if (!(users.first && users.second)){
 			await message.channel.createMessage("You need to specify two people.");
@@ -30,7 +32,7 @@ function commandFunc(message: Message, args: string[]) {
 			const secondAvatar = users.second.avatarURL.replace(".jpg", ".png");
 
 			Axios.post(`${generalConfig.apiEndpoint}api/images/love`, {
-				apiKey: botSettings.kurisuApiKey,
+				apiKey: botSettings.apikey,
 				firstUser: {
 					username: users.first.username,
 					avatar: firstAvatar,

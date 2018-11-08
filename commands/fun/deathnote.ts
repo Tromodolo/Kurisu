@@ -2,7 +2,7 @@ import Axios from "axios";
 import { Message } from "eris";
 import { generalConfig } from "../../config/";
 import { Command } from "../../types";
-import { botSettings } from "../../bot";
+import { db } from "../../database/database";
 
 const commandName: string = "deathnote";
 const aliases: string[] = [
@@ -18,6 +18,8 @@ const deleteCommand: boolean = false;
 
 function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
+		let botSettings = await db.models.BotConfig.find({ where: { id: 1 }, raw: true });
+
 		let text = "";
 		if (args.length < 1){
 			text = `${message.author.username}#${message.author.discriminator}`;
@@ -32,7 +34,7 @@ function commandFunc(message: Message, args: string[]) {
 		}
 
 		Axios.post(`${generalConfig.apiEndpoint}api/images/deathnote`, {
-			apiKey: botSettings.kurisuApiKey,
+			apiKey: botSettings.apikey,
 			text,
 		}, {
 			responseType: "arraybuffer",

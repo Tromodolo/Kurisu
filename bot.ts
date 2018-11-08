@@ -7,15 +7,15 @@ import TriviaHandler from "./util/TriviaHandler";
 import { db } from "./database/database";
 
 function getBotSettings(){
-	return new Promise((resolve) => {
-		return resolve(db.models.BotConfig.find({
+	return new Promise(async (resolve) => {
+		let config = await db.models.BotConfig.findOne({
 			where: {
 				id: 1
 			},
-			raw: true
-		}).then((results) => {
-			return results;
-		}));
+			raw: true,
+		});
+		resolve(config);
+		return config;
 	})
 }
 
@@ -26,13 +26,22 @@ function getBotSettings(){
 ////////////////////////////////////////////////////////////
 
 let botSettings: any;
-const bot = new eris.Client("", { getAllUsers: true });
+let bot = new eris.Client("", { getAllUsers: true });
 
-getBotSettings().then((results: any) => {
-	botSettings = results;
-	bot.token = results.bottoken;
-	bot.connect();
-});
+(async () => {
+    try {
+		db.sync().then(async () => {
+			var res: any = await getBotSettings();
+			bot.token = res.devtoken
+			//bot.token = res.bottoken;
+			bot.connect();
+			botSettings = res;
+		});
+    } catch (e) {
+		console.trace(e);
+        // Deal with the fact the chain failed
+    }
+})();
 
 // bot instatance
 
@@ -89,7 +98,7 @@ bot.on("ready", async () => {
 
 	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
 	let statusMessage: string;
-	statusMessage = `${botSettings.commandPrefix}help to get command list`;
+	statusMessage = `${botSettings.defaultprefix}help to get command list`;
 
 	await bot.editStatus("online", {name: statusMessage});
 });
@@ -126,7 +135,7 @@ bot.on("messageCreate", async (message) => {
  * @param {Array} modules An array of all the loaded commmand modules
  */
 async function checkCommand(message: eris.Message, args: string[], modules: CommandModule[]){
-	if (message.content.startsWith(botSettings.commandPrefix)){
+	if (message.content.startsWith(botSettings.defaultprefix)){
 		// Starting at 1 index so that it takes away the prefix
 		// This makes it easier to later allow custom prefixes for servers, and just check for those too in the if case above
 		args[0] = args[0].substring(1);
@@ -275,7 +284,7 @@ function removeTrivia(handler: TriviaHandler){
 
 export {
 	bot,
-	botSettings,
+	getBotSettings,
 	moduleList,
 	addTrivia,
 	removeTrivia,
