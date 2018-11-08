@@ -31,6 +31,8 @@ node_modules
 
 config\.json
 
+database\.json
+
 data/tmp/avatars/*.png
 data/tmp/discordavatars/*.png
 data/tmp/love/*.png

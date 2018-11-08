@@ -8,7 +8,7 @@
 
 import { Message } from "eris";
 import fs from "fs";
-import * as config from "../../config.json";
+import { generalConfig } from "../../config/";
 import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
 import { getUserByMessage } from "../../util/Util";
@@ -31,7 +31,7 @@ async function commandFunc(message: Message, args: string[]) {
 		const user = getUserByMessage(message, args);
 		let embedMessage = "";
 
-		embed.setColor(parseInt(config.color));
+		embed.setColor(parseInt(generalConfig.color));
 
 		if (!user || user.id === message.member.id){
 			embedMessage = `*Hugs* ${message.member.mention}`;

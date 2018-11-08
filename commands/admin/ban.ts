@@ -1,7 +1,7 @@
 import { Member, Message, PrivateChannel } from "eris";
 import moment from "moment";
 import { bot } from "../../bot";
-import * as config from "../../config.json";
+import { generalConfig } from "../../config/";
 import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
 import { getHighestRole, getUserByMessage } from "../../util/Util";
@@ -58,7 +58,7 @@ function commandFunc(message: Message, args: string[]) {
 			const reason = args[1] || "None specified";
 
 			const embed = new DiscordEmbed();
-			embed.setColor(parseInt(config.color));
+			embed.setColor(parseInt(generalConfig.color));
 			embed.setTitle(`**You were banned from ${message.member ? message.member.guild.name : "_Unavailable_"}**`);
 			embed.addField("Reason", `${reason}`);
 

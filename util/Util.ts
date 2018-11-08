@@ -7,15 +7,29 @@
  */
 
 import { Client, Guild, Member, Message, Role } from "eris";
-import { google } from "googleapis";
-import * as config from "../config.json";
+import { google, GoogleApis } from "googleapis";
+import { generalConfig } from "../config/";
 import { DiscordEmbed } from "./DiscordEmbed";
+import { getBotSettings } from "../bot";
 
+let botSettings: any;
+let youtube: any;
 const customSearch = google.customsearch("v1");
-const youtube = google.youtube({
-	  version: "v3",
-	auth: config.googleApiKey,
-});
+
+(async () => {
+    try {
+		var res: any = await getBotSettings();
+		botSettings = res;
+
+		youtube = google.youtube({
+			version: "v3",
+		  auth: botSettings.googleapikey,
+	  });
+    } catch (e) {
+		console.trace(e);
+        // Deal with the fact the chain failed
+    }
+})();
 
 /**
  * Grabs the user that sent a message if args == 1. Grabs first mentioned user if args > 1
@@ -145,9 +159,9 @@ function googleLookup(bot: Client, message: Message, query: string, inMessage: b
 		}
 
 		const res = await customSearch.cse.list({
-			cx: config.googleCustomSearchId,
+			cx: botSettings.googlecustomsearchid,
 			q: query,
-			auth: config.googleApiKey,
+			auth: botSettings.googleapikey,
 		});
 
 		const data = res.data;
@@ -168,7 +182,7 @@ function googleLookup(bot: Client, message: Message, query: string, inMessage: b
 
 			if (data.items){
 
-				embed.setColor(parseInt(config.color));
+				embed.setColor(parseInt(generalConfig.color));
 				embed.setTitle(data.items[0].title || "Unavailable");
 				embed.setUrl(data.items[0].formattedUrl || "https://google.com/");
 				embed.setDescription(`${data.items[0].snippet ? data.items[0].snippet.replace("\n", " ") : "Description unavailable"}`);

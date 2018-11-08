@@ -9,7 +9,7 @@
 import { Message } from "eris";
 import moment from "moment";
 import { bot } from "../../bot";
-import * as config from "../../config.json";
+import { generalConfig } from "../../config/";
 import { Command } from "../../types";
 import { DiscordEmbed } from "../../util/DiscordEmbed";
 
@@ -26,12 +26,12 @@ async function commandFunc(message: Message, args: string[]) {
 	return new Promise(async (resolve) => {
 		const embed = new DiscordEmbed();
 
-		embed.setColor(parseInt(config.color));
+		embed.setColor(parseInt(generalConfig.color));
 		embed.setAuthor("Bot information:", bot.user.avatarURL, bot.user.avatarURL);
 
-		embed.addField("Devs", config.developers.length > 0 ? config.developers.join(",\n") : "Uh Oh I don't know how this happened", true);
+		embed.addField("Devs", generalConfig.developers.length > 0 ? generalConfig.developers.join(",\n") : "Uh Oh I don't know how this happened", true);
 		embed.addField("Node.js Version", process.version, true);
-		embed.addField("Discord Library", config.libraryVersion, true);
+		embed.addField("Discord Library", generalConfig.libraryVersion, true);
 
 		// Process.uptime returns in seconds, so here i multiply by 1000 to get miliseconds
 		const timeNow = Date.now();
@@ -49,7 +49,7 @@ async function commandFunc(message: Message, args: string[]) {
 		embed.addField("Shards", `${bot.shards.size}`, true);
 		embed.addField("Server Count", `${bot.guilds.size}`, true);
 		embed.addField("User Count", `${bot.users.size}`, true);
-		embed.addField("Invite Link", `[Link](${config.inviteLink})`, true);
+		embed.addField("Invite Link", `[Link](${generalConfig.inviteLink})`, true);
 
 		await message.channel.createMessage(embed.getEmbed());
 		return resolve();

@@ -1,9 +1,23 @@
 import Axios from "axios";
 import * as eris from "eris";
 import * as fs from "fs";
-import config from "./config.json";
+import { generalConfig } from "./config/";
 import { CommandModule, UserTimer } from "./types";
 import TriviaHandler from "./util/TriviaHandler";
+import { db } from "./database/database";
+
+function getBotSettings(){
+	return new Promise(async (resolve) => {
+		let config = await db.models.BotConfig.findOne({
+			where: {
+				id: 1
+			},
+			raw: true,
+		});
+		resolve(config);
+		return config;
+	})
+}
 
 ////////////////////////////////////////////////////////////
 //                                                        //
@@ -11,8 +25,25 @@ import TriviaHandler from "./util/TriviaHandler";
 //                                                        //
 ////////////////////////////////////////////////////////////
 
+let botSettings: any;
+let bot = new eris.Client("", { getAllUsers: true });
+
+(async () => {
+    try {
+		db.sync().then(async () => {
+			var res: any = await getBotSettings();
+			bot.token = res.devtoken
+			//bot.token = res.bottoken;
+			bot.connect();
+			botSettings = res;
+		});
+    } catch (e) {
+		console.trace(e);
+        // Deal with the fact the chain failed
+    }
+})();
+
 // bot instatance
-const bot = new eris.Client(config.botToken, { getAllUsers: true });
 
 // Command list
 const moduleList: CommandModule[] = [];
@@ -67,7 +98,7 @@ bot.on("ready", async () => {
 
 	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
 	let statusMessage: string;
-	statusMessage = `${config.commandPrefix}help to get command list`;
+	statusMessage = `${botSettings.defaultprefix}help to get command list`;
 
 	await bot.editStatus("online", {name: statusMessage});
 });
@@ -84,13 +115,12 @@ bot.on("messageCreate", async (message) => {
 	if (await checkCommand(message, messageArgs, moduleList)){
 		// This means a command was ran, so update database accordingly
 		// There is no custom command system in place, but eventually adding that somehow is good
-	}else if (config.xpMoneyEnabled === true){
+	}else if (generalConfig.xpMoneyEnabled === true){
 		// Do other non-command stuff
 		await updateExperience(message.author, message);
 	}
 });
 
-bot.connect();
 
 ////////////////////////////////////////////////////////////
 //                                                        //
@@ -105,7 +135,7 @@ bot.connect();
  * @param {Array} modules An array of all the loaded commmand modules
  */
 async function checkCommand(message: eris.Message, args: string[], modules: CommandModule[]){
-	if (message.content.startsWith(config.commandPrefix)){
+	if (message.content.startsWith(botSettings.defaultprefix)){
 		// Starting at 1 index so that it takes away the prefix
 		// This makes it easier to later allow custom prefixes for servers, and just check for those too in the if case above
 		args[0] = args[0].substring(1);
@@ -118,7 +148,7 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 				return;
 			}
 			if (module.name.toLowerCase() === "owner"){
-				const devs: any = config.developerIds;
+				const devs: any = generalConfig.developerIds;
 				if (!devs.includes(message.author.id)){
 					return;
 				}
@@ -193,18 +223,14 @@ async function updateExperience(user: eris.User, message: eris.Message){
 		success = true;
 	}
 
-	const msg = {
-		apiKey: config.botToken,
-		id: message.author.id,
-		guild: message.member ? message.member.guild : undefined,
-		username: message.author.username,
-		discriminator: message.author.discriminator,
-		flag: success,
-	};
-
 	if (success){
-		Axios.post(`${config.apiEndpoint}api/user/expupdate`, {
-			msg: JSON.stringify(msg),
+		Axios.post(`${generalConfig.apiEndpoint}api/user/expupdate`, {
+			apiKey: botSettings.apikey,
+			id: message.author.id,
+			guild: message.member ? message.member.guild : undefined,
+			username: message.author.username,
+			discriminator: message.author.discriminator,
+			flag: success,
 		}).then((result) => {
 			if (result.data.leveledUp){
 				console.log(result.data);
@@ -258,6 +284,7 @@ function removeTrivia(handler: TriviaHandler){
 
 export {
 	bot,
+	getBotSettings,
 	moduleList,
 	addTrivia,
 	removeTrivia,
