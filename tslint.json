@@ -18,7 +18,8 @@
 		"max-classes-per-file": false,
 		"align": false,
 		"no-eval": false,
-		"quotemark": false
+		"quotemark": false,
+		"no-var-keyword": false
 	},
     "rulesDirectory": []
 }

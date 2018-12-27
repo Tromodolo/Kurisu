@@ -58,13 +58,45 @@ function createJSON(result: any, fields: any){
 				}
 			}
 		}
-
 		return json;
 	}
 	return null;
 }
 
+let synced = false;
+
+function initializeDb(): Promise<any>{
+	return new Promise((resolve, reject) => {
+		if (synced === true){
+			synced = true;
+			db.sync().then(() => {
+				resolve();
+			}).catch((err) => {
+				reject(err);
+			});
+		}
+		else{
+			resolve();
+		}
+	});
+}
+
+function getBotSettings(): Promise<any>{
+	return new Promise(async (resolve) => {
+		const config = await db.models.BotConfig.findOne({
+			where: {
+				id: 1,
+			},
+			raw: true,
+		});
+		resolve(config);
+		return config;
+	});
+}
+
 export {
+	initializeDb,
+	getBotSettings,
 	db,
 	createJSON,
 };
