@@ -9,27 +9,23 @@
 import { Client, Guild, Member, Message, Role } from "eris";
 import { google, GoogleApis } from "googleapis";
 import { generalConfig } from "../config/";
+import { getBotSettings, initializeDb } from "../database/database";
 import { DiscordEmbed } from "./DiscordEmbed";
-import { getBotSettings } from "../bot";
 
 let botSettings: any;
 let youtube: any;
 const customSearch = google.customsearch("v1");
 
-(async () => {
-    try {
-		var res: any = await getBotSettings();
-		botSettings = res;
-
-		youtube = google.youtube({
-			version: "v3",
-		  auth: botSettings.googleapikey,
-	  });
-    } catch (e) {
-		console.trace(e);
-        // Deal with the fact the chain failed
-    }
-})();
+initializeDb().then(async () => {
+	const config = await getBotSettings();
+	botSettings = config;
+	youtube = google.youtube({
+		version: "v3",
+	 	auth: config.googleapikey,
+  	});
+}).catch((err) => {
+	console.log(err);
+});
 
 /**
  * Grabs the user that sent a message if args == 1. Grabs first mentioned user if args > 1

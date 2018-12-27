@@ -1,23 +1,11 @@
 import Axios from "axios";
 import * as eris from "eris";
 import * as fs from "fs";
+import pm2 from 'pm2';
 import { generalConfig } from "./config/";
+import { db, getBotSettings, initializeDb } from "./database/database";
 import { CommandModule, UserTimer } from "./types";
 import TriviaHandler from "./util/TriviaHandler";
-import { db } from "./database/database";
-
-function getBotSettings(){
-	return new Promise(async (resolve) => {
-		let config = await db.models.BotConfig.findOne({
-			where: {
-				id: 1
-			},
-			raw: true,
-		});
-		resolve(config);
-		return config;
-	})
-}
 
 ////////////////////////////////////////////////////////////
 //                                                        //
@@ -26,24 +14,23 @@ function getBotSettings(){
 ////////////////////////////////////////////////////////////
 
 let botSettings: any;
-let bot = new eris.Client("", { getAllUsers: true });
+const bot = new eris.Client("", { getAllUsers: true });
 
-(async () => {
-    try {
-		db.sync().then(async () => {
-			var res: any = await getBotSettings();
-			bot.token = res.devtoken
-			//bot.token = res.bottoken;
-			bot.connect();
-			botSettings = res;
-		});
-    } catch (e) {
-		console.trace(e);
-        // Deal with the fact the chain failed
-    }
-})();
-
-// bot instatance
+initializeDb().then(async () => {
+	const config = await getBotSettings();
+	console.log("Database initialized");
+	// bot.token = config.devtoken;
+	bot.token = config.bottoken;
+	bot.connect();
+	botSettings = config;
+}).catch((err) => {
+	console.error(err);
+	pm2.restart("Kurisu", (error) => {
+		if (error){
+			return;
+		}
+	});
+});
 
 // Command list
 const moduleList: CommandModule[] = [];
@@ -95,12 +82,8 @@ bot.on("ready", async () => {
 		loadedFiles += commandModule.commands.length;
 	}
 	console.log(`Loaded ${loadedFiles} commands`);
-
 	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
-	let statusMessage: string;
-	statusMessage = `${botSettings.defaultprefix}help to get command list`;
-
-	await bot.editStatus("online", {name: statusMessage});
+	await bot.editStatus("online", {name: `${botSettings.defaultprefix}help to get command list`});
 });
 
 /**
@@ -115,12 +98,12 @@ bot.on("messageCreate", async (message) => {
 	if (await checkCommand(message, messageArgs, moduleList)){
 		// This means a command was ran, so update database accordingly
 		// There is no custom command system in place, but eventually adding that somehow is good
-	}else if (generalConfig.xpMoneyEnabled === true){
+	}
+	else if (generalConfig.xpMoneyEnabled === true){
 		// Do other non-command stuff
 		await updateExperience(message.author, message);
 	}
 });
-
 
 ////////////////////////////////////////////////////////////
 //                                                        //
