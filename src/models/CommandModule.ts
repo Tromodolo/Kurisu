@@ -29,6 +29,10 @@ export default class CommandModule {
 			for (const file of files){
 				if (!(file === "index.ts")){
 					const command = require(path.join(commandPath, `/${file}`));
+					if (command.default.name){
+						continue;
+					}
+					console.log(command);
 					this.commands.push(new command.default());
 				}
 			}
