@@ -1,6 +1,6 @@
 import CommandModule from "../../models/CommandModule";
 
-const moduleName: string = "Fun";
+const moduleName: string = "Admin";
 const permissions: string[] = [];
 
 const commandModule = new CommandModule(

@@ -2,7 +2,7 @@ import { Message } from "eris";
 import { bot } from "../../bot";
 import Command from "../../models/Command";
 
-export default class Prune extends Command {
+export default class Roll extends Command {
 	constructor(){
 		super();
 		this.commandName = "roll";

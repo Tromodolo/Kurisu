@@ -29,7 +29,8 @@ node_modules
 
 *.sqlite
 
-config\.json
+config\db.json
+config\bot.json
 
 database\.json
 
@@ -39,3 +40,6 @@ data/tmp/love/*.png
 data/tmp/*.png
 
 build
+src/config/bot\.json
+
+src/config/db\.json

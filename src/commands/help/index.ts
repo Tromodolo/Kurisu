@@ -1,4 +1,4 @@
-import { CommandModule } from "../../types";
+import CommandModule from "../../models/CommandModule";
 
 const moduleName: string = "Help";
 const permissions: string[] = [];

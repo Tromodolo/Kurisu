@@ -1,0 +1,28 @@
+{
+    "ownerName": "Tromo#7430",
+	"ownerId": "123184215423582208",
+	"developers": [
+		"Tromo#7430",
+		"elias🌸#8005"
+	],
+	"developerIds": [
+		"227965056170590208",
+		"123184215423582208"
+	],
+	"inviteLink": "https://discordapp.com/oauth2/authorize?&client_id=338099495248068618&scope=bot&permissions=8",
+	"botToken": "MzgyMjQ0NjIzMTUxNjYxMDY2.DruS4A.y8aBtKmrstLsN1FLDZ38bdyoDjU",
+	"libraryVersion": "Eris.js v0.90",
+	"commandPrefix": ">",
+	"color": "0xd83e3e",
+    "googleApiKey": "AIzaSyCzRakkf_fd9mYtYJrF2jjw-59gb_gkULE",
+    "googleCustomSearchId": "000495943812474214127:uwgvp2yysyc",
+    "databaseHost": "server.tro.moe",
+    "databaseName": "kurisu",
+    "databaseUsername": "tromodolo",
+    "databasePassword": "Mitsukan123",
+    "databaseType": "mysql",
+	"xpMoneyEnabled": false,
+	"kurisuApiKey": "4DE19B9A304FFD078ED6A8C58FDF74DABDB2ADB29B6FECFDB6E198F858DBFB58",
+	"apiEndpoint": "http://localhost:7600/",
+	"downloadDir": ""
+}

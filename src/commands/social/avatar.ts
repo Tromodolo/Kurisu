@@ -3,57 +3,51 @@
  *
  * Gets avatar of another user
  *
- * Last Edit - Oct 18, 2018 by Tromo
+ * Last Edit - March 29 2019 by Tromo
  */
 
 import { Message } from "eris";
-import { generalConfig } from "../../config/";
-import { Command } from "../../types";
-import { DiscordEmbed } from "../../util/DiscordEmbed";
-import { getUserByMessage } from "../../util/Util";
+import config from "../../config";
+import Command from "../../models/Command";
+import { DiscordEmbed } from "../../utility/DiscordEmbed";
+import { getUserByMessage } from "../../utility/Util";
 
-const commandName: string = "avatar";
-const aliases: string[] = ["ava", "pfp", "proflepicture"];
-const description: string = "Gets avatar for a user";
-const fullDescription: string = "Gets avatar for a user, or your own if unspecified";
-const usage: string = "avatar [user]";
-const requirements: string[] = [];
-const deleteCommand: boolean = false;
+export default class Avatar extends Command {
+	constructor(){
+		super();
+		this.commandName = "avatar";
+		this.aliases = ["ava", "pfp", "proflepicture"];
+		this.description = "Gets avatar for a user";
+		this.fullDescription = "Gets avatar for a user, or your own if unspecified";
+		this.usage = "avatar [user]";
 
-async function commandFunc(message: Message, args: string[]) {
-	return new Promise(async (resolve) => {
-		const user = getUserByMessage(message, args);
-		const embed = new DiscordEmbed();
+		// const requirements: new Object();
+		this.requirements = [];
+		this.deleteCommand = false;
+	}
 
-		embed.setTimestamp(new Date(Date.now()).toISOString());
-		embed.setColor(parseInt(generalConfig.color));
+	public commandFunc(message: Message, args: string[]) {
+		return new Promise(async (resolve) => {
+			const user = getUserByMessage(message, args);
+			const embed = new DiscordEmbed();
 
-		if (!user) {
-			return "User not found";
-		}
+			embed.setTimestamp(new Date(Date.now()).toISOString());
+			embed.setColor(parseInt(config.bot.color));
 
-		embed.setTitle(`Avatar for ${user.username}#${user.discriminator}`);
+			if (!user) {
+				return "User not found";
+			}
 
-		let userAvatar = user.avatarURL.replace("jpg", "png");
-		userAvatar = userAvatar.replace("?size=128", "?size=1024");
+			embed.setTitle(`Avatar for ${user.username}#${user.discriminator}`);
 
-		embed.setUrl(userAvatar);
-		embed.setImage(userAvatar);
+			let userAvatar = user.avatarURL.replace("jpg", "png");
+			userAvatar = userAvatar.replace("?size=128", "?size=1024");
 
-		await message.channel.createMessage(embed.getEmbed());
-		return resolve();
-	});
+			embed.setUrl(userAvatar);
+			embed.setImage(userAvatar);
+
+			await message.channel.createMessage(embed.getEmbed());
+			return resolve();
+		});
+	}
 }
-
-const command = new Command(
-	commandName,
-	description,
-	fullDescription,
-	usage,
-	aliases,
-	requirements,
-	deleteCommand,
-	commandFunc,
-);
-
-export default command;

@@ -45,7 +45,7 @@ class DiscordEmbed{
 	private fields?: Array<{
 		name: string,
 		value: string,
-		inline: boolean,
+		inline?: boolean,
 	}>;
 
 	/**
@@ -142,6 +142,9 @@ class DiscordEmbed{
 	 * @param { boolean } [ inline ] inline Whether or not the field should be inline
 	 */
 	public addField(name: string, value: string, inline?: boolean) {
+		if (!this.fields){
+			this.fields = [];
+		}
 		const newField = {
 			name,
 			value,

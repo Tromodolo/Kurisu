@@ -1,60 +1,50 @@
 import { Message } from "eris";
 import util from "util";
-import { bot } from "../../bot";
-import { Command } from "../../types";
+import Command from "../../models/Command";
 
-const commandName: string = "eval";
-const aliases: string[] = [
-	"evaluate",
-];
-const description: string = "Evaluates code";
-const fullDescription: string = "Evaluates code";
-const usage: string = "eval 5+5";
+export default class Eval extends Command {
+	constructor(){
+		super();
+		this.commandName = "eval";
+		this.aliases = [
+			"evaluate",
+		];
+		this.description = "Evaluates code";
+		this.fullDescription = "Evaluates code";
+		this.usage = "eval 5+5";
 
-// const requirements: new Object();
-const requirements: string[] = [];
-const deleteCommand: boolean = false;
+		// const requirements: new Object();
+		this.requirements = [];
+		this.deleteCommand = false;
+	}
 
-function commandFunc(message: Message, args: string[]) {
-	return new Promise(async (resolve) => {
-		const client = bot;
-		const before = Date.now();
-		let retStr: string = "";
-		try {
-			let evald = eval(args.join(" "));
-			evald = util.inspect(evald, { depth: 0 });
+	public commandFunc(message: Message, args: string[]) {
+		return new Promise(async (resolve) => {
+			const before = Date.now();
+			let retStr: string = "";
+			try {
+				let evald = eval(args.join(" "));
+				evald = util.inspect(evald, { depth: 0 });
 
-			if (evald && evald.length > 1800){
-				evald = evald.substring(0, 1800);
+				if (evald && evald.length > 1800){
+					evald = evald.substring(0, 1800);
+				}
+				const after = Date.now();
+				retStr = "```javascript\n" +
+					`Input: ${args.join(" ")}\n` +
+					`Output: ${evald}\n` +
+					`Time: ${(after - before)} ms\`\`\``;
 			}
-			const after = Date.now();
-			retStr = "```javascript\n" +
-				`Input: ${args.join(" ")}\n` +
-				`Output: ${evald}\n` +
-				`Time: ${(after - before)} ms\`\`\``;
-		}
-		catch (err) {
-			const after = Date.now();
+			catch (err) {
+				const after = Date.now();
 
-			retStr = "```javascript\n" +
-				`Input: ${args.join(" ")}\n` +
-				`Error: ${err}\n` +
-				`Time: ${(after - before)} ms\`\`\``;
-		}
-		await message.channel.createMessage(retStr);
-		return resolve();
-	});
+				retStr = "```javascript\n" +
+					`Input: ${args.join(" ")}\n` +
+					`Error: ${err}\n` +
+					`Time: ${(after - before)} ms\`\`\``;
+			}
+			await message.channel.createMessage(retStr);
+			return resolve();
+		});
+	}
 }
-
-const command = new Command(
-	commandName,
-	description,
-	fullDescription,
-	usage,
-	aliases,
-	requirements,
-	deleteCommand,
-	commandFunc,
-);
-
-export default command;

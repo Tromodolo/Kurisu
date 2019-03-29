@@ -7,41 +7,35 @@
  */
 
 import { Message } from "eris";
-import { Command } from "../../types";
-import { getUserByMessage } from "../../util/Util";
+import Command from "../../models/Command";
+import { getUserByMessage } from "../../utility/Util";
 
-const commandName: string = "highfive";
-const aliases: string[] = [];
-const description: string = "High fives another user";
-const fullDescription: string = "High fives another user";
-const usage: string = "highfive [user]";
-const requirements: string[] = [];
-const deleteCommand: boolean = false;
+export default class HighFive extends Command {
+	constructor(){
+		super();
+		this.commandName = "highfive";
+		this.aliases = [];
+		this.description = "High fives another user";
+		this.fullDescription = "High fives another user";
+		this.usage = "highfive [user]";
 
-async function commandFunc(message: Message, args: string[]) {
-	return new Promise(async (resolve) => {
-		const user = getUserByMessage(message, args);
+		// const requirements: new Object();
+		this.requirements = [];
+		this.deleteCommand = false;
+	}
 
-		if (user && message.member){
-			message.channel.createMessage(`${message.member.mention}(✿･∀･)／＼(･∀･✿)${user.mention}`);
-		}
-		else{
-			message.channel.createMessage("(✿･∀･)／＼(･∀･✿)");
-		}
+	public commandFunc(message: Message, args: string[]) {
+		return new Promise(async (resolve) => {
+			const user = getUserByMessage(message, args);
 
-		return resolve();
-	});
+			if (user && message.member){
+				message.channel.createMessage(`${message.member.mention}(✿･∀･)／＼(･∀･✿)${user.mention}`);
+			}
+			else{
+				message.channel.createMessage("(✿･∀･)／＼(･∀･✿)");
+			}
+
+			return resolve();
+		});
+	}
 }
-
-const command = new Command(
-	commandName,
-	description,
-	fullDescription,
-	usage,
-	aliases,
-	requirements,
-	deleteCommand,
-	commandFunc,
-);
-
-export default command;

@@ -5,15 +5,13 @@ import CommandModule from "../models/CommandModule";
 
 const moduleList: CommandModule[] = [];
 
-export function registerCommands(client: eris.Client){
-	let amountOfCommands = 0;
+function registerCommands(client: eris.Client){
 	fs.readdir("./commands/", (folderErr, folders) => {
-		folders.forEach((folderName) => {
+		folders.forEach((folder) => {
 			try{
-				const props = require(`../commands/${folderName}`);
+				const props = require(`../commands/${folder}`);
 				if (props){
 					moduleList.push(props.default);
-					amountOfCommands++;
 				}
 				return;
 			}
@@ -33,13 +31,11 @@ export function registerCommands(client: eris.Client){
 		}
 		const messageArgs = message.content.split(" ");
 		// Check if there are any commands that match this message
-		if (await checkCommand(message, messageArgs, moduleList)){
+		if (await checkCommand(message, messageArgs)){
 			// This means a command was ran, so update database accordingly
 			// There is no custom command system in place, but eventually adding that somehow is good
 		}
 	});
-
-	return amountOfCommands;
 }
 
 /**
@@ -48,12 +44,12 @@ export function registerCommands(client: eris.Client){
  * @param {Array} args The message as an array of strings
  * @param {Array} modules An array of all the loaded commmand modules
  */
-async function checkCommand(message: eris.Message, args: string[], modules: CommandModule[]){
+async function checkCommand(message: eris.Message, args: string[]){
 	if (message.content.startsWith(config.bot.defaultPrefix)){
 		// Starting at 1 index so that it takes away the prefix
 		// This makes it easier to later allow custom prefixes for servers, and just check for those too in the if case above
-		args[0] = args[0].substring(1);
-		modules.forEach(async (module) => {
+		args[0] = args[0].substring(config.bot.defaultPrefix.length);
+		moduleList.forEach(async (module) => {
 			if (!message.member){
 				return;
 			}
@@ -92,3 +88,8 @@ async function checkCommand(message: eris.Message, args: string[], modules: Comm
 		return false;
 	}
 }
+
+export {
+	moduleList,
+	registerCommands,
+};

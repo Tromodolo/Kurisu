@@ -3,68 +3,61 @@
  *
  * Gets information about the bot
  *
- * Last Edit - Oct 19, 2018 by Tromo
+ * Last Edit - March 29 2019 by Tromo
  */
 
 import { Message } from "eris";
 import moment from "moment";
 import { bot } from "../../bot";
-import { generalConfig } from "../../config/";
-import { Command } from "../../types";
-import { DiscordEmbed } from "../../util/DiscordEmbed";
+import config from "../../config";
+import Command from "../../models/Command";
+import { DiscordEmbed } from "../../utility/DiscordEmbed";
 
-const commandName: string = "info";
-const aliases: string[] = [];
-const description: string = "Show information about the bot";
-const fullDescription: string = "Show information about the bot";
-const usage: string = "info";
-const requirements: string[] = [
-];
-const deleteCommand: boolean = false;
+export default class Info extends Command {
+	constructor(){
+		super();
+		this.commandName = "info";
+		this.aliases = [];
+		this.description = "Show information about the bot";
+		this.fullDescription = "Show information about the bot";
+		this.usage = "info]";
 
-async function commandFunc(message: Message, args: string[]) {
-	return new Promise(async (resolve) => {
-		const embed = new DiscordEmbed();
+		// const requirements: new Object();
+		this.requirements = [];
+		this.deleteCommand = false;
+	}
 
-		embed.setColor(parseInt(generalConfig.color));
-		embed.setAuthor("Bot information:", bot.user.avatarURL, bot.user.avatarURL);
+	public commandFunc(message: Message, args: string[]) {
+		return new Promise(async (resolve) => {
+			const embed = new DiscordEmbed();
 
-		embed.addField("Devs", generalConfig.developers.length > 0 ? generalConfig.developers.join(",\n") : "Uh Oh I don't know how this happened", true);
-		embed.addField("Node.js Version", process.version, true);
-		embed.addField("Discord Library", generalConfig.libraryVersion, true);
+			embed.setColor(parseInt(config.bot.color));
+			embed.setAuthor("Bot information:", bot.user.avatarURL, bot.user.avatarURL);
 
-		// Process.uptime returns in seconds, so here i multiply by 1000 to get miliseconds
-		const timeNow = Date.now();
-		const timeAgo = timeNow - (process.uptime() * 1000);
-		const ms = moment(timeNow).diff(moment(timeAgo));
-		const duration = moment.duration(ms);
-		const formattedTime = Math.floor(duration.asHours()) + moment.utc(ms).format(":mm:ss");
-		embed.addField("Uptime", `${formattedTime}`, true);
+			embed.addField("Devs", config.bot.developers.length > 0 ? config.bot.developers.join(",\n") : "Uh Oh I don't know how this happened", true);
+			embed.addField("Node.js Version", process.version, true);
+			embed.addField("Discord Library", config.bot.libraryVersion, true);
 
-		// Gets heap of memory used in bytes, so divide by 1024 two times to get MB
-		const memHeap = process.memoryUsage().heapUsed;
-		const megabytes = Math.round(memHeap / 1024 / 1024);
+			// Process.uptime returns in seconds, so here i multiply by 1000 to get miliseconds
+			const timeNow = Date.now();
+			const timeAgo = timeNow - (process.uptime() * 1000);
+			const ms = moment(timeNow).diff(moment(timeAgo));
+			const duration = moment.duration(ms);
+			const formattedTime = Math.floor(duration.asHours()) + moment.utc(ms).format(":mm:ss");
+			embed.addField("Uptime", `${formattedTime}`, true);
 
-		embed.addField("Memory usage", `${megabytes}MB`, true);
-		embed.addField("Shards", `${bot.shards.size}`, true);
-		embed.addField("Server Count", `${bot.guilds.size}`, true);
-		embed.addField("User Count", `${bot.users.size}`, true);
-		embed.addField("Invite Link", `[Link](${generalConfig.inviteLink})`, true);
+			// Gets heap of memory used in bytes, so divide by 1024 two times to get MB
+			const memHeap = process.memoryUsage().heapUsed;
+			const megabytes = Math.round(memHeap / 1024 / 1024);
 
-		await message.channel.createMessage(embed.getEmbed());
-		return resolve();
-	});
+			embed.addField("Memory usage", `${megabytes}MB`, true);
+			embed.addField("Shards", `${bot.shards.size}`, true);
+			embed.addField("Server Count", `${bot.guilds.size}`, true);
+			embed.addField("User Count", `${bot.users.size}`, true);
+			/* embed.addField("Invite Link", `[Link](${config.bot.inviteLink})`, true); */
+
+			await message.channel.createMessage(embed.getEmbed());
+			return resolve();
+		});
+	}
 }
-
-const command = new Command(
-	commandName,
-	description,
-	fullDescription,
-	usage,
-	aliases,
-	requirements,
-	deleteCommand,
-	commandFunc,
-);
-
-export default command;

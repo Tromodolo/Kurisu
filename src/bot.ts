@@ -12,7 +12,7 @@ const bot = new eris.Client(config.bot.botToken, {
 const loadedFiles = registerCommands(bot);
 
 bot.on("ready", async () => {
-	console.log(`Loaded ${loadedFiles} commands`);
+	console.log(`Loaded commands`);
 	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
 	await bot.editStatus("online", {name: `${config.bot.defaultPrefix}help to get command list`});
 });

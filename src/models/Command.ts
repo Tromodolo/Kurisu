@@ -22,30 +22,7 @@ export default class Command {
 	public requirements: string[] = [];
 	public deleteCommand: boolean = false;
 
-	/**
-	 * @param name The name of the command
-	 * @param description A short description of the command
-	 * @param fullDesc A more in depth description of the command
-	 * @param usage Usage instructions for the command
-	 * @param aliases Other names for the command
-	 * @param requirements List of requirements needed for the command
-	 * @param deleteCommand Flag used to determine whether to delete the under message
-	 * @param func Command function that runs when the command gets triggered
-	 */
-	/* constructor(name: string, description: string, fullDesc: string, usage: string,
-				aliases: string[], requirements: string[], deleteCommand: boolean,
-				func: (message: eris.Message, args: string[]) => Promise<{}>){
-		this.commandName = name;
-		this.description = description;
-		this.fullDescription = fullDesc;
-		this.usage = usage;
-		this.aliases = aliases;
-		this.requirements = requirements;
-		this.deleteCommand = deleteCommand;
-		this.commandFunc = func;
-	} */
-
-	constructor() {
+	constructor(){
 		return;
 	}
 

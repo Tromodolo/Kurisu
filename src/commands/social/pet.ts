@@ -8,63 +8,57 @@
 
 import { Message } from "eris";
 import fs from "fs";
-import { generalConfig } from "../../config/";
-import { Command } from "../../types";
-import { DiscordEmbed } from "../../util/DiscordEmbed";
-import { getUserByMessage } from "../../util/Util";
+import config from "../../config";
+import Command from "../../models/Command";
+import { DiscordEmbed } from "../../utility/DiscordEmbed";
+import { getUserByMessage } from "../../utility/Util";
 
-const commandName: string = "pet";
-const aliases: string[] = [];
-const description: string = "Pets someone";
-const fullDescription: string = "Pets someone or gets petted if unspecified";
-const usage: string = "pet [user]";
-const requirements: string[] = [];
-const deleteCommand: boolean = false;
+export default class Pet extends Command {
+	constructor(){
+		super();
+		this.commandName = "pet";
+		this.aliases = [];
+		this.description = "Pets someone";
+		this.fullDescription = "Pets someone or gets petted if unspecified";
+		this.usage = "pet [user]";
 
-async function commandFunc(message: Message, args: string[]) {
-	return new Promise(async (resolve) => {
-		if (!message.member){
-			return resolve();
-		}
+		// const requirements: new Object();
+		this.requirements = [];
+		this.deleteCommand = false;
+	}
 
-		const embed = new DiscordEmbed();
-		const user = getUserByMessage(message, args);
-		let embedMessage = "";
+	public commandFunc(message: Message, args: string[]) {
+		return new Promise(async (resolve) => {
+			if (!message.member){
+				return resolve();
+			}
 
-		embed.setColor(parseInt(generalConfig.color));
+			const embed = new DiscordEmbed();
+			const user = getUserByMessage(message, args);
+			let embedMessage = "";
 
-		if (!user || user.id === message.member.id){
-			embedMessage = `*Pets* ${message.member.mention}`;
-		}
-		else{
-			embedMessage = `${message.member.mention} *pets* ${user.mention}`;
-		}
+			embed.setColor(parseInt(config.bot.color));
 
-		let fileNum = 1;
-		fs.readdir("./data/pet", (err: Error, files: any) => {
-			fileNum = files.length;
+			if (!user || user.id === message.member.id){
+				embedMessage = `*Pets* ${message.member.mention}`;
+			}
+			else{
+				embedMessage = `${message.member.mention} *pets* ${user.mention}`;
+			}
 
-			const randomFile = Math.floor(Math.random() * fileNum);
+			let fileNum = 1;
+			fs.readdir("./data/pet", (err: Error, files: any) => {
+				fileNum = files.length;
 
-			fs.readFile(`./data/pet/${randomFile}.gif`, (err2: Error, data: Buffer ) => {
-				embed.setDescription(embedMessage);
-				embed.setImage("attachment://pet.gif");
-				message.channel.createMessage(embed.getEmbed(), { file: data, name: "pet.gif" });
+				const randomFile = Math.floor(Math.random() * fileNum);
+
+				fs.readFile(`./data/pet/${randomFile}.gif`, (err2: Error, data: Buffer ) => {
+					embed.setDescription(embedMessage);
+					embed.setImage("attachment://pet.gif");
+					message.channel.createMessage(embed.getEmbed(), { file: data, name: "pet.gif" });
+				});
 			});
+			return resolve();
 		});
-		return resolve();
-	});
+	}
 }
-
-const command = new Command(
-	commandName,
-	description,
-	fullDescription,
-	usage,
-	aliases,
-	requirements,
-	deleteCommand,
-	commandFunc,
-);
-
-export default command;

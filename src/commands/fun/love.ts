@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { createCanvas, Image } from "canvas";
+import { createCanvas, Image, registerFont } from "canvas";
 import drawMultilineText from "canvas-multiline-text";
 import { Member, Message } from "eris";
 import fs from "fs";
@@ -8,6 +8,10 @@ import path from "path";
 import seedrandom from "seedrandom";
 import Command from "../../models/Command";
 import { getLoveUsers } from "../../utility/Util";
+
+registerFont(path.join(__dirname, "../../data/love/VCR_OSD_MONO_1.001.ttf"), { family: "VCR" });
+registerFont(path.join(__dirname, "../../data/deathnote/IndieFlower.ttf"), { family: "Indie Flower" });
+registerFont(path.join(__dirname, "../../data/deathnote/ShadowsIntoLight.ttf"), { family: "Shadows Into Light" });
 
 export default class Love extends Command {
 	constructor(){
@@ -97,7 +101,7 @@ export default class Love extends Command {
 				const secondAvatarFile = new Image();
 
 				// Loads both user avatars as buffers and sets them to the Image objects
-				const buffers: any = await sendAvatarRequests(users.first.username, users.second.username);
+				const buffers: any = await sendAvatarRequests(firstAvatar, secondAvatar);
 				firstAvatarFile.src = buffers.first;
 				secondAvatarFile.src = buffers.second;
 
@@ -121,8 +125,8 @@ export default class Love extends Command {
 				ctx.fillRect(43, 58, 89, 89);
 				ctx.fillRect(268, 58, 89, 89);
 
-				ctx.drawImage(firstAvatar, 45, 60, 85, 85);
-				ctx.drawImage(secondAvatar, 270, 60, 85, 85);
+				ctx.drawImage(firstAvatarFile, 45, 60, 85, 85);
+				ctx.drawImage(secondAvatarFile, 270, 60, 85, 85);
 
 				ctx.drawImage(heartBg, 170, 55, 60, 60);
 				ctx.drawImage(heartFilled, 200 - (loveSize / 2), 85 - (loveSize / 2), loveSize, loveSize);
@@ -176,10 +180,10 @@ function sendAvatarRequests(firstUrl: string, secondUrl: string) {
 		}).then((data) => {
 			if (firstFinished === false){
 				firstFinished = true;
-				buffers.first = new Buffer(data.data, "binary");
+				buffers.first = Buffer.from(data.data);
 			}
 			else{
-				buffers.first = new Buffer(data.data, "binary");
+				buffers.first = Buffer.from(data.data);
 				resolve(buffers);
 			}
 		});
@@ -189,10 +193,10 @@ function sendAvatarRequests(firstUrl: string, secondUrl: string) {
 		}).then((data) => {
 			if (firstFinished === false){
 				firstFinished = true;
-				buffers.second = new Buffer(data.data, "binary");
+				buffers.second = Buffer.from(data.data);
 			}
 			else{
-				buffers.second = new Buffer(data.data, "binary");
+				buffers.second = Buffer.from(data.data);
 				resolve(buffers);
 			}
 		});

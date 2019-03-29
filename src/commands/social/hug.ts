@@ -3,68 +3,62 @@
  *
  * Hugs another user
  *
- * Last Edit - Oct 18, 2018 by Tromo
+ * Last Edit - March 29 2019 by Tromo
  */
 
 import { Message } from "eris";
 import fs from "fs";
-import { generalConfig } from "../../config/";
-import { Command } from "../../types";
-import { DiscordEmbed } from "../../util/DiscordEmbed";
-import { getUserByMessage } from "../../util/Util";
+import config from "../../config";
+import Command from "../../models/Command";
+import { DiscordEmbed } from "../../utility/DiscordEmbed";
+import { getUserByMessage } from "../../utility/Util";
 
-const commandName: string = "hug";
-const aliases: string[] = [];
-const description: string = "Hugs someone";
-const fullDescription: string = "Hugs someone or gets hugged if unspecified";
-const usage: string = "hug [user]";
-const requirements: string[] = [];
-const deleteCommand: boolean = false;
+export default class Hug extends Command {
+	constructor(){
+		super();
+		this.commandName = "hug";
+		this.aliases = [];
+		this.description = "Hugs someone";
+		this.fullDescription = "Hugs someone or gets hugged if unspecified";
+		this.usage = "hug [user]";
 
-async function commandFunc(message: Message, args: string[]) {
-	return new Promise(async (resolve) => {
-		if (!message.member){
-			return resolve();
-		}
+		// const requirements: new Object();
+		this.requirements = [];
+		this.deleteCommand = false;
+	}
 
-		const embed = new DiscordEmbed();
-		const user = getUserByMessage(message, args);
-		let embedMessage = "";
+	public commandFunc(message: Message, args: string[]) {
+		return new Promise(async (resolve) => {
+			if (!message.member){
+				return resolve();
+			}
 
-		embed.setColor(parseInt(generalConfig.color));
+			const embed = new DiscordEmbed();
+			const user = getUserByMessage(message, args);
+			let embedMessage = "";
 
-		if (!user || user.id === message.member.id){
-			embedMessage = `*Hugs* ${message.member.mention}`;
-		}
-		else{
-			embedMessage = `${message.member.mention} *hugs* ${user.mention}`;
-		}
+			embed.setColor(parseInt(config.bot.color));
 
-		let fileNum = 1;
-		fs.readdir("./data/hug", (err: Error, files: any) => {
-			fileNum = files.length;
+			if (!user || user.id === message.member.id){
+				embedMessage = `*Hugs* ${message.member.mention}`;
+			}
+			else{
+				embedMessage = `${message.member.mention} *hugs* ${user.mention}`;
+			}
 
-			const randomFile = Math.floor(Math.random() * fileNum);
+			let fileNum = 1;
+			fs.readdir("./data/hug", (err: Error, files: any) => {
+				fileNum = files.length;
 
-			fs.readFile(`./data/hug/${randomFile}.gif`, (err2: Error, data: Buffer ) => {
-				embed.setDescription(embedMessage);
-				embed.setImage("attachment://hug.gif");
-				message.channel.createMessage(embed.getEmbed(), { file: data, name: "hug.gif" });
+				const randomFile = Math.floor(Math.random() * fileNum);
+
+				fs.readFile(`./data/hug/${randomFile}.gif`, (err2: Error, data: Buffer ) => {
+					embed.setDescription(embedMessage);
+					embed.setImage("attachment://hug.gif");
+					message.channel.createMessage(embed.getEmbed(), { file: data, name: "hug.gif" });
+				});
 			});
+			return resolve();
 		});
-		return resolve();
-	});
+	}
 }
-
-const command = new Command(
-	commandName,
-	description,
-	fullDescription,
-	usage,
-	aliases,
-	requirements,
-	deleteCommand,
-	commandFunc,
-);
-
-export default command;

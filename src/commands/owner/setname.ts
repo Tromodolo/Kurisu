@@ -1,40 +1,31 @@
 import { Message } from "eris";
 import { bot } from "../../bot";
-import { Command } from "../../types";
+import Command from "../../models/Command";
 
-const commandName: string = "setname";
-const aliases: string[] = [
-];
-const description: string = "Sets the name of the bot";
-const fullDescription: string = "Sets the name of the bot";
-const usage: string = "setname Kurisu";
+export default class SetName extends Command {
+	constructor(){
+		super();
+		this.commandName = "setname";
+		this.aliases = [];
+		this.description = "Sets the name of the bot";
+		this.fullDescription = "Sets the name of the bot";
+		this.usage = "setname Kurisu";
 
-// const requirements: new Object();
-const requirements: string[] = [];
-const deleteCommand: boolean = false;
+		// const requirements: new Object();
+		this.requirements = [];
+		this.deleteCommand = false;
+	}
 
-function commandFunc(message: Message, args: string[]) {
-	return new Promise(async (resolve) => {
-		if (args.length < 1){
-			message.channel.createMessage("You need to specify a name");
-		}
-		else{
-			bot.editSelf({username: args.join(" ")});
-			message.channel.createMessage("Name changed! :ok_hand:");
-		}
-		return resolve();
-	});
+	public commandFunc(message: Message, args: string[]) {
+		return new Promise(async (resolve) => {
+			if (args.length < 1){
+				message.channel.createMessage("You need to specify a name");
+			}
+			else{
+				bot.editSelf({username: args.join(" ")});
+				message.channel.createMessage("Name changed! :ok_hand:");
+			}
+			return resolve();
+		});
+	}
 }
-
-const command = new Command(
-	commandName,
-	description,
-	fullDescription,
-	usage,
-	aliases,
-	requirements,
-	deleteCommand,
-	commandFunc,
-);
-
-export default command;
