@@ -1,0 +1,19 @@
+{
+	"developers": [
+		{
+			"name": "CeruleanSong#1367"
+		},
+		{
+			"name": "Tromo#7430"
+		}
+	],
+	"developerIds": [],
+	"libraryVersion": "0.9.0",
+	"color": "0xd83e3e",
+	"xpMoneyEnabled": true,
+	"botToken": "MzM4MDk5NDk1MjQ4MDY4NjE4.D3_juA.sNNwaThW5F121-ZPZEV527ect9c",
+	"devToken": "MzgyMjQ0NjIzMTUxNjYxMDY2.D3_jyQ.-9MR2nkfBw-bmWn5Ly0XmkjNP0A",
+	"defaultPrefix": "k:",
+	"googleApiKey": "AIzaSyCzRakkf_fd9mYtYJrF2jjw-59gb_gkULE",
+	"googleCustomSearchId": "000495943812474214127:uwgvp2yysyc"
+}

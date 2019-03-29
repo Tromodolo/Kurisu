@@ -1,0 +1,7 @@
+{
+	"databaseHost": "server.tro.moe",
+	"databaseName": "kurisu",
+	"databaseUsername": "tromo",
+	"databasePassword": "Mitsukan123",
+	"databaseType": "mysql"
+}
