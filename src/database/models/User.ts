@@ -8,6 +8,6 @@ export class User {
 	id!: number;
 
 	@Index()
-	@Column({ type: "string" })
+	@Column({ type: "varchar" })
 	userid!: string;
 }

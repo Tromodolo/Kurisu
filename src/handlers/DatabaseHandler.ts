@@ -15,6 +15,7 @@ export default class DatabaseHandler{
 		this.connectionManager.create({
 			host: config.db.databaseHost,
 			name: config.db.databaseName,
+			database: config.db.databaseName,
 			type: "mysql",
 			username: config.db.databaseUsername,
 			password: config.db.databasePassword,
@@ -23,7 +24,8 @@ export default class DatabaseHandler{
 		this.connection = this.connectionManager.get(config.db.databaseName);
 	}
 
-	private async init(){
+	public async init(){
 		await this.connection.connect();
+		await this.connection.synchronize();
 	}
 }
