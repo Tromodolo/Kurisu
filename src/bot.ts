@@ -1,6 +1,6 @@
 import eris from "eris";
 import config from "./config";
-import { registerCommands } from "./handlers/CommandHandler";
+import CommandHandler from "./handlers/CommandHandler";
 
 const bot = new eris.Client(config.bot.botToken, {
 	getAllUsers: true,
@@ -9,7 +9,10 @@ const bot = new eris.Client(config.bot.botToken, {
 	disableEveryone: true,
 	autoreconnect: true,
 });
-const loadedFiles = registerCommands(bot);
+
+const commands = new CommandHandler(bot);
+commands.loadCommands();
+commands.hookEvent();
 
 bot.on("ready", async () => {
 	console.log(`Loaded commands`);
@@ -21,4 +24,5 @@ bot.connect();
 
 export {
 	bot,
+	commands,
 };

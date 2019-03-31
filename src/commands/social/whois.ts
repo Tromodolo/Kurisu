@@ -12,7 +12,7 @@ import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getUserByMessage } from "../../utility/Util";
 
-export default class User extends Command {
+export default class WhoIs extends Command {
 	constructor(){
 		super();
 		this.commandName = "user";

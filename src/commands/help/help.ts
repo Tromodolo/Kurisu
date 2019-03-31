@@ -1,7 +1,6 @@
 import { Message } from "eris";
-import { bot } from "../../bot";
+import { bot, commands } from "../../bot";
 import config from "../../config";
-import { moduleList } from "../../handlers/CommandHandler";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 /**
@@ -36,18 +35,18 @@ export default class Help extends Command {
 				embed.setAuthor("List of commands", bot.user.avatarURL, bot.user.avatarURL);
 				embed.setDescription("If you want information about a specific command, type 'help command-name'");
 
-				moduleList.forEach((module) => {
+				commands.modules.forEach((module) => {
 					if (module.name.toLowerCase() === "owner"){
 						return;
 					}
-					const commands = module.commands.map((x) => x.commandName).join(", ");
-					embed.addField(module.name, commands, false);
+					const moduleCommands = module.commands.map((x) => x.commandName).join(", ");
+					embed.addField(module.name, moduleCommands, false);
 				});
 			}
 			else{
 				let helpCommand: Command | undefined;
 
-				moduleList.forEach((commandModule) => {
+				commands.modules.forEach((commandModule) => {
 					const com = commandModule.findCommand(args[0]);
 					if (com){
 						helpCommand = com;
