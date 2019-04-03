@@ -4,13 +4,21 @@
 # ./build.sh run - run kurisubot
 #
 
-if [ "$1" = "build" ] # transpile the typescript
-then
-	tsc
-	# create dir if not exists then copy transpiled files
-	mkdir -p build/data && cp -R src/data build/
-elif [ "$1" = "run" ] # run program
+#if [ "$1" = "build"] # transpile the typescript
+#	tsc
+#	# create dir if not exists then copy transpiled files
+#	mkdir -p build/data && cp -R src/data build/
+#then
+
+if [ "$1" = "run" ] # run program
 then
 	# move to bot dir and run bot
 	cd build && node bot.js
+else
+	echo "compiling"
+	tsc
+
+	echo "moving to files to build/ directory"
+	# create dir if not exists then copy transpiled files
+	mkdir -p build/data && cp -R src/data build/
 fi
