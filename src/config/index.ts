@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 
+// empty bot.json
 let bot = {
 	developers: [],
 	developerIds: [],
@@ -13,6 +14,8 @@ let bot = {
 	googleApiKey: "",
 	googleCustomSearchId: "",
 };
+
+// empty db.json
 let db = {
 	databaseHost: "",
 	databaseName: "",
@@ -30,7 +33,7 @@ try{
 }
 catch (err){
 	console.error("bot.json file has been generated. Please edit the file for the bot to work properly.");
-	fs.writeFileSync(path.join(__dirname, "./bot.json"), bot);
+	fs.writeFileSync(path.join(__dirname, "./bot.json"), JSON.stringify(bot, null, 2));
 }
 
 try{
@@ -42,7 +45,7 @@ try{
 }
 catch (err){
 	console.error("db.json file has been generated. Please edit the file for the bot to work properly.");
-	fs.writeFileSync(path.join(__dirname, "./db.json"), db);
+	fs.writeFileSync(path.join(__dirname, "./db.json"), JSON.stringify(db, null, 2));
 }
 
 const config = {
