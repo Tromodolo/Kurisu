@@ -2,7 +2,19 @@ import config from "../config";
 import { User } from "../database/models/User";
 import { ConnectionManager, Connection } from "typeorm";
 
-export default class DatabaseHandler{
+/**
+ * Creates a new DatabaseHandler based off of config file
+ *
+ * @class DatabaseHandler
+ * @classdesc Handles database connections
+ * @constructor Creates a connecton with connectionManager and saves it to connection.
+ *
+ * @function
+ *
+ * @prop {ConnectionManager} connectionManager Manages a connection to a database
+ * @prop {Connection} connection Connection to a specific connection
+ */
+class DatabaseHandler{
 	private connectionManager: ConnectionManager;
 	private connection: Connection;
 
@@ -27,5 +39,10 @@ export default class DatabaseHandler{
 	public async init(){
 		await this.connection.connect();
 		await this.connection.synchronize();
+
 	}
+}
+
+export {
+	DatabaseHandler
 }

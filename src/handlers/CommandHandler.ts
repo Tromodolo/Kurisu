@@ -3,7 +3,7 @@ import fs from "fs";
 import config from "../config";
 import CommandModule from "../models/CommandModule";
 
-export default class CommandHandler{
+class CommandHandler{
 	private moduleList: CommandModule[] = [];
 	private bot: eris.Client;
 
@@ -105,4 +105,8 @@ export default class CommandHandler{
 			return false;
 		}
 	}
+}
+
+export {
+	CommandHandler
 }
