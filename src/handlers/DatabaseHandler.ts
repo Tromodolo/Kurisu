@@ -1,6 +1,9 @@
 import config from "../config";
 import { User } from "../database/models/User";
 import { ConnectionManager, Connection } from "typeorm";
+import { UserLevel } from "../database/models/UserLevel";
+import { Guild } from "../database/models/Guild";
+import { GuildConfig } from "../database/models/GuildConfig";
 
 /**
  * Creates a new DatabaseHandler based off of config file
@@ -31,7 +34,12 @@ class DatabaseHandler{
 			type: "mysql",
 			username: config.db.databaseUsername,
 			password: config.db.databasePassword,
-			entities: [User],
+			entities: [
+				User,
+				UserLevel,
+				Guild,
+				GuildConfig,
+			],
 		});
 		this.connection = this.connectionManager.get(config.db.databaseName);
 	}
@@ -39,10 +47,9 @@ class DatabaseHandler{
 	public async init(){
 		await this.connection.connect();
 		await this.connection.synchronize();
-
 	}
 }
 
 export {
-	DatabaseHandler
-}
+	DatabaseHandler,
+};
