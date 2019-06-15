@@ -9,9 +9,9 @@ import seedrandom from "seedrandom";
 import Command from "../../models/Command";
 import { getLoveUsers } from "../../utility/Util";
 
-registerFont(path.join(__dirname, "../../data/love/VCR_OSD_MONO_1.001.ttf"), { family: "VCR" });
-registerFont(path.join(__dirname, "../../data/deathnote/IndieFlower.ttf"), { family: "Indie Flower" });
-registerFont(path.join(__dirname, "../../data/deathnote/ShadowsIntoLight.ttf"), { family: "Shadows Into Light" });
+registerFont(path.join(__dirname, "../../../data/love/VCR_OSD_MONO_1.001.ttf"), { family: "VCR" });
+registerFont(path.join(__dirname, "../../../data/deathnote/IndieFlower.ttf"), { family: "Indie Flower" });
+registerFont(path.join(__dirname, "../../../data/deathnote/ShadowsIntoLight.ttf"), { family: "Shadows Into Light" });
 
 export default class Love extends Command {
 	constructor(){
@@ -94,7 +94,7 @@ export default class Love extends Command {
 
 				// Draws background to image
 				const bg = new Image();
-				bg.src = fs.readFileSync(path.join(__dirname, "../../data/love/LoveBg.jpg"));
+				bg.src = fs.readFileSync(path.join(__dirname, "../../../data/love/LoveBg.jpg"));
 				ctx.drawImage(bg, 0, 0, 400, 300);
 
 				const firstAvatarFile = new Image();
@@ -108,10 +108,10 @@ export default class Love extends Command {
 				// Draws all images and text to the image
 				// https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API
 				const heartFilled = new Image();
-				heartFilled.src = fs.readFileSync(path.join(__dirname, `../../data/love/HeartFull.png`));
+				heartFilled.src = fs.readFileSync(path.join(__dirname, `../../../data/love/HeartFull.png`));
 
 				const heartBg = new Image();
-				heartBg.src = fs.readFileSync(path.join(__dirname, `../../data/love/HeartBg.png`));
+				heartBg.src = fs.readFileSync(path.join(__dirname, `../../../data/love/HeartBg.png`));
 
 				ctx.drawImage(bg, -100, -50, 500, 500);
 

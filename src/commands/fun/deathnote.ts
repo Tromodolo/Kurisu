@@ -41,7 +41,7 @@ export default class Deathnote extends Command {
 			const ctx = canvas.getContext("2d");
 
 			const kirby = new Image();
-			kirby.src = fs.readFileSync(path.join(__dirname, `../../data/deathnote/deathnote.png`));
+			kirby.src = fs.readFileSync(path.join(__dirname, `../../../data/deathnote/deathnote.png`));
 
 			ctx.drawImage(kirby, 0, 0, 1000, 562);
 

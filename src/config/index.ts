@@ -25,7 +25,7 @@ let db = {
 };
 
 try{
-	const botData = fs.readFileSync(path.join(__dirname, "./bot.json"));
+	const botData = fs.readFileSync(path.join(__dirname, "../../data/config/bot.json"));
 	if (!botData){
 		console.error("bot.json file needs to be edited. Please take a look at the example file in config for guidance");
 	}
@@ -33,11 +33,11 @@ try{
 }
 catch (err){
 	console.error("bot.json file has been generated. Please edit the file for the bot to work properly.");
-	fs.writeFileSync(path.join(__dirname, "./bot.json"), JSON.stringify(bot, null, 2));
+	fs.writeFileSync(path.join(__dirname, "../../data/config/bot.json"), JSON.stringify(bot, null, 2));
 }
 
 try{
-	const dbData = fs.readFileSync(path.join(__dirname, "./db.json"));
+	const dbData = fs.readFileSync(path.join(__dirname, "../../data/config/db.json"));
 	if (!dbData){
 		console.error("db.json file needs to be edited. Please take a look at the example file in config for guidance");
 	}
@@ -45,7 +45,7 @@ try{
 }
 catch (err){
 	console.error("db.json file has been generated. Please edit the file for the bot to work properly.");
-	fs.writeFileSync(path.join(__dirname, "./db.json"), JSON.stringify(db, null, 2));
+	fs.writeFileSync(path.join(__dirname, "../../data/config/db.json"), JSON.stringify(db, null, 2));
 }
 
 const config = {

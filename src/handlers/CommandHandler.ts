@@ -1,5 +1,8 @@
-import eris, { Message } from "eris";
 import fs from "fs";
+import path from "path";
+
+import eris, { Message } from "eris";
+
 import config from "../config";
 import CommandModule from "../models/CommandModule";
 
@@ -18,10 +21,10 @@ class CommandHandler{
 	}
 
 	public loadCommands(){
-		fs.readdir("./commands/", (folderErr, folders) => {
+		fs.readdir(path.join(__dirname, "../commands/"), (folderErr, folders) => {
 			folders.forEach((folder) => {
 				try{
-					const props = require(`../commands/${folder}`);
+					const props = require(path.join(__dirname, `../commands/${folder}`));
 					if (props){
 						this.moduleList.push(props.default);
 					}
