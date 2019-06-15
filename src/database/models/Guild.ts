@@ -8,8 +8,7 @@ import { GuildConfig } from './GuildConfig';
 @Entity()
 export class Guild {
 	@Index()
-	@PrimaryColumn()
-	@Column("varchar", {unique: true, nullable: false})
+	@Column("varchar", {primary: true, unique: true, nullable: false})
 	id!: string;
 
 	@Column("varchar")
