@@ -8,6 +8,6 @@ export class UserLevel {
 	id!: number;
 
 	@Index()
-	@Column({ type: "integer", default: 0 })
+	@Column("int", { default: 0 })
 	total!: number;
 }

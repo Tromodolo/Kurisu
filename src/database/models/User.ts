@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, ManyToMany, JoinTable, PrimaryColumn } from 'typeorm';
 import { UserLevel } from './UserLevel';
 import { Guild } from './Guild';
 
@@ -6,12 +6,10 @@ import { Guild } from './Guild';
 
 @Entity()
 export class User {
-	@PrimaryGeneratedColumn()
-	id!: number;
-
 	@Index()
-	@Column({ type: "varchar" })
-	userId!: string;
+	@PrimaryColumn()
+	@Column("varchar")
+	id!: string;
 
 	@OneToOne((type) => UserLevel, {cascade: true})
 	@JoinColumn()

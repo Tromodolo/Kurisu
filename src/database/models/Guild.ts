@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, ManyToMany, JoinTable, OneToMany, PrimaryColumn, Unique } from 'typeorm';
 import { UserLevel } from './UserLevel';
 import { User } from './User';
 import { GuildConfig } from './GuildConfig';
@@ -7,17 +7,15 @@ import { GuildConfig } from './GuildConfig';
 
 @Entity()
 export class Guild {
-	@PrimaryGeneratedColumn()
-	id!: number;
-
 	@Index()
-	@Column({ type: "varchar" })
-	nativeId!: string;
+	@PrimaryColumn()
+	@Column("varchar", {unique: true, nullable: false})
+	id!: string;
 
-	@Column({ type: "varchar" })
+	@Column("varchar")
 	name!: string;
 
-	@Column({ type: "varchar" })
+	@Column("varchar")
 	avatarURL!: string;
 
 	@OneToMany((type) => GuildConfig, (config) => config.guild)

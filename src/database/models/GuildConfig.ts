@@ -13,13 +13,13 @@ export class GuildConfig {
 	@ManyToOne((type) => Guild, (guild) => guild.configs)
 	guild!: Guild;
 
-	@Column({ type: "int" })
+	@Column("int")
 	configType!: ConfigFeature;
 
-	@Column({ type: "boolean" })
+	@Column("boolean")
 	enabled!: boolean;
 
-	@Column({ type: "varchar" })
+	@Column("varchar")
 	value!: string;
 }
 

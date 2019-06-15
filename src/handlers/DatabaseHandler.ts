@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import config from "../config";
 import { User } from "../database/models/User";
 import { ConnectionManager, Connection } from "typeorm";
