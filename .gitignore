@@ -40,6 +40,6 @@ data/tmp/love/*.png
 data/tmp/*.png
 
 build
-src/config/bot\.json
+bot\.json
 
-src/config/db\.json
+db\.json
