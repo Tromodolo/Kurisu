@@ -21,6 +21,7 @@
     "canvas": "^2.4.1",
     "canvas-multiline-text": "^1.0.3",
     "eris": "^0.9.0",
+    "fuse.js": "^3.4.5",
     "googleapis": "^39.1.0",
     "html-to-text": "^5.0.0",
     "ip": "^1.1.5",

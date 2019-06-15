@@ -6,16 +6,33 @@
  * Last Edit - March 29, 2019 by Tromo
  */
 
-import { Client, Guild, Member, Message, Role } from "eris";
+import { Client, Guild, Member, Message, Role, TextChannel } from "eris";
 import { google, GoogleApis } from "googleapis";
 import config from "../config";
 import { DiscordEmbed } from "./DiscordEmbed";
+
+import Fuse from "fuse.js";
 
 const youtube = google.youtube({
 	version: "v3",
 	 auth: config.bot.googleApiKey,
   });
 const customSearch = google.customsearch("v1");
+
+const userSearchOpts = {
+	shouldSort: true,
+	  threshold: 0.6,
+	  location: 0,
+	  distance: 100,
+	  maxPatternLength: 32,
+	  minMatchCharLength: 1,
+	  keys: [
+		"username",
+		"nick",
+		"id",
+	],
+};
+
 
 /**
  * Grabs the user that sent a message if args == 1. Grabs first mentioned user if args > 1
@@ -25,35 +42,28 @@ const customSearch = google.customsearch("v1");
  * @returns returns the user that sent the message, or the first person mentioned in the message
  */
 function getUserByMessage(msg: Message, args: string[]): Member | undefined {
-	let user: Member | undefined;
+	const mentionRegex = /<@!?[0-9]*>/;
 
 	// if no args were passed with command
 	if (args.length === 0) {
-		user = msg.member;
-		return user;
+		return msg.member;
 	}
-	// if args are passed with command
-	if (msg.mentions.length > 0) {
-		const channel: any = msg.channel;
-		user = channel.guild.members.find((x: Member) => x.id === msg.mentions[0].id);
-		return user;
+
+	if (args[0].match(mentionRegex)){
+		const channel = msg.channel;
+		return (channel as TextChannel).guild.members.find((x: Member) => x.id === msg.mentions[0].id);
 	}
-	if (args.length === 1) {
+	else{
 		const guild: Guild | undefined = msg.member ? msg.member.guild : undefined;
-
 		if (!guild){
-			user = undefined;
-			return user;
+			return undefined;
 		}
-		else {
-			user = guild.members.find((x: Member) => x.id === args[0]) ||
-				   guild.members.find((x: Member) => x.username.toLowerCase().includes(args[0])) ||
-				   guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[0]) : false);
-			return user;
+		else{
+			const guildMembs = new Fuse(guild.members.map((x) => x), userSearchOpts);
+			const found = guildMembs.search(args.join(" "));
+			return found[0];
 		}
 	}
-
-	return undefined;
 }
 
 /**
@@ -65,7 +75,7 @@ function getUserByMessage(msg: Message, args: string[]): Member | undefined {
  */
 function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: Member }{
 	const users: { first?: Member, second?: Member } = {};
-	const guild: Guild | undefined = msg.member ? msg.member.guild : undefined;
+	const guild: Guild = msg.member!.guild;
 	const mentionCheck: RegExp = /<@!?[0-9]*>/g;
 
 	if (!guild){
@@ -77,20 +87,23 @@ function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: 
 			users.first = guild.members.find((x: Member) => x.id === msg.mentions[0].id);
 		}
 		else {
-			users.first = guild.members.find((x: Member) => x.id === args[0]) ||
-						  guild.members.find((x: Member) => x.username.toLowerCase().includes(args[0])) ||
-						  guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[0]) : false);
+			const guildMembs = new Fuse(guild.members.map((x) => x), userSearchOpts);
+			const found = guildMembs.search(args[0]);
+			users.first = found[0];
 		}
 	}
-
 	if (args[1]){
 		if (args[1].match(mentionCheck)){
-			users.second = guild.members.find((x: Member) => x.id === msg.mentions[1].id);
+			// A bit tricky here because the second user could be the first mention
+			users.second =
+				args[0].match(mentionCheck) ?
+					guild.members.find((x: Member) => x.id === msg.mentions[1].id)
+					: guild.members.find((x: Member) => x.id === msg.mentions[0].id);
 		}
 		else {
-			users.second = guild.members.find((x: Member) => x.id === args[1]) ||
-						   guild.members.find((x: Member) => x.username.toLowerCase().includes(args[1])) ||
-						   guild.members.find((x: Member) => x.nick ? x.nick.toLowerCase().includes(args[1]) : false);
+			const guildMembs = new Fuse(guild.members.map((x) => x), userSearchOpts);
+			const found = guildMembs.search(args[1]);
+			users.second = found[0];
 		}
 	}
 
