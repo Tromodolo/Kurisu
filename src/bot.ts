@@ -27,7 +27,7 @@ console.log("Commands loaded successfully");
 
 // Connect to database
 db.init().then(() => {
-	console.log("Database connection successfull");
+	console.log("Database connection successful");
 });
 
 /* Run the bot */
