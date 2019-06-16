@@ -10,7 +10,7 @@ export class GuildConfig {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
-	@ManyToOne((type) => Guild, (guild) => guild.configs, {cascade: true})
+	@ManyToOne((type) => Guild, (guild) => guild.configs)
 	guild!: Guild;
 
 	@Column("int")
