@@ -17,10 +17,10 @@ export class Guild {
 	@Column("varchar")
 	avatarURL!: string;
 
-	@OneToMany((type) => GuildConfig, (config) => config.guild)
+	@OneToMany((type) => GuildConfig, (config) => config.guild, {cascade: true})
 	configs!: GuildConfig[];
 
-	@ManyToMany((type) => User)
+	@ManyToMany((type) => User, {cascade: true})
 	@JoinTable()
 	userList!: User[];
 

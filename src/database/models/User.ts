@@ -14,7 +14,7 @@ export class User {
 	@JoinColumn()
 	experience!: UserLevel;
 
-	@ManyToMany((type) => Guild)
+	@ManyToMany((type) => Guild, {cascade: true})
 	@JoinTable()
 	guilds!: Guild[];
 }
