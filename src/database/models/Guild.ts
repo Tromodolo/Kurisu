@@ -8,13 +8,13 @@ import { GuildConfig } from './GuildConfig';
 @Entity()
 export class Guild {
 	@Index()
-	@Column("varchar", {primary: true, nullable: false})
+	@Column({primary: true, nullable: false})
 	id!: string;
 
-	@Column("varchar")
+	@Column()
 	name!: string;
 
-	@Column("varchar")
+	@Column()
 	avatarURL!: string;
 
 	@OneToMany((type) => GuildConfig, (config) => config.guild, {cascade: true})

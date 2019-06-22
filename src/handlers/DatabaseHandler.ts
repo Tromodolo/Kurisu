@@ -21,10 +21,10 @@ import { GuildConfig } from "../database/models/GuildConfig";
  */
 class DatabaseHandler{
 	private connectionManager: ConnectionManager;
-	private connection: Connection;
+	private _connection: Connection;
 
-	public get db(){
-		return this.connection;
+	public get connection(){
+		return this._connection;
 	}
 
 	constructor(){
@@ -43,12 +43,12 @@ class DatabaseHandler{
 				GuildConfig,
 			],
 		});
-		this.connection = this.connectionManager.get(config.db.databaseName);
+		this._connection = this.connectionManager.get(config.db.databaseName);
 	}
 
 	public async init(){
-		await this.connection.connect();
-		await this.connection.synchronize();
+		await this._connection.connect();
+		await this._connection.synchronize();
 	}
 }
 

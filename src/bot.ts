@@ -3,11 +3,11 @@
  */
 import eris from "eris";
 import config from "./config";
-import { CommandHandler, DatabaseHandler } from "./handlers";
+import { CommandHandler, DatabaseHandler, ExperienceHandler } from "./handlers";
 
 /* Initialize main modules */
 // Discord api connecton
-const bot = new eris.Client(config.bot.botToken, {
+const bot = new eris.Client(config.bot.devToken, {
 	getAllUsers: true,
 	defaultImageFormat: "png",
 	defaultImageSize: 1024,
@@ -16,8 +16,9 @@ const bot = new eris.Client(config.bot.botToken, {
 });
 
 // Handlers
-const commands = new CommandHandler(bot);
 const db = new DatabaseHandler();
+const commands = new CommandHandler(bot);
+let exp: ExperienceHandler;
 
 /* Initialize main modules */
 // Load commands
@@ -28,6 +29,11 @@ console.log("Commands loaded successfully");
 // Connect to database
 db.init().then(() => {
 	console.log("Database connection successful");
+
+	exp = new ExperienceHandler(bot, db);
+
+	console.log("Registering events");
+	exp.hookEvent();
 });
 
 /* Run the bot */

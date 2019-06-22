@@ -7,7 +7,7 @@ import { Guild } from './Guild';
 @Entity()
 export class User {
 	@Index()
-	@Column("varchar", {primary: true})
+	@Column({primary: true})
 	id!: string;
 
 	@OneToOne((type) => UserLevel, {cascade: true})

@@ -8,6 +8,10 @@ export class UserLevel {
 	id!: number;
 
 	@Index()
-	@Column("int", { default: 0 })
+	@Column({ default: 0 })
 	total!: number;
+
+	@Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
+	lastUpdated!: Date;
+
 }

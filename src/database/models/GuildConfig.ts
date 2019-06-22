@@ -13,17 +13,18 @@ export class GuildConfig {
 	@ManyToOne((type) => Guild, (guild) => guild.configs)
 	guild!: Guild;
 
-	@Column("int")
+	@Column()
 	configType!: ConfigFeature;
 
-	@Column("boolean")
+	@Column()
 	enabled!: boolean;
 
-	@Column("varchar")
+	@Column()
 	value!: string;
 }
 
-enum ConfigFeature{
+export enum ConfigFeature{
 	JoinLeaveNotification,
 	KickBanNotification,
+	LevelUpMessage,
 }
