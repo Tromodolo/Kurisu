@@ -786,10 +786,10 @@ entities@^1.1.1:
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.2.tgz#bdfa735299664dfafd34529ed4f8522a275fea56"
   integrity sha512-f2LZMYl1Fzu7YSBKg+RoROelpOaNrcGmE9AZubeDfrCEia483oW4MI4VyFd5VNHIgQ/7qm1I0wUHK1eJnn2y2w==
 
-eris@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/eris/-/eris-0.9.0.tgz#a2796839f7768cd40645c2c6b1bf0c86ba3147f3"
-  integrity sha512-U3/fv/wF2nA7Pc003v2cMXfTXvz8OySZYE21Zpx3ipm5sKbHWjcwDGdNXbp2Nb7fUip/IIjA/5540YDcqyQSvQ==
+eris@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/eris/-/eris-0.10.0.tgz#cfc3ba5721fe3c116e4f3dac5a2bb07b00ff7558"
+  integrity sha512-xAvmD4wsE5mwuiP+wy8RiarjiuwCylSsglKqru4J4sk0/WGOnSOfEZf43YLx/TcF4J1D4B2VMTq38446Bk1x1Q==
   dependencies:
     ws "^6.0.0"
   optionalDependencies:
@@ -1822,7 +1822,7 @@ moment-timezone@^0.5.x:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.21.0, moment@^2.22.2:
+"moment@>= 2.9.0", moment@^2.21.0, moment@^2.22.2, moment@^2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
