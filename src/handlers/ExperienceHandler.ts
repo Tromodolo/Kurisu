@@ -68,12 +68,12 @@ class ExperienceHandler{
 					const foundConfig = dbGuild.configs.find((x) => x.configType === ConfigFeature.LevelUpMessage);
 					if (foundConfig){
 						if (foundConfig.enabled){
-							message.channel.createMessage(`:star: ${message.author.username} has leveled up to level ${levelCheck.level} :tada:`);
+							message.channel.createMessage(`:star: **${message.author.username}** has leveled up to level **${levelCheck.level}** :tada:`);
 						}
 					}
 					else{
 						// If the config wasn't found, assume enabled
-						message.channel.createMessage(`:star: ${message.author.username} has leveled up to level ${levelCheck.level} :tada:`);
+						message.channel.createMessage(`:star: **${message.author.username}** has leveled up to level **${levelCheck.level}** :tada:`);
 					}
 				}
 			}
