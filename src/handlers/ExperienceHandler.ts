@@ -68,23 +68,36 @@ class ExperienceHandler{
 					const foundConfig = dbGuild.configs.find((x) => x.configType === ConfigFeature.LevelUpMessage);
 					if (foundConfig){
 						if (foundConfig.enabled){
-							message.channel.createMessage(`${message.author.username} has leveled up to level ${levelCheck.level}!`);
+							message.channel.createMessage(`:star: ${message.author.username} has leveled up to level ${levelCheck.level} :tada:`);
 						}
 					}
 					else{
 						// If the config wasn't found, assume enabled
-						message.channel.createMessage(`${message.author.username} has leveled up to level ${levelCheck.level}!`);
+						message.channel.createMessage(`:star: ${message.author.username} has leveled up to level ${levelCheck.level} :tada:`);
 					}
 				}
 			}
 		}
 	}
 
+	// EXP Formula 50 * x ^ 2
 	private checkIfLevelUp(oldExp: number, newExp: number): {leveledUp: boolean, level: number}{
+		const oldLevel = this.getLevelFromExp(oldExp);
+		const newLevel = this.getLevelFromExp(newExp);
+		let leveledUp = false;
+		if (newLevel > oldLevel){
+			leveledUp = true;
+		}
 		return {
-			leveledUp: false,
-			level: 0,
+			leveledUp,
+			level: newLevel,
 		};
+	}
+
+	// 50 * x ^ 2 = Y
+	// x ^ 2 = Y / 50
+	private getLevelFromExp(exp: number){
+		return Math.floor(Math.sqrt(exp / 50)) + 1;
 	}
 
 	/* private async getOrCreateGuildScore */
