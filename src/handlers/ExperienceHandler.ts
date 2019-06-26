@@ -35,7 +35,7 @@ class ExperienceHandler{
 
 	private async handleExperience(message: Message){
 		// Don't give EXP for dms
-		if (message.channel instanceof eris.PrivateChannel){
+		if (message.channel instanceof eris.PrivateChannel || message.author.bot){
 			return;
 		}
 		else{
