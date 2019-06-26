@@ -8,7 +8,7 @@ import Command from "../../models/Command";
 
 registerFont(path.join(__dirname, "../../../data/Comic Sans UT.ttf"), { family: "Sans" });
 
-export default class Love extends Command {
+export default class Sans extends Command {
 	constructor(){
 		super();
 		this.commandName = "sans";
