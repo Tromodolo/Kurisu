@@ -1,11 +1,13 @@
 import "reflect-metadata";
 
 import config from "../config";
+import eris from "eris";
 import { User } from "../database/models/User";
-import { ConnectionManager, Connection } from "typeorm";
+import { ConnectionManager, Connection, Repository } from "typeorm";
 import { UserLevel } from "../database/models/UserLevel";
 import { Guild } from "../database/models/Guild";
 import { GuildConfig } from "../database/models/GuildConfig";
+import { UserProfile } from "../database/models/UserProfile";
 
 /**
  * Creates a new DatabaseHandler based off of config file
@@ -20,6 +22,9 @@ import { GuildConfig } from "../database/models/GuildConfig";
  * @prop {Connection} connection Connection to a specific connection
  */
 class DatabaseHandler{
+	public guildRepo!: Repository<Guild>;
+	public userRepo!: Repository<User>;
+
 	private connectionManager: ConnectionManager;
 	private _connection: Connection;
 
@@ -39,9 +44,13 @@ class DatabaseHandler{
 			entities: [
 				User,
 				UserLevel,
+				UserProfile,
 				Guild,
 				GuildConfig,
 			],
+			cache: {
+				duration: 5000,
+			},
 		});
 		this._connection = this.connectionManager.get(config.db.databaseName);
 	}
@@ -49,9 +58,71 @@ class DatabaseHandler{
 	public async init(){
 		await this._connection.connect();
 		await this._connection.synchronize();
+
+		this.guildRepo = this._connection.getRepository(Guild);
+		this.userRepo = this._connection.getRepository(User);
 	}
+
+	public async getOrCreateGuild(guild: eris.Guild): Promise<Guild>{
+		let foundGuild = await this.guildRepo.findOne({
+			where: {
+				id: guild.id,
+			},
+			relations: [
+				"configs",
+				"userList",
+			],
+		});
+		if (!foundGuild){
+			foundGuild = new Guild();
+			foundGuild.id = guild.id;
+			foundGuild.name = guild.name;
+			foundGuild.avatarURL = guild.iconURL || "";
+			foundGuild.configs = [];
+			foundGuild.userList = [];
+			return foundGuild;
+		}
+		return foundGuild;
+	}
+
+	public async getOrCreateUser(member: eris.Member): Promise<User>{
+		let user = await this.userRepo.findOne({
+			where: {
+				id: member.id,
+			},
+			relations: [
+				"experience",
+				"profile",
+			],
+		});
+		if (!user){
+			user = new User();
+			user.id = member.id;
+			user.guilds = [];
+			user.experience.total = 0;
+		}
+		else{
+			user = user.checkForMissing();
+		}
+		await this.userRepo.save(user);
+		return user;
+	}
+
+	public async saveEntity(data: any, type: DatabaseEntities){
+		const repo = this._connection.getRepository(type);
+		await repo.save(data);
+	}
+}
+
+enum DatabaseEntities{
+	User = "User",
+	Guild = "Guild",
+	GuildConfig = "GuildConfig",
+	UserLevel = "UserLevel",
+	UserProfile = "UserProfile",
 }
 
 export {
 	DatabaseHandler,
+	DatabaseEntities,
 };

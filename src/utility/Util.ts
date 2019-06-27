@@ -33,7 +33,6 @@ const userSearchOpts = {
 	],
 };
 
-
 /**
  * Grabs the user that sent a message if args == 1. Grabs first mentioned user if args > 1
  *

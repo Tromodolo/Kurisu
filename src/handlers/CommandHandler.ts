@@ -5,13 +5,16 @@ import eris, { Message } from "eris";
 
 import config from "../config";
 import CommandModule from "../models/CommandModule";
+import { DatabaseHandler } from ".";
 
 class CommandHandler{
 	private moduleList: CommandModule[] = [];
 	private bot: eris.Client;
+	private db: DatabaseHandler;
 
-	constructor(bot: eris.Client){
+	constructor(bot: eris.Client, db: DatabaseHandler){
 		this.bot = bot;
+		this.db = db;
 
 		this.messageEvent = this.messageEvent.bind(this);
 	}
@@ -95,7 +98,7 @@ class CommandHandler{
 					}
 
 					args.shift();
-					await command.commandFunc(message, args);
+					await command.commandFunc(message, args, this.db);
 
 					return true;
 				}

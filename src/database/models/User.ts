@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, ManyToMany, JoinTable, PrimaryColumn } from 'typeorm';
 import { UserLevel } from './UserLevel';
 import { Guild } from './Guild';
+import { UserProfile } from './UserProfile';
 
 /* tslint:disable:member-access variable-name */
 
@@ -14,7 +15,26 @@ export class User {
 	@JoinColumn()
 	experience!: UserLevel;
 
+	@OneToOne((type) => UserProfile, {cascade: true})
+	@JoinColumn()
+	profile!: UserProfile;
+
 	@ManyToMany((type) => Guild, {cascade: true})
 	@JoinTable()
 	guilds!: Guild[];
+
+	constructor(){
+		this.experience = new UserLevel();
+		this.profile = new UserProfile();
+	}
+
+	checkForMissing(){
+		if (!this.experience){
+			this.experience = new UserLevel();
+		}
+		if (!this.profile){
+			this.profile = new UserProfile();
+		}
+		return this;
+	}
 }

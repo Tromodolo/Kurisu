@@ -17,20 +17,21 @@ const bot = new eris.Client(config.bot.devToken, {
 
 // Handlers
 const db = new DatabaseHandler();
-const commands = new CommandHandler(bot);
+let commands: CommandHandler;
 let exp: ExperienceHandler;
-
-/* Initialize main modules */
-// Load commands
-commands.loadCommands();
-commands.hookEvent();
-console.log("Commands loaded successfully");
 
 // Connect to database
 db.init().then(() => {
 	console.log("Database connection successful");
 
 	exp = new ExperienceHandler(bot, db);
+	commands = new CommandHandler(bot, db);
+
+	/* Initialize main modules */
+	// Load commands
+	commands.loadCommands();
+	commands.hookEvent();
+	console.log("Commands loaded successfully");
 
 	console.log("Registering events");
 	exp.hookEvent();
