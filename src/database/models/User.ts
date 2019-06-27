@@ -11,15 +11,15 @@ export class User {
 	@Column({primary: true})
 	id!: string;
 
-	@OneToOne((type) => UserLevel, {cascade: true})
+	@OneToOne((type) => UserLevel, {cascade: true, eager: true})
 	@JoinColumn()
 	experience!: UserLevel;
 
-	@OneToOne((type) => UserProfile, {cascade: true})
+	@OneToOne((type) => UserProfile, {cascade: true, eager: true})
 	@JoinColumn()
 	profile!: UserProfile;
 
-	@ManyToMany((type) => Guild, {cascade: true})
+	@ManyToMany((type) => Guild, {cascade: true, eager: true})
 	@JoinTable()
 	guilds!: Guild[];
 

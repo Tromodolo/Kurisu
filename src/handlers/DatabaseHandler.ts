@@ -90,10 +90,6 @@ class DatabaseHandler{
 			where: {
 				id: member.id,
 			},
-			relations: [
-				"experience",
-				"profile",
-			],
 		});
 		if (!user){
 			user = new User();
