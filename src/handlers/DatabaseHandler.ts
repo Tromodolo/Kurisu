@@ -8,6 +8,8 @@ import { UserLevel } from "../database/models/UserLevel";
 import { Guild } from "../database/models/Guild";
 import { GuildConfig } from "../database/models/GuildConfig";
 import { UserProfile } from "../database/models/UserProfile";
+import { UserAchievements } from "../database/models/UserAchievements";
+import { Achievement } from "../database/models/Achievement";
 
 /**
  * Creates a new DatabaseHandler based off of config file
@@ -47,6 +49,8 @@ class DatabaseHandler{
 				UserProfile,
 				Guild,
 				GuildConfig,
+				UserAchievements,
+				Achievement,
 			],
 			cache: {
 				duration: 5000,

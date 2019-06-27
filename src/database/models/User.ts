@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, ManyToMany, JoinTable, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, ManyToMany, JoinTable, PrimaryColumn, OneToMany } from 'typeorm';
 import { UserLevel } from './UserLevel';
 import { Guild } from './Guild';
 import { UserProfile } from './UserProfile';
+import { UserAchievements } from './UserAchievements';
 
 /* tslint:disable:member-access variable-name */
 
@@ -18,6 +19,9 @@ export class User {
 	@OneToOne((type) => UserProfile, {cascade: true, eager: true})
 	@JoinColumn()
 	profile!: UserProfile;
+
+	@OneToMany((type) => UserAchievements, (achivement) => achivement.id, {cascade: true, eager: true})
+	earnedAchivements!: UserAchievements[];
 
 	@ManyToMany((type) => Guild, {cascade: true, eager: true})
 	@JoinTable()
