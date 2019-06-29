@@ -37,11 +37,11 @@ export default class Profile extends Command {
 			embed.setTitle("Profile");
 			embed.setThumbnail(user.avatarURL);
 			embed.addField("Name", user.username, true);
-			/* embed.addField("Title", `**ADD TITLE HERE**`, true); */
+			embed.addField("Title", dbUser.profile.equippedAchievement ? `**${dbUser.profile.equippedAchievement.achievement.title}**` : "_No equipped title_", true);
 
 			embed.addField("Level", `:star: ${getLevelFromExp(dbUser.experience.total)}`, true);
 			embed.addField("Total Experience", `**${dbUser.experience.total}** XP`, true);
-			embed.addField("Description", `**${dbUser.profile.description}**`);
+			embed.addField("Description", `${dbUser.profile.description}`);
 
 			await message.channel.createMessage(embed.getEmbed());
 			return resolve();

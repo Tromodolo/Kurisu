@@ -7,9 +7,10 @@ import { UserProfile } from './UserProfile';
 
 @Entity()
 export class Achievement {
+	@PrimaryGeneratedColumn()
 	@Index()
 	@Column({primary: true})
-	id!: string;
+	id!: number;
 
 	@Column()
 	name!: string;

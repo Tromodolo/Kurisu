@@ -8,7 +8,7 @@ import { UserLevel } from "../database/models/UserLevel";
 import { Guild } from "../database/models/Guild";
 import { GuildConfig } from "../database/models/GuildConfig";
 import { UserProfile } from "../database/models/UserProfile";
-import { UserAchievements } from "../database/models/UserAchievements";
+import { UserAchievement } from "../database/models/UserAchievement";
 import { Achievement } from "../database/models/Achievement";
 
 /**
@@ -49,7 +49,7 @@ class DatabaseHandler{
 				UserProfile,
 				Guild,
 				GuildConfig,
-				UserAchievements,
+				UserAchievement,
 				Achievement,
 			],
 			cache: {

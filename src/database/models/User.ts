@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, Ma
 import { UserLevel } from './UserLevel';
 import { Guild } from './Guild';
 import { UserProfile } from './UserProfile';
-import { UserAchievements } from './UserAchievements';
+import { UserAchievement } from './UserAchievement';
 
 /* tslint:disable:member-access variable-name */
 
@@ -20,8 +20,8 @@ export class User {
 	@JoinColumn()
 	profile!: UserProfile;
 
-	@OneToMany((type) => UserAchievements, (achivement) => achivement.id, {cascade: true, eager: true})
-	earnedAchivements!: UserAchievements[];
+	@OneToMany((type) => UserAchievement, (achievement) => achievement.user, {cascade: true, eager: true})
+	earnedAchivements!: UserAchievement[];
 
 	@ManyToMany((type) => Guild, {cascade: true, eager: true})
 	@JoinTable()
