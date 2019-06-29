@@ -23,6 +23,10 @@ export default class SetDescription extends Command {
 				await message.channel.createMessage("You need to specify a description message.");
 				return resolve();
 			}
+			if (args.join(" ").length > 256){
+				await message.channel.createMessage("That message is too long. The maximum description length is 256 characters");
+				return resolve();
+			}
 			const dbUser = await db.getOrCreateUser(message.member!);
 			dbUser.profile.description = args.join(" ");
 			dbUser.profile.lastUpdated = new Date();
