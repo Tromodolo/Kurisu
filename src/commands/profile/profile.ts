@@ -39,13 +39,18 @@ export default class Profile extends Command {
 			embed.addField("Name", user.username, true);
 			embed.addField("Title", dbUser.profile.equippedAchievement ? `**${dbUser.profile.equippedAchievement.achievement.title}**` : "_No equipped title_", true);
 
-			embed.addField("Level", `:star: ${getLevelFromExp(dbUser.experience.total)}`, true);
+			/* Everything about this is a confusing mess, don't ask */
+			const level = getLevelFromExp(dbUser.experience.total);
+
+			const expForNextLevel = getExpForLevel(level) - getExpForLevel(level - 1);
+			const levelExp = expForNextLevel - (getExpForLevel(level) - dbUser.experience.total);
+
+			embed.addField("Level", `**Lvl. ${level}** :star:\n${levelExp}/${expForNextLevel} xp`, true);
 			embed.addField("Total Experience", `**${dbUser.experience.total}** XP`, true);
 			embed.addField("Description", `${dbUser.profile.description}`);
 
 			await message.channel.createMessage(embed.getEmbed());
 			return resolve();
-
 		});
 	}
 }
@@ -54,4 +59,8 @@ export default class Profile extends Command {
 // x ^ 2 = Y / 50
 function getLevelFromExp(exp: number){
 	return Math.floor(Math.sqrt(exp / 50)) + 1;
+}
+
+function getExpForLevel(level: number){
+	return Math.floor(50 * Math.pow(level, 2));
 }
