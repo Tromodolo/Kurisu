@@ -15,9 +15,7 @@ export default class Roll extends Command {
 		this.usage = "roll [maxnumber]";
 
 		// const requirements: new Object();
-		this.requirements = [
-			"manageMessages",
-		];
+		this.requirements = [];
 		this.deleteCommand = false;
 	}
 
