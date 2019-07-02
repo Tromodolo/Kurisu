@@ -102,7 +102,10 @@ class CommandHandler{
 						await message.delete();
 					}
 
-					await command.commandFunc(message, args, this.db);
+					const commandArgs = [...args];
+					commandArgs.shift();
+
+					await command.commandFunc(message, commandArgs, this.db);
 
 					return true;
 				}
