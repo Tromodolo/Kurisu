@@ -68,6 +68,10 @@ class CommandHandler{
 	 * @param {Array} modules An array of all the loaded commmand modules
 	 */
 	private async checkCommand(message: eris.Message, args: string[]){
+		if (message.author.bot){
+			return;
+		}
+
 		if (message.content.startsWith(config.bot.defaultPrefix)){
 			// Starting at 1 index so that it takes away the prefix
 			// This makes it easier to later allow custom prefixes for servers, and just check for those too in the if case above
@@ -114,5 +118,5 @@ class CommandHandler{
 }
 
 export {
-	CommandHandler
-}
+	CommandHandler,
+};
