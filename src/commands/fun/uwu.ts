@@ -26,7 +26,7 @@ export default class PleaseHelpMe extends Command {
 
 			content = content.replace(/l/gi, "w");
 			content = content.replace(/r/gi, "w");
-			content = content.replace(/\sis\s/gi, "ish");
+			content = content.replace(/\sis\s/gi, " ish ");
 			content = content.replace(/\?/gi, "? uwu");
 			content = content.replace(/\!/gi, "! owo");
 			content = content.replace(/\./gi, " :3");
