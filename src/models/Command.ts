@@ -32,7 +32,7 @@ export default class Command {
 	 * @arg {string[]} args Array of all the args sent with the command
 	 * @returns {Promise<{}>}
 	 */
-	public commandFunc(message: eris.Message, args: string[], db?: DatabaseHandler){
+	public commandFunc(message: eris.Message, args: string[], db?: DatabaseHandler, bot?: eris.Client){
 		return new Promise((resolve) => resolve());
 	}
 

@@ -16,8 +16,14 @@ export class Achievement {
 	name!: string;
 
 	@Column()
+	title!: string;
+
+	@Column()
 	description!: string;
 
 	@Column()
-	title!: string;
+	showDescription!: boolean;
+
+	@Column()
+	hidden!: boolean;
 }

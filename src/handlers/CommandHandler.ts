@@ -105,7 +105,7 @@ class CommandHandler{
 					const commandArgs = [...args];
 					commandArgs.shift();
 
-					await command.commandFunc(message, commandArgs, this.db);
+					await command.commandFunc(message, commandArgs, this.db, this.bot);
 
 					return true;
 				}

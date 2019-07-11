@@ -26,6 +26,7 @@ import { Achievement } from "../database/models/Achievement";
 class DatabaseHandler{
 	public guildRepo!: Repository<Guild>;
 	public userRepo!: Repository<User>;
+	public achievementRepo!: Repository<Achievement>;
 
 	private connectionManager: ConnectionManager;
 	private _connection: Connection;
@@ -65,6 +66,7 @@ class DatabaseHandler{
 
 		this.guildRepo = this._connection.getRepository(Guild);
 		this.userRepo = this._connection.getRepository(User);
+		this.achievementRepo = this._connection.getRepository(Achievement);
 	}
 
 	public async getOrCreateGuild(guild: eris.Guild): Promise<Guild>{
