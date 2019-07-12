@@ -76,7 +76,6 @@ class CommandHandler{
 			// Starting at 1 index so that it takes away the prefix
 			// This makes it easier to later allow custom prefixes for servers, and just check for those too in the if case above
 			args[0] = args[0].substring(config.bot.defaultPrefix.length);
-			console.log(args);
 			this.moduleList.forEach(async (module) => {
 				if (!message.member){
 					return;
