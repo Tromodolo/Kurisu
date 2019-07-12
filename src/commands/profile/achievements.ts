@@ -40,7 +40,7 @@ export default class Achievements extends Command {
 			});
 
 			achievements = achievements.filter((y) => !earned.map((x) => x.id).includes(y.id));
-			const achievementPages = getAchievementPages([...earned,...earned], achievements);
+			const achievementPages = getAchievementPages(earned, achievements);
 
 			const embed = new DiscordEmbed();
 			embed.setAuthor("List of Achievements:", "", bot.user.avatarURL);
