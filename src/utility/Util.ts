@@ -40,7 +40,7 @@ const userSearchOpts = {
  * @param args args in the message sent by the user
  * @returns returns the user that sent the message, or the first person mentioned in the message
  */
-function getUserByMessage(msg: Message, args: string[]): Member | undefined {
+export function getUserByMessage(msg: Message, args: string[]): Member | undefined {
 	const mentionRegex = /<@!?[0-9]*>/;
 
 	// if no args were passed with command
@@ -72,7 +72,7 @@ function getUserByMessage(msg: Message, args: string[]): Member | undefined {
  * @param args args in the message sent by the user
  * @returns returns two members that are mentioned or specified in args
  */
-function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: Member }{
+export function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: Member }{
 	const users: { first?: Member, second?: Member } = {};
 	const guild: Guild = msg.member!.guild;
 	const mentionCheck: RegExp = /<@!?[0-9]*>/g;
@@ -116,7 +116,7 @@ function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: 
  * @param member the user whos roles are going to be checked
  * @returns returns a the highest Role of the specified member
  */
-function getHighestRole(guild: Guild, member: Member) {
+export function getHighestRole(guild: Guild, member: Member) {
 	let highestRole: Role | undefined;
 
 	member.roles.forEach((roleId) => {
@@ -143,7 +143,7 @@ function getHighestRole(guild: Guild, member: Member) {
  * @param query Query string to pass to api
  * @param inMessage Whether or not the query was in-line of a message or through a command
  */
-function googleLookup(bot: Client, message: Message, query: string, inMessage: boolean): Promise<{}>{
+export function googleLookup(bot: Client, message: Message, query: string, inMessage: boolean): Promise<{}>{
 	return new Promise(async (resolve) => {
 		// Doing this to get an index between 0 and 5 for the reactions
 		const search = Math.floor(Math.random() * (searchReactions.length - 1));
@@ -200,7 +200,7 @@ function googleLookup(bot: Client, message: Message, query: string, inMessage: b
  * @param query Query string to pass to api
  * @param inMessage Whether or not the query was in-line of a message or through a command
  */
-function youtubeLookup(bot: Client, message: Message, query: string, inMessage: boolean): Promise<{}>{
+export function youtubeLookup(bot: Client, message: Message, query: string, inMessage: boolean): Promise<{}>{
 	return new Promise(async (resolve) => {
 		// Doing this to get an index between 0 and 5 for the reactions
 		const search = Math.floor(Math.random() * (searchReactions.length - 1));
@@ -267,11 +267,3 @@ const notFoundReactions: string[] =
 	"Nullpo, couldn't find it.",
 	"It came up with nothing, don't tell me this is one of your delusions again.",
 ];
-
-export {
-	googleLookup,
-	getUserByMessage,
-	getLoveUsers,
-	getHighestRole,
-	youtubeLookup,
-};
