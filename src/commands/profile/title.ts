@@ -3,14 +3,14 @@ import Command from "../../models/Command";
 import { DatabaseHandler } from "../../handlers";
 import { DatabaseEntities } from "../../handlers/DatabaseHandler";
 
-export default class SetDescription extends Command {
+export default class SetTitle extends Command {
 	constructor(){
 		super();
-		this.commandName = "description";
+		this.commandName = "title";
 		this.aliases = [];
-		this.description = "Updates your profile description";
-		this.fullDescription = "Updates your profile description";
-		this.usage = "description {message}";
+		this.description = "Updates your profile ttile";
+		this.fullDescription = "Updates your profile title";
+		this.usage = "title {title}";
 
 		// const requirements: new Object();
 		this.requirements = [];
@@ -20,18 +20,18 @@ export default class SetDescription extends Command {
 	public commandFunc(message: Message, args: string[], db: DatabaseHandler) {
 		return new Promise(async (resolve) => {
 			if (args.length < 1){
-				await message.channel.createMessage("You need to specify a description message.");
+				await message.channel.createMessage("You need to specify a title.");
 				return resolve();
 			}
-			if (args.join(" ").length > 256){
-				await message.channel.createMessage("That message is too long. The maximum description length is 256 characters");
+			if (args.join(" ").length > 32){
+				await message.channel.createMessage("That message is too long. The maximum title length is 32 characters");
 				return resolve();
 			}
 			const dbUser = await db.getOrCreateUser(message.member!);
-			dbUser.profile.description = args.join(" ");
+			dbUser.profile.title = args.join(" ");
 			dbUser.profile.lastUpdated = new Date();
 			await db.saveEntity(dbUser, DatabaseEntities.User);
-			await message.channel.createMessage(":white_check_mark: Successfully updated profile description!");
+			await message.channel.createMessage(":white_check_mark: Successfully updated profile title!");
 			return resolve();
 		});
 	}
