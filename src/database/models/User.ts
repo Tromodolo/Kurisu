@@ -20,9 +20,6 @@ export class User {
 	@JoinColumn()
 	profile!: UserProfile;
 
-	@OneToMany((type) => UserAchievement, (achievement) => achievement.user, {cascade: true, eager: true})
-	earnedAchievements!: UserAchievement[];
-
 	@ManyToMany((type) => Guild, {cascade: true, eager: true})
 	@JoinTable()
 	guilds!: Guild[];

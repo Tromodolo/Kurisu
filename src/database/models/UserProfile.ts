@@ -12,9 +12,9 @@ export class UserProfile {
 	@Column({ type: "varchar", default: "This user does not have anything to say about themselves.", length: 256 })
 	description!: string;
 
-	@OneToOne((type) => UserAchievement, {eager: true})
-	@JoinColumn()
-	equippedAchievement!: UserAchievement;
+	@Index()
+	@Column({ type: "varchar", default: "Wanderer", length: 32 })
+	title!: string;
 
 	@Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
 	lastUpdated!: Date;
