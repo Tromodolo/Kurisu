@@ -66,8 +66,8 @@ class ExperienceHandler{
 						}
 					}
 					else{
-						// If the config wasn't found, assume enabled
-						message.channel.createMessage(`:star: **${message.author.username}** has leveled up to level **${levelCheck.level}** :tada:`);
+						// If the config wasn't found, assume disabled
+						// message.channel.createMessage(`:star: **${message.author.username}** has leveled up to level **${levelCheck.level}** :tada:`);
 					}
 				}
 			}
