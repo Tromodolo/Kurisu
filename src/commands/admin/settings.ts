@@ -1,12 +1,17 @@
-import { Member, Message, PrivateChannel } from "eris";
-import moment from "moment";
-import { bot } from "../../bot";
+import { Message, Client, Emoji, GuildChannel } from "eris";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
-import { getHighestRole, getUserByMessage } from "../../utility/Util";
+import { DatabaseHandler } from "../../handlers";
+import { ReactionHandler } from "../../handlers/ReactionHandler";
+import { ConfigFeature, GuildConfig } from "../../database/models/GuildConfig";
+import { ResponseHandler } from "../../handlers/ResponseHandler";
+import { Guild } from "../../database/models/Guild";
+import { Db } from "typeorm";
 
-export default class Ban extends Command {
+const LEVEL_UP_EMOJI = "🎉";
+
+export default class Settings extends Command {
 	constructor(){
 		super();
 		this.commandName = "settings";
@@ -15,72 +20,98 @@ export default class Ban extends Command {
 		];
 		this.description = "Sets up server settings";
 		this.fullDescription = "Sets up server settings";
-		this.usage = "ban {user} [reason]";
+		this.usage = "settings";
 		this.requirements = [
-			"banMembers",
+			"manageGuild",
 		];
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public commandFunc(message: Message, args: string[], db: DatabaseHandler, bot: Client) {
 		return new Promise(async (resolve) => {
-			let user: Member | undefined;
-
-			user = getUserByMessage(message, args);
-
-			if (!user){
-				message.channel.createMessage("User not found.");
+			if (!(message.channel as GuildChannel).guild){
+				return;
 			}
-			else{
-				if (!message.member){
-					return resolve();
-				}
-				const targetedUserRole = getHighestRole(user.guild, user);
-				const kickerRole = getHighestRole(message.member.guild, message.member);
-				const botUser = message.member.guild.members.get(bot.user.id);
+			const guild = await db.getOrCreateGuild((message.channel as GuildChannel).guild);
 
-				if (!botUser){
-					return resolve();
-				}
-				const botRole = getHighestRole(botUser.guild, botUser);
+			const embed = new DiscordEmbed();
+			embed.setAuthor("Admin Menu", "", bot.user.avatarURL);
+			embed.setColor(parseInt(config.bot.color));
+			embed.setDescription(`
+**React to this message to edit settings.**
 
-				if (!targetedUserRole || !kickerRole || !botRole){
-					return resolve();
-				}
+:tada: - Level-up Messages
+			`);
+			const sentMessage = await message.channel.createMessage(embed.getEmbed());
+			sentMessage.addReaction(LEVEL_UP_EMOJI);
 
-				if (targetedUserRole.position >= kickerRole.position){
-					message.channel.createMessage("You can't ban someone with equal or higher role position than you");
-					return resolve();
+			const reactions = new ReactionHandler(bot, sentMessage, 30 * 1000);
+			reactions.on("reactionAdd", async (reactionMessage: Message, emoji: Emoji, userId: string) => {
+				if (userId === message.author.id){
+					switch (emoji.name){
+						case LEVEL_UP_EMOJI:
+							await reactionMessage.removeReactions();
+							await handleLevelUpConfig(reactionMessage, db, guild, bot, userId);
+							return;
+						default:
+							return;
+					}
 				}
-				if (targetedUserRole.position >= botRole.position){
-					message.channel.createMessage("I can't ban someone with equal or higher role position than me");
-					return resolve();
-				}
-
-				const reason = args[1] || "None specified";
-
-				const embed = new DiscordEmbed();
-				embed.setColor(parseInt(config.bot.color));
-				embed.setTitle(`**You were banned from ${message.member ? message.member.guild.name : "_Unavailable_"}**`);
-				embed.addField("Reason", `${reason}`);
-
-				embed.setTimestamp(moment(Date.now()).toISOString());
-
-				try{
-					user.user.getDMChannel().then(async (channel: PrivateChannel) => {
-						channel.createMessage(embed.getEmbed()).then(async () => {
-							if (user){
-								await user.ban(1, reason);
-							}
-						});
-					});
-					await message.channel.createMessage(`${user.username}#${user.discriminator} was successfully banned`);
-				}
-				catch (e){
-					await message.channel.createMessage("User couldn't be banned");
-				}
-			}
+			});
 			return resolve();
 		});
 	}
+}
+
+async function handleLevelUpConfig(reactionMessage: Message, db: DatabaseHandler, guild: Guild, bot: Client, userId: string){
+	const index = guild.configs.findIndex((x) => x.configType === ConfigFeature.LevelUpMessage);
+	let levelUpConfig;
+	if (index < 0){
+		levelUpConfig = new GuildConfig();
+		levelUpConfig.configType = ConfigFeature.LevelUpMessage;
+		levelUpConfig.enabled = false;
+		levelUpConfig.guild = guild;
+		levelUpConfig.value = "";
+	}
+	else{
+		levelUpConfig = guild.configs[index];
+	}
+
+	const embed = new DiscordEmbed();
+	embed.setAuthor("Admin Menu", "", bot.user.avatarURL);
+	embed.setColor(parseInt(config.bot.color));
+	embed.setDescription(`Enter **enable**, **disable** or **cancel**. Currently: ${levelUpConfig!.enabled ? "Enabled" : "Disabled"}`);
+	await reactionMessage.edit(embed.getEmbed());
+
+	const responseHandler = new ResponseHandler(bot, userId, 30 * 1000);
+	responseHandler.on("response", async (responseMessage: Message) => {
+		switch (responseMessage.content.toLowerCase()){
+			case "enable":
+				levelUpConfig!.enabled = true;
+				embed.setDescription(":white_check_mark: Setting successfully enabled.");
+				await reactionMessage.edit(embed.getEmbed());
+				break;
+			case "disable":
+				levelUpConfig!.enabled = false;
+				embed.setDescription(":x: Setting successfully disabled.");
+				await reactionMessage.edit(embed.getEmbed());
+				break;
+			case "cancel":
+				embed.setDescription(":exclamation: Menu canceled.");
+				await reactionMessage.edit(embed.getEmbed());
+				responseHandler.stopListening();
+				return;
+			default:
+				return;
+		}
+
+		if (index < 0){
+		guild.configs.push(levelUpConfig);
+		}
+		else{
+			guild.configs[index] = levelUpConfig;
+		}
+
+		await db.guildRepo.save(guild);
+	});
 }

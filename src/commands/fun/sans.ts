@@ -67,37 +67,3 @@ export default class Sans extends Command {
 		});
 	}
 }
-
-function sendAvatarRequests(firstUrl: string, secondUrl: string) {
-	return new Promise((resolve, reject) => {
-		let firstFinished = false;
-
-		const buffers: { first?: Buffer, second?: Buffer} = {};
-
-		Axios.get(firstUrl, {
-			responseType: "arraybuffer",
-		}).then((data) => {
-			if (firstFinished === false){
-				firstFinished = true;
-				buffers.first = Buffer.from(data.data);
-			}
-			else{
-				buffers.first = Buffer.from(data.data);
-				resolve(buffers);
-			}
-		});
-
-		Axios.get(secondUrl, {
-			responseType: "arraybuffer",
-		}).then((data) => {
-			if (firstFinished === false){
-				firstFinished = true;
-				buffers.second = Buffer.from(data.data);
-			}
-			else{
-				buffers.second = Buffer.from(data.data);
-				resolve(buffers);
-			}
-		});
-	});
-}

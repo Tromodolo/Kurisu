@@ -3,14 +3,13 @@ import { Client, Message, Emoji } from "eris";
 
 export class ResponseHandler extends EventEmitter{
 	private client: Client;
-	private message: Message;
+	private _userId: string;
 
-	constructor(client: Client, message: Message, time: number = 60000){
+	constructor(client: Client, userId: string, time: number = 60000){
 		super();
 		this.messageEvent = this.messageEvent.bind(this);
-
 		this.client = client;
-		this.message = message;
+		this._userId = userId;
 
 		this.client.on("messageCreate", this.messageEvent);
 
@@ -25,7 +24,7 @@ export class ResponseHandler extends EventEmitter{
 	}
 
 	private messageEvent(message: Message){
-		if (this.message.member!.id === message.member!.id){
+		if (message.author.id === this._userId){
 			this.emit("response", message);
 		}
 	}

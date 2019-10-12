@@ -37,7 +37,7 @@ export default class Profile extends Command {
 			embed.setTitle("Profile");
 			embed.setThumbnail(user.avatarURL);
 			embed.addField("Name", user.username, true);
-			embed.addField("Title", dbUser.profile.equippedAchievement ? `**${dbUser.profile.equippedAchievement.achievement.title}**` : "_No equipped title_", true);
+			embed.addField("Title", dbUser.profile.title ? `**${dbUser.profile.title}**` : "Wanderer", true);
 
 			/* Everything about this is a confusing mess, don't ask */
 			const level = getLevelFromExp(dbUser.experience.total);
