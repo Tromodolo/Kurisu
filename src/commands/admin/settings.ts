@@ -1,13 +1,13 @@
-import { Message, Client, Emoji, GuildChannel } from "eris";
 import config from "../../config";
 import Command from "../../models/Command";
+import ReactionListener from "../../handlers/ReactionListener";
+import ResponseListener from "../../handlers/ResponseListener";
+import { Message, Client, Emoji, GuildChannel } from "eris";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { DatabaseHandler } from "../../handlers";
-import { ReactionHandler } from "../../handlers/ReactionHandler";
 import { ConfigFeature, GuildConfig } from "../../database/models/GuildConfig";
-import { ResponseHandler } from "../../handlers/ResponseHandler";
 import { Guild } from "../../database/models/Guild";
-import { Db } from "typeorm";
+import { Bot } from "../../bot";
 
 const LEVEL_UP_EMOJI = "🎉";
 
@@ -27,15 +27,15 @@ export default class Settings extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[], db: DatabaseHandler, bot: Client) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			if (!(message.channel as GuildChannel).guild){
 				return;
 			}
-			const guild = await db.getOrCreateGuild((message.channel as GuildChannel).guild);
+			const guild = await bot.db.getOrCreateGuild((message.channel as GuildChannel).guild);
 
 			const embed = new DiscordEmbed();
-			embed.setAuthor("Admin Menu", "", bot.user.avatarURL);
+			embed.setAuthor("Admin Menu", "", bot.client.user.avatarURL);
 			embed.setColor(parseInt(config.bot.color));
 			embed.setDescription(`
 **React to this message to edit settings.**
@@ -45,13 +45,13 @@ export default class Settings extends Command {
 			const sentMessage = await message.channel.createMessage(embed.getEmbed());
 			sentMessage.addReaction(LEVEL_UP_EMOJI);
 
-			const reactions = new ReactionHandler(bot, sentMessage, 30 * 1000);
+			const reactions = new ReactionListener(bot.client, sentMessage, 30 * 1000);
 			reactions.on("reactionAdd", async (reactionMessage: Message, emoji: Emoji, userId: string) => {
 				if (userId === message.author.id){
 					switch (emoji.name){
 						case LEVEL_UP_EMOJI:
 							await reactionMessage.removeReactions();
-							await handleLevelUpConfig(reactionMessage, db, guild, bot, userId);
+							await handleLevelUpConfig(reactionMessage, bot.db, guild, bot.client, userId);
 							return;
 						default:
 							return;
@@ -83,7 +83,7 @@ async function handleLevelUpConfig(reactionMessage: Message, db: DatabaseHandler
 	embed.setDescription(`Enter **enable**, **disable** or **cancel**. Currently: ${levelUpConfig!.enabled ? "Enabled" : "Disabled"}`);
 	await reactionMessage.edit(embed.getEmbed());
 
-	const responseHandler = new ResponseHandler(bot, userId, 30 * 1000);
+	const responseHandler = new ResponseListener(bot, userId, 30 * 1000);
 	responseHandler.on("response", async (responseMessage: Message) => {
 		switch (responseMessage.content.toLowerCase()){
 			case "enable":

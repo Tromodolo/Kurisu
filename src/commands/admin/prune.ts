@@ -1,6 +1,6 @@
 import { Message } from "eris";
-import { bot } from "../../bot";
 import Command from "../../models/Command";
+import { Bot } from "../../bot";
 
 export default class Prune extends Command {
 	constructor(){
@@ -20,7 +20,7 @@ export default class Prune extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			let messages = 0;
 			if (!args[0]){
@@ -41,7 +41,7 @@ export default class Prune extends Command {
 				messageIds = messageList.map((msg) => msg.id);
 
 				if 	(messageIds.length > 0){
-					bot.deleteMessages(message.channel.id, messageIds, "Prune command").then(() => {
+					bot.client.deleteMessages(message.channel.id, messageIds, "Prune command").then(() => {
 						message.channel.createMessage(`🗑 ${messages} messages deleted`);
 					});
 				}

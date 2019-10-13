@@ -1,7 +1,7 @@
 import { Message } from "eris";
 import Command from "../../models/Command";
-import { DatabaseHandler } from "../../handlers";
 import { DatabaseEntities } from "../../handlers/DatabaseHandler";
+import { Bot } from "../../bot";
 
 export default class SetDescription extends Command {
 	constructor(){
@@ -17,7 +17,7 @@ export default class SetDescription extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[], db: DatabaseHandler) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			if (args.length < 1){
 				await message.channel.createMessage("You need to specify a description message.");
@@ -27,10 +27,10 @@ export default class SetDescription extends Command {
 				await message.channel.createMessage("That message is too long. The maximum description length is 256 characters");
 				return resolve();
 			}
-			const dbUser = await db.getOrCreateUser(message.member!);
+			const dbUser = await bot.db.getOrCreateUser(message.member!);
 			dbUser.profile.description = args.join(" ");
 			dbUser.profile.lastUpdated = new Date();
-			await db.saveEntity(dbUser, DatabaseEntities.User);
+			await bot.db.saveEntity(dbUser, DatabaseEntities.User);
 			await message.channel.createMessage(":white_check_mark: Successfully updated profile description!");
 			return resolve();
 		});

@@ -1,6 +1,6 @@
 import { Member, Message, PrivateChannel } from "eris";
 import moment from "moment";
-import { bot } from "../../bot";
+import { Bot } from "../../bot";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
@@ -25,7 +25,7 @@ export default class Kick extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			let user: Member | undefined;
 
@@ -40,7 +40,7 @@ export default class Kick extends Command {
 				}
 				const targetedUserRole = getHighestRole(user.guild, user);
 				const kickerRole = getHighestRole(message.member.guild, message.member);
-				const botUser = message.member.guild.members.get(bot.user.id);
+				const botUser = message.member.guild.members.get(bot.client.user.id);
 
 				if (!botUser){
 					return resolve();

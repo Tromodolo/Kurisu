@@ -8,19 +8,19 @@ import { Guild } from './Guild';
 @Entity()
 export class GuildConfig {
 	@PrimaryGeneratedColumn()
-	id!: number;
+	id: number;
 
 	@ManyToOne((type) => Guild, (guild) => guild.configs)
-	guild!: Guild;
+	guild: Guild;
 
 	@Column()
-	configType!: ConfigFeature;
+	configType: ConfigFeature;
 
 	@Column()
-	enabled!: boolean;
+	enabled: boolean;
 
 	@Column()
-	value!: string;
+	value: string;
 }
 
 export enum ConfigFeature{

@@ -26,7 +26,7 @@ export default class WhoIs extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			let user = getUserByMessage(message, args);
 			const embed = new DiscordEmbed();

@@ -9,18 +9,18 @@ import { GuildConfig, ConfigFeature } from './GuildConfig';
 export class Guild {
 	@Index()
 	@Column({primary: true, nullable: false})
-	id!: string;
+	id: string;
 
 	@Column()
-	name!: string;
+	name: string;
 
 	@Column()
-	avatarURL!: string;
+	avatarURL: string;
 
 	@OneToMany((type) => GuildConfig, (config) => config.guild, {cascade: true})
-	configs!: GuildConfig[];
+	configs: GuildConfig[];
 
 	@ManyToMany((type) => User, {cascade: true})
 	@JoinTable()
-	userList!: User[];
+	userList: User[];
 }

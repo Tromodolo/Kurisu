@@ -1,5 +1,5 @@
 import { Message } from "eris";
-import { bot } from "../../bot";
+import { Bot } from "../../bot";
 import Command from "../../models/Command";
 
 export default class SetName extends Command {
@@ -16,13 +16,13 @@ export default class SetName extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			if (args.length < 1){
 				message.channel.createMessage("You need to specify a name");
 			}
 			else{
-				bot.editSelf({username: args.join(" ")});
+				bot.client.editSelf({username: args.join(" ")});
 				message.channel.createMessage("Name changed! :ok_hand:");
 			}
 			return resolve();

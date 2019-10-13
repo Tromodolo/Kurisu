@@ -7,24 +7,25 @@ import { Repository } from "typeorm";
 import { DatabaseHandler, DatabaseEntities } from "./DatabaseHandler";
 import { UserLevel } from "../database/models/UserLevel";
 import { ConfigFeature } from "../database/models/GuildConfig";
+import { Bot } from "../bot";
 
 class ExperienceHandler{
-	private bot: eris.Client;
-	private db: DatabaseHandler;
+	private bot: Bot;
 
-	constructor(bot: eris.Client, db: DatabaseHandler){
-		this.bot = bot;
-		this.db = db;
-
+	constructor(){
 		this.handleExperience = this.handleExperience.bind(this);
 	}
 
+	initialize(bot: Bot){
+		this.bot = bot;
+	}
+
 	public hookEvent(){
-		this.bot.on("messageCreate", this.handleExperience);
+		this.bot.client.on("messageCreate", this.handleExperience);
 	}
 
 	public unhookEvent(){
-		this.bot.off("messageCreate", this.handleExperience);
+		this.bot.client.off("messageCreate", this.handleExperience);
 	}
 
 	private async handleExperience(message: Message){
@@ -36,15 +37,15 @@ class ExperienceHandler{
 			const member = message.member!;
 			const guild = member.guild;
 
-			const dbUser = await this.db.getOrCreateUser(member);
-			const dbGuild = await this.db.getOrCreateGuild(guild);
+			const dbUser = await this.bot.db.getOrCreateUser(member);
+			const dbGuild = await this.bot.db.getOrCreateGuild(guild);
 
 			const exp = this.getRandomExp(15, 25);
 
 			// If user does not exist in guild list, then add them
 			if ((dbGuild.userList && !dbGuild.userList.find((x) => x.id === dbUser.id))){
 				dbGuild.userList.push(dbUser);
-				await this.db.saveEntity(dbGuild, DatabaseEntities.Guild);
+				await this.bot.db.saveEntity(dbGuild, DatabaseEntities.Guild);
 			}
 
 			const then = moment(dbUser.experience.lastUpdated).add(1, "minute");
@@ -52,7 +53,7 @@ class ExperienceHandler{
 			if (now.isAfter(then)){
 				dbUser.experience.total += exp;
 				dbUser.experience.lastUpdated = moment().toDate();
-				await this.db.saveEntity(dbUser, DatabaseEntities.User);
+				await this.bot.db.saveEntity(dbUser, DatabaseEntities.User);
 
 				const oldExp = dbUser.experience.total - exp;
 				const newExp = dbUser.experience.total;

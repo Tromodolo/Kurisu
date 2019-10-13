@@ -5,13 +5,13 @@ import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn } f
 @Entity()
 export class UserLevel {
 	@PrimaryGeneratedColumn()
-	id!: number;
+	id: number;
 
 	@Index()
 	@Column({ default: 0 })
-	total!: number;
+	total: number;
 
 	@Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
-	lastUpdated!: Date;
+	lastUpdated: Date;
 
 }

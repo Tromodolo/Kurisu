@@ -1,8 +1,31 @@
 import fs from "fs";
 import path from "path";
 
+// tslint:disable-next-line: interface-over-type-literal
+type BotConfig = {
+	developers: Array<{name: string}>;
+	developerIds: string[];
+	libraryVersion: string;
+	color: string;
+	xpMoneyEnabled: boolean;
+	defaultPrefix: string;
+	botToken: string;
+	devToken: string;
+	googleApiKey: string;
+	googleCustomSearchId: string;
+};
+
+// tslint:disable-next-line: interface-over-type-literal
+type DbConfig = {
+	databaseHost: string;
+	databaseName: string;
+	databaseUsername: string;
+	databasePassword: string;
+	databaseType: string;
+};
+
 // empty bot.json
-let bot = {
+let bot: BotConfig = {
 	developers: [],
 	developerIds: [],
 	libraryVersion: "",
@@ -16,7 +39,7 @@ let bot = {
 };
 
 // empty db.json
-let db = {
+let db: DbConfig = {
 	databaseHost: "",
 	databaseName: "",
 	databaseUsername: "",

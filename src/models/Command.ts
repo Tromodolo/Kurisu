@@ -1,5 +1,5 @@
 import eris from "eris";
-import { DatabaseHandler } from "../handlers";
+import { Bot } from "../bot";
 
 /**
  * Class definition for a command object
@@ -30,9 +30,9 @@ export default class Command {
 	/**
 	 * @arg {Message} message The message sent
 	 * @arg {string[]} args Array of all the args sent with the command
-	 * @returns {Promise<any>}
+	 * @returns {Promise<*>}
 	 */
-	public commandFunc(message: eris.Message, args: string[], db?: DatabaseHandler, bot?: eris.Client): Promise<any>{
+	public exec(message: eris.Message, args: string[], bot?: Bot): Promise<any>{
 		return new Promise((resolve) => resolve());
 	}
 

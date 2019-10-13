@@ -8,12 +8,12 @@ import { User } from './User';
 export class UserAchievement {
 	@PrimaryGeneratedColumn()
 	@Index()
-	id!: number;
+	id: number;
 
 	@ManyToOne((type) => User, (user) => user.id)
-	user!: User;
+	user: User;
 
 	@OneToOne((type) => Achievement, {eager: true})
 	@JoinColumn()
-	achievement!: Achievement;
+	achievement: Achievement;
 }

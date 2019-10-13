@@ -5,18 +5,18 @@ import eris, { Message } from "eris";
 
 import config from "../config";
 import CommandModule from "../models/CommandModule";
-import { DatabaseHandler } from ".";
+import { Bot } from "../bot";
 
 class CommandHandler{
 	private moduleList: CommandModule[] = [];
-	private bot: eris.Client;
-	private db: DatabaseHandler;
+	private bot: Bot;
 
-	constructor(bot: eris.Client, db: DatabaseHandler){
-		this.bot = bot;
-		this.db = db;
-
+	constructor(){
 		this.messageEvent = this.messageEvent.bind(this);
+	}
+
+	initialize(bot: Bot){
+		this.bot = bot;
 	}
 
 	public get modules(){
@@ -42,11 +42,11 @@ class CommandHandler{
 	}
 
 	public hookEvent(){
-		this.bot.on("messageCreate", this.messageEvent);
+		this.bot.client.on("messageCreate", this.messageEvent);
 	}
 
 	public unhookEvent(){
-		this.bot.off("messageCreate", this.messageEvent);
+		this.bot.client.off("messageCreate", this.messageEvent);
 	}
 
 	private async messageEvent(message: Message){
@@ -104,7 +104,7 @@ class CommandHandler{
 					const commandArgs = [...args];
 					commandArgs.shift();
 
-					await command.commandFunc(message, commandArgs, this.db, this.bot);
+					await command.exec(message, commandArgs, this.bot);
 
 					return true;
 				}

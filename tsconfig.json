@@ -8,6 +8,7 @@
 
 		/* Strict Type-Checking Options */
 		"strict": true,                          /* Enable all strict type-checking options. */
+		"strictPropertyInitialization": false,
 		"noImplicitAny": false,
 
 		/* Module Resolution Options */	

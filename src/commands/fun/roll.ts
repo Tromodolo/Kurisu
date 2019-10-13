@@ -1,5 +1,4 @@
 import { Message } from "eris";
-import { bot } from "../../bot";
 import Command from "../../models/Command";
 
 export default class Roll extends Command {
@@ -19,7 +18,7 @@ export default class Roll extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			let randomNum: number = 0;
 			if (args[0]){

@@ -1,51 +1,63 @@
 /**
  * Bot.ts - Main bot entrypoint
  */
-import eris from "eris";
+import eris, { Client, Command } from "eris";
 import config from "./config";
-import { CommandHandler, DatabaseHandler, ExperienceHandler } from "./handlers";
+import { CommandHandler, DatabaseHandler, ExperienceHandler, GuildEventHandler } from "./handlers";
 
-/* Initialize main modules */
-// Discord api connecton
-const bot = new eris.Client(config.bot.devToken, {
-	getAllUsers: true,
-	defaultImageFormat: "png",
-	defaultImageSize: 1024,
-	disableEveryone: true,
-	autoreconnect: true,
-});
+export class Bot {
+	cnf: typeof config;
+	client: Client;
 
-// Handlers
-const db = new DatabaseHandler();
-let commands: CommandHandler;
-let exp: ExperienceHandler;
+	// Handlers
+	db: DatabaseHandler;
+	commands: CommandHandler;
+	exp: ExperienceHandler;
+	guildEvent: GuildEventHandler;
 
-// Connect to database
-db.init().then(() => {
-	console.log("Database connection successful");
+	constructor(e_cnf: typeof config, production: boolean) {
+		this.cnf = e_cnf;
 
-	exp = new ExperienceHandler(bot, db);
-	commands = new CommandHandler(bot, db);
+		this.client = new eris.Client(production ? this.cnf.bot.botToken : this.cnf.bot.devToken, {
+			getAllUsers: true,
+			defaultImageFormat: "png",
+			defaultImageSize: 1024,
+			disableEveryone: true,
+			autoreconnect: true,
+		});
 
-	/* Initialize main modules */
-	// Load commands
-	commands.loadCommands();
-	commands.hookEvent();
-	console.log("Commands loaded successfully");
+		this.client.on("ready", async () => {
+			console.log("Successfully connected as: " + this.client.user.username + "#" + this.client.user.discriminator); // Log "Ready!"
+			await this.client.editStatus("online", {name: `${this.cnf.bot.defaultPrefix}help to get command list`});
+		});
 
-	console.log("Registering events");
-	exp.hookEvent();
-});
+		this.initialize().then(() => this.client.connect());
+	}
+	private async initialize(){
+		this.db = new DatabaseHandler();
+		try{
+			// Connect to database
+			await this.db.init();
+			console.log("Database connection successful");
+		}
+		catch {
+			throw new Error("Database connection failed");
+		}
 
-/* Run the bot */
-bot.on("ready", async () => {
-	console.log("Successfully connected as: " + bot.user.username + "#" + bot.user.discriminator); // Log "Ready!"
-	await bot.editStatus("online", {name: `${config.bot.defaultPrefix}help to get command list`});
-});
+		this.exp = new ExperienceHandler();
+		this.commands = new CommandHandler();
+		this.guildEvent = new GuildEventHandler();
 
-bot.connect();
+		this.exp.initialize(this);
+		this.commands.initialize(this);
+		this.guildEvent.initialize(this);
 
-export {
-	bot,
-	commands,
-};
+		console.log("Commands loaded successfully");
+		this.commands.loadCommands();
+		console.log("Registering events");
+		this.commands.hookEvent();
+		this.exp.hookEvent();
+	}
+}
+
+export const bot = new Bot(config, false);

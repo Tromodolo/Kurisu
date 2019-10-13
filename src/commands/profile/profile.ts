@@ -2,9 +2,8 @@ import { Message } from "eris";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
-import { DatabaseHandler } from "../../handlers";
-import { User } from "../../database/models/User";
 import { getUserByMessage } from "../../utility/Util";
+import { Bot } from "../../bot";
 
 export default class Profile extends Command {
 	constructor(){
@@ -20,7 +19,7 @@ export default class Profile extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[], db: DatabaseHandler) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			let user = message.member!;
 			if (args.length > 0){
@@ -30,7 +29,7 @@ export default class Profile extends Command {
 				}
 			}
 
-			const dbUser = await db.getOrCreateUser(user);
+			const dbUser = await bot.db.getOrCreateUser(user);
 
 			const embed = new DiscordEmbed();
 			embed.setColor(parseInt(config.bot.color));

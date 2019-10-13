@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import { Client, Message, Emoji } from "eris";
 
-export class ReactionHandler extends EventEmitter{
+export default class ReactionListener extends EventEmitter{
 	private client: Client;
 	private message: Message;
 

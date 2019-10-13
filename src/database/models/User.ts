@@ -10,19 +10,19 @@ import { UserAchievement } from './UserAchievement';
 export class User {
 	@Index()
 	@Column({primary: true})
-	id!: string;
+	id: string;
 
 	@OneToOne((type) => UserLevel, {cascade: true, eager: true})
 	@JoinColumn()
-	experience!: UserLevel;
+	experience: UserLevel;
 
 	@OneToOne((type) => UserProfile, {cascade: true, eager: true})
 	@JoinColumn()
-	profile!: UserProfile;
+	profile: UserProfile;
 
 	@ManyToMany((type) => Guild, {cascade: true, eager: true})
 	@JoinTable()
-	guilds!: Guild[];
+	guilds: Guild[];
 
 	constructor(){
 		this.experience = new UserLevel();

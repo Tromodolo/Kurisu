@@ -10,20 +10,20 @@ export class Achievement {
 	@PrimaryGeneratedColumn()
 	@Index()
 	@Column({primary: true})
-	id!: number;
+	id: number;
 
 	@Column()
-	name!: string;
+	name: string;
 
 	@Column()
-	title!: string;
+	title: string;
 
 	@Column()
-	description!: string;
+	description: string;
 
 	@Column()
-	showDescription!: boolean;
+	showDescription: boolean;
 
 	@Column()
-	hidden!: boolean;
+	hidden: boolean;
 }

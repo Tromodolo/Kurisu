@@ -1,8 +1,8 @@
 import { Message } from "eris";
-import { bot, commands } from "../../bot";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
+import { Bot } from "../../bot";
 /**
  * help.ts
  *
@@ -25,17 +25,17 @@ export default class Help extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			const embed = new DiscordEmbed();
 
 			embed.setColor(parseInt(config.bot.color));
 
 			if (!args[0]){
-				embed.setAuthor("List of commands", bot.user.avatarURL, bot.user.avatarURL);
+				embed.setAuthor("List of commands", bot.client.user.avatarURL, bot.client.user.avatarURL);
 				embed.setDescription("If you want information about a specific command, type 'help command-name'");
 
-				commands.modules.forEach((module) => {
+				bot.commands.modules.forEach((module) => {
 					if (module.name.toLowerCase() === "owner"){
 						return;
 					}
@@ -46,7 +46,7 @@ export default class Help extends Command {
 			else{
 				let helpCommand: Command | undefined;
 
-				commands.modules.forEach((commandModule) => {
+				bot.commands.modules.forEach((commandModule) => {
 					const com = commandModule.findCommand(args[0]);
 					if (com){
 						helpCommand = com;
@@ -58,7 +58,7 @@ export default class Help extends Command {
 					return resolve();
 				}
 				else{
-					embed.setAuthor(`Help for command '${helpCommand.commandName}'`, bot.user.avatarURL, bot.user.avatarURL);
+					embed.setAuthor(`Help for command '${helpCommand.commandName}'`, bot.client.user.avatarURL, bot.client.user.avatarURL);
 
 					embed.addField("Description",  helpCommand.fullDescription, false);
 					embed.addField("Aliases", helpCommand.aliases.length > 0  ? helpCommand.aliases.join(", ").toString() : "**none**", true);

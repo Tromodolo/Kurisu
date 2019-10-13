@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Message } from "eris";
-import { bot } from "../../bot";
 import Command from "../../models/Command";
+import { Bot } from "../../bot";
 
 export default class SetAvatar extends Command {
 	constructor(){
@@ -17,7 +17,7 @@ export default class SetAvatar extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			if (args.length < 1){
 				message.channel.createMessage("You need to specify a url");
@@ -29,7 +29,7 @@ export default class SetAvatar extends Command {
 				.then((response) => {
 					const buffer = Buffer.from(response.data, "utf8");
 					const avatarBase = "data:image/png;base64," + buffer.toString("base64");
-					bot.editSelf({ avatar: avatarBase });
+					bot.client.editSelf({ avatar: avatarBase });
 				});
 			}
 			return resolve();

@@ -1,7 +1,7 @@
 import { Message } from "eris";
 import pm2 from "pm2";
-import { bot } from "../../bot";
 import Command from "../../models/Command";
+import { Bot } from "../../bot";
 
 export default class Restart extends Command {
 	constructor(){
@@ -20,10 +20,10 @@ export default class Restart extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			message.channel.createMessage("Restarting, will be back soon");
-			bot.disconnect({ reconnect: false });
+			bot.client.disconnect({ reconnect: false });
 			pm2.restart("Kurisu", (err) => {
 				if (err){
 					return;

@@ -1,4 +1,3 @@
-import Axios from "axios";
 import { createCanvas, Image, registerFont } from "canvas";
 import drawMultilineText from "canvas-multiline-text";
 import { Message } from "eris";
@@ -22,7 +21,7 @@ export default class Sans extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			if (args.length < 1){
 				message.channel.createMessage("You need to specify a message. :<");

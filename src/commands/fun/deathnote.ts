@@ -3,7 +3,6 @@ import { Message } from "eris";
 import fs from "fs";
 import path from "path";
 import Command from "../../models/Command";
-
 import drawMultilineText from "canvas-multiline-text";
 
 export default class Deathnote extends Command {
@@ -22,7 +21,7 @@ export default class Deathnote extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			let text = "";
 			if (args.length < 1){

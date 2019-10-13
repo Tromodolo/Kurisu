@@ -20,7 +20,8 @@
 		"no-eval": false,
 		"quotemark": false,
 		"no-var-keyword": false,
-		"ordered-imports": false
+		"ordered-imports": false,
+		"member-access": false
 	},
     "rulesDirectory": []
 }

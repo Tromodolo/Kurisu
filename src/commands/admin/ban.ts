@@ -1,10 +1,10 @@
 import { Member, Message, PrivateChannel } from "eris";
 import moment from "moment";
-import { bot } from "../../bot";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getHighestRole, getUserByMessage } from "../../utility/Util";
+import { Bot } from "../../bot";
 
 export default class Ban extends Command {
 	constructor(){
@@ -22,7 +22,7 @@ export default class Ban extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			let user: Member | undefined;
 
@@ -37,7 +37,7 @@ export default class Ban extends Command {
 				}
 				const targetedUserRole = getHighestRole(user.guild, user);
 				const kickerRole = getHighestRole(message.member.guild, message.member);
-				const botUser = message.member.guild.members.get(bot.user.id);
+				const botUser = message.member.guild.members.get(bot.client.user.id);
 
 				if (!botUser){
 					return resolve();

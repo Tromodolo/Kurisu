@@ -6,16 +6,16 @@ import { UserAchievement } from './UserAchievement';
 @Entity()
 export class UserProfile {
 	@PrimaryGeneratedColumn()
-	id!: number;
+	id: number;
 
 	@Index()
 	@Column({ type: "varchar", default: "This user does not have anything to say about themselves.", length: 256 })
-	description!: string;
+	description: string;
 
 	@Index()
 	@Column({ type: "varchar", default: "Wanderer", length: 32 })
-	title!: string;
+	title: string;
 
 	@Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
-	lastUpdated!: Date;
+	lastUpdated: Date;
 }

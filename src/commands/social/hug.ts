@@ -27,7 +27,7 @@ export default class Hug extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			if (!message.member){
 				return resolve();

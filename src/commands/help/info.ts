@@ -8,10 +8,10 @@
 
 import { Message } from "eris";
 import moment from "moment";
-import { bot } from "../../bot";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
+import { Bot } from "../../bot";
 
 export default class Info extends Command {
 	constructor(){
@@ -27,12 +27,12 @@ export default class Info extends Command {
 		this.deleteCommand = false;
 	}
 
-	public commandFunc(message: Message, args: string[]) {
+	public exec(message: Message, args: string[], bot: Bot) {
 		return new Promise(async (resolve) => {
 			const embed = new DiscordEmbed();
 
 			embed.setColor(parseInt(config.bot.color));
-			embed.setAuthor("Bot information:", bot.user.avatarURL, bot.user.avatarURL);
+			embed.setAuthor("Bot information:", bot.client.user.avatarURL, bot.client.user.avatarURL);
 
 			embed.addField("Devs", config.bot.developers.length > 0 ? config.bot.developers.join(",\n") : "Uh Oh I don't know how this happened", true);
 			embed.addField("Node.js Version", process.version, true);
@@ -51,9 +51,9 @@ export default class Info extends Command {
 			const megabytes = Math.round(memHeap / 1024 / 1024);
 
 			embed.addField("Memory usage", `${megabytes}MB`, true);
-			embed.addField("Shards", `${bot.shards.size}`, true);
-			embed.addField("Server Count", `${bot.guilds.size}`, true);
-			embed.addField("User Count", `${bot.users.size}`, true);
+			embed.addField("Shards", `${bot.client.shards.size}`, true);
+			embed.addField("Server Count", `${bot.client.guilds.size}`, true);
+			embed.addField("User Count", `${bot.client.users.size}`, true);
 			/* embed.addField("Invite Link", `[Link](${config.bot.inviteLink})`, true); */
 
 			await message.channel.createMessage(embed.getEmbed());
