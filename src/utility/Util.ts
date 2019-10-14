@@ -6,7 +6,7 @@
  * Last Edit - March 29, 2019 by Tromo
  */
 
-import { Client, Guild, Member, Message, Role, TextChannel } from "eris";
+import { Client, Guild, Member, Message, Role, TextChannel, AnyGuildChannel } from "eris";
 import { google, GoogleApis } from "googleapis";
 import config from "../config";
 import { DiscordEmbed } from "./DiscordEmbed";
@@ -134,6 +134,23 @@ export function getHighestRole(guild: Guild, member: Member) {
 	});
 
 	return highestRole;
+}
+
+export function getChannelByName(channels: TextChannel[], searchWord: string){
+	const guildChannels = new Fuse(channels, {
+		shouldSort: true,
+		threshold: 0.6,
+		location: 0,
+		distance: 100,
+		maxPatternLength: 32,
+		minMatchCharLength: 1,
+		keys: [
+			"id",
+			"name",
+		],
+	});
+	const found = guildChannels.search(searchWord);
+	return found[0];
 }
 
 /**

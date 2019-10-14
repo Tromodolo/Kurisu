@@ -56,6 +56,7 @@ export class Bot {
 		this.commands.loadCommands();
 		console.log("Registering events");
 		this.commands.hookEvent();
+		this.guildEvent.hookEvent();
 		this.exp.hookEvent();
 	}
 }

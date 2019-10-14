@@ -1,6 +1,9 @@
-import eris from "eris";
+import eris, { Guild, Member } from "eris";
 import { DatabaseHandler, DatabaseEntities } from "./DatabaseHandler";
 import { Bot } from "../bot";
+import { ConfigFeature } from "../database/models/GuildConfig";
+import { DiscordEmbed } from "../utility/DiscordEmbed";
+import moment from "moment";
 
 export class GuildEventHandler {
 	private bot: Bot;
@@ -8,6 +11,7 @@ export class GuildEventHandler {
 	constructor(){
 		this.userLeft = this.userLeft.bind(this);
 		this.userJoin = this.userJoin.bind(this);
+		this.userBanned = this.userBanned.bind(this);
 	}
 
 	initialize(bot: Bot){
@@ -17,11 +21,13 @@ export class GuildEventHandler {
 	public hookEvent(){
 		this.bot.client.on("guildMemberRemove", this.userLeft);
 		this.bot.client.on("guildMemberAdd", this.userJoin);
+		this.bot.client.on("guildBanAdd", this.userBanned);
 	}
 
 	public unhookEvent(){
 		this.bot.client.off("guildMemberRemove", this.userLeft);
 		this.bot.client.off("guildMemberAdd", this.userJoin);
+		this.bot.client.off("guildBanAdd", this.userBanned);
 	}
 
 	private async userLeft(guild: eris.Guild, member: eris.Member){
@@ -39,6 +45,34 @@ export class GuildEventHandler {
 			dbUser.guilds.splice(index, 1);
 			await this.bot.db.saveEntity(dbUser, DatabaseEntities.User);
 		}
+
+		const config = dbGuild.configs.find((x) => x.configType === ConfigFeature.JoinLeaveNotification);
+		if (config){
+			if (config.enabled){
+				const embed = new DiscordEmbed();
+				const audit = await this.getAuditLog(guild, member);
+
+				if (audit){
+					if (audit.actionType === 22){
+						return;
+					}
+					embed.setAuthor("User Kicked", "", this.bot.client.user.avatarURL);
+					embed.addField("Kicked by", `${audit.user.username}#${audit.user.discriminator}`, true);
+					embed.addField("Reason", `${audit.reason || "Unspecified"}`, true);
+				}
+				else{
+					embed.setAuthor("User Left", "", this.bot.client.user.avatarURL);
+				}
+
+				embed.setColor(0xfa5f5f);
+				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
+				embed.addField("ID", `${member.id}`, true);
+				embed.setThumbnail(member.avatarURL);
+				embed.setFooter("", moment().utc().format("LLL"));
+
+				this.bot.client.createMessage(config.value, embed.getEmbed());
+			}
+		}
 	}
 
 	private async userJoin(guild: eris.Guild, member: eris.Member){
@@ -53,5 +87,60 @@ export class GuildEventHandler {
 			dbUser.guilds.push(dbGuild);
 			await this.bot.db.saveEntity(dbUser, DatabaseEntities.User);
 		}
+
+		const config = dbGuild.configs.find((x) => x.configType === ConfigFeature.JoinLeaveNotification);
+		if (config){
+			if (config.enabled){
+				const embed = new DiscordEmbed();
+
+				embed.setAuthor("User Joined", "", this.bot.client.user.avatarURL);
+				embed.setColor(0xa6f28f);
+				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
+				embed.addField("ID", `${member.id}`, true);
+				embed.setThumbnail(member.avatarURL);
+				embed.setFooter("", moment().utc().format("LLL"));
+
+				this.bot.client.createMessage(config.value, embed.getEmbed());
+			}
+		}
+	}
+
+	private async userBanned(guild: Guild, member: Member){
+		const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+
+		const config = dbGuild.configs.find((x) => x.configType === ConfigFeature.JoinLeaveNotification);
+		if (config){
+			if (config.enabled){
+				const audit = await this.getAuditLog(guild, member);
+				const embed = new DiscordEmbed();
+				if (audit){
+					embed.addField("Banned by", `${audit.user.username}#${audit.user.discriminator}`, true);
+					embed.addField("Reason", audit.reason || "Unspecified", true);
+				}
+
+				embed.setAuthor("User Banned 🔨", "", this.bot.client.user.avatarURL);
+				embed.setColor(0xfa5f5f);
+				embed.addField("ID", `${member.id}`, true);
+				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
+				embed.setThumbnail(member.avatarURL);
+				embed.setFooter("", moment().utc().format("LLL"));
+
+				this.bot.client.createMessage(config.value, embed.getEmbed());
+			}
+		}
+		return;
+	}
+
+	private async getAuditLog(guild: Guild, user: Member){
+		const audits = await guild.getAuditLogs();
+		for (let index = 0; index < 5; index++){
+			if (audits.entries[index].targetID === user.id){
+				const audit = audits.entries[index];
+				if (audit.actionType  === 20 || audit.actionType === 22){
+					return audits.entries[index];
+				}
+			}
+		}
+		return null;
 	}
 }
