@@ -13,7 +13,7 @@ import { getChannelByName } from "../../utility/Util";
 const LEVEL_UP_EMOJI = "🎉";
 const KICK_BAN_EMOJI = "🛑";
 const JOIN_LEAVE_EMOJI = "🚪";
-const EDIT_DELETE_EMOJI = "📝k:";
+const EDIT_DELETE_EMOJI = "📝";
 
 export default class Settings extends Command {
 	constructor(){
