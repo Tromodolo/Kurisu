@@ -13,6 +13,7 @@ import { getChannelByName } from "../../utility/Util";
 const LEVEL_UP_EMOJI = "🎉";
 const KICK_BAN_EMOJI = "🛑";
 const JOIN_LEAVE_EMOJI = "🚪";
+const EDIT_DELETE_EMOJI = "📝k:";
 
 export default class Settings extends Command {
 	constructor(){
@@ -46,11 +47,13 @@ export default class Settings extends Command {
 ${LEVEL_UP_EMOJI} - Level-up Messages
 ${KICK_BAN_EMOJI} - Ban/Kick Messages
 ${JOIN_LEAVE_EMOJI} - Join/Leave Messages
+${EDIT_DELETE_EMOJI} - Edited/Deleted Messages
 			`);
 			const sentMessage = await message.channel.createMessage(embed.getEmbed());
 			sentMessage.addReaction(LEVEL_UP_EMOJI);
 			sentMessage.addReaction(KICK_BAN_EMOJI);
 			sentMessage.addReaction(JOIN_LEAVE_EMOJI);
+			sentMessage.addReaction(EDIT_DELETE_EMOJI);
 
 			const reactions = new ReactionListener(bot.client, sentMessage, 30 * 1000);
 			reactions.on("reactionAdd", async (reactionMessage: Message, emoji: Emoji, userId: string) => {
@@ -59,17 +62,21 @@ ${JOIN_LEAVE_EMOJI} - Join/Leave Messages
 						case LEVEL_UP_EMOJI:
 							await reactionMessage.removeReactions();
 							await handleEnabled(reactionMessage, bot.db, guild, bot.client, userId, ConfigFeature.LevelUpMessage);
-							return;
+							return resolve();
 						case KICK_BAN_EMOJI:
 							await reactionMessage.removeReactions();
 							await handleSelectChannel(reactionMessage, bot.db, guild, bot.client, userId, ConfigFeature.KickBanNotification);
-							return;
+							return resolve();
 						case JOIN_LEAVE_EMOJI:
 							await reactionMessage.removeReactions();
 							await handleSelectChannel(reactionMessage, bot.db, guild, bot.client, userId, ConfigFeature.JoinLeaveNotification);
-							return;
+							return resolve();
+						case EDIT_DELETE_EMOJI:
+							await reactionMessage.removeReactions();
+							await handleSelectChannel(reactionMessage, bot.db, guild, bot.client, userId, ConfigFeature.EditMessageNotification);
+							return resolve();
 						default:
-							return;
+							return resolve();
 					}
 				}
 			});

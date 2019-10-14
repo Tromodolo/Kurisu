@@ -1,4 +1,4 @@
-import eris, { Guild, Member } from "eris";
+import eris, { Guild, Member, Message, TextChannel } from "eris";
 import { DatabaseHandler, DatabaseEntities } from "./DatabaseHandler";
 import { Bot } from "../bot";
 import { ConfigFeature } from "../database/models/GuildConfig";
@@ -12,6 +12,8 @@ export class GuildEventHandler {
 		this.userLeft = this.userLeft.bind(this);
 		this.userJoin = this.userJoin.bind(this);
 		this.userBanned = this.userBanned.bind(this);
+		this.messageDelete = this.messageDelete.bind(this);
+		this.messageEdit = this.messageEdit.bind(this);
 	}
 
 	initialize(bot: Bot){
@@ -22,12 +24,69 @@ export class GuildEventHandler {
 		this.bot.client.on("guildMemberRemove", this.userLeft);
 		this.bot.client.on("guildMemberAdd", this.userJoin);
 		this.bot.client.on("guildBanAdd", this.userBanned);
+		this.bot.client.on("messageDelete", this.messageDelete);
+		this.bot.client.on("messageUpdate", this.messageEdit);
 	}
 
 	public unhookEvent(){
 		this.bot.client.off("guildMemberRemove", this.userLeft);
 		this.bot.client.off("guildMemberAdd", this.userJoin);
 		this.bot.client.off("guildBanAdd", this.userBanned);
+		this.bot.client.off("messageDelete", this.messageDelete);
+		this.bot.client.off("messageUpdate", this.messageEdit);
+	}
+
+	private async messageDelete(message: Message){
+		if (!message.content){
+			return;
+		}
+		const guild = (message.channel as TextChannel).guild;
+		if (!guild){
+			return;
+		}
+		const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+
+		const config = dbGuild.configs.find((x) => x.configType === ConfigFeature.EditMessageNotification);
+		if (config){
+			if (config.enabled){
+				const embed = new DiscordEmbed();
+
+				embed.setAuthor(`Message Deleted (${message.author.username}#${message.author.discriminator})`, "", message.author.avatarURL);
+				embed.setColor(0xfa5f5f);
+				embed.setDescription(message.content);
+				embed.setFooter("", moment(message.createdAt).utc().format());
+
+				this.bot.client.createMessage(config.value, embed.getEmbed());
+			}
+		}
+	}
+
+	private async messageEdit(newMessage: Message, oldMessage?: Message){
+		if (!oldMessage || !newMessage || newMessage.author.bot){
+			return;
+		}
+		const guild = (newMessage.channel as TextChannel).guild;
+		if (!guild){
+			return;
+		}
+		const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+
+		const config = dbGuild.configs.find((x) => x.configType === ConfigFeature.EditMessageNotification);
+		if (config){
+			if (config.enabled){
+				const embed = new DiscordEmbed();
+
+				embed.setAuthor(`Message Edited (${newMessage.author.username}#${newMessage.author.discriminator})`, "", newMessage.author.avatarURL);
+				embed.setColor(0x5faafa);
+
+				embed.addField("Old", oldMessage.content.length > 250 ? oldMessage.content.substring(0, 249) + "..." : oldMessage.content || "");
+				embed.addField("New", newMessage.content.length > 250 ? newMessage.content.substring(0, 249) + "..." : newMessage.content || "");
+
+				embed.setFooter("", moment(newMessage.createdAt).utc().format("LLL"));
+
+				this.bot.client.createMessage(config.value, embed.getEmbed());
+			}
+		}
 	}
 
 	private async userLeft(guild: eris.Guild, member: eris.Member){

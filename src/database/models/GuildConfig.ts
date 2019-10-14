@@ -26,5 +26,6 @@ export class GuildConfig {
 export enum ConfigFeature{
 	JoinLeaveNotification,
 	KickBanNotification,
+	EditMessageNotification,
 	LevelUpMessage,
 }
