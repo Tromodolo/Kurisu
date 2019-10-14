@@ -23,6 +23,7 @@
 ## ✍️ Authors <a name = "authors"></a>
 + [@Tromodolo](https://github.com/tromodolo) - Start of project and creator
 + [@CeruleanSong](https://github.com/CeruleanSong) - Help with coding
++ [@Twirlybee](https://twitter.com/twirlybee) - Made bot avatar
 
 See also the list of [contributors](https://github.com/Tromodolo/Kurisu-Node/contributors) who participated in this project.
 
