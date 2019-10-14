@@ -115,6 +115,7 @@ Currently: **${config.enabled ? (activeChannel || {name: null}).name || "Deleted
 				config.enabled = false;
 				embed.setDescription(":x: Setting successfully disabled.");
 				await reactionMessage.edit(embed.getEmbed());
+				responseHandler.stopListening();
 				break;
 			case "cancel":
 				embed.setDescription(":exclamation: Menu canceled.");
@@ -134,7 +135,7 @@ Currently: **${config.enabled ? (activeChannel || {name: null}).name || "Deleted
 		}
 
 		if (index < 0){
-		guild.configs.push(config);
+			guild.configs.push(config);
 		}
 		else{
 			guild.configs[index] = config;
@@ -169,19 +170,21 @@ Currently: ${config.enabled ? "Enabled" : "Disabled"}`);
 	responseHandler.on("response", async (responseMessage: Message) => {
 		switch (responseMessage.content.toLowerCase()){
 			case "enable":
+				responseHandler.stopListening();
 				config.enabled = true;
 				embed.setDescription(":white_check_mark: Setting successfully enabled.");
 				await reactionMessage.edit(embed.getEmbed());
 				break;
 			case "disable":
+				responseHandler.stopListening();
 				config.enabled = false;
 				embed.setDescription(":x: Setting successfully disabled.");
 				await reactionMessage.edit(embed.getEmbed());
 				break;
 			case "cancel":
+				responseHandler.stopListening();
 				embed.setDescription(":exclamation: Menu canceled.");
 				await reactionMessage.edit(embed.getEmbed());
-				responseHandler.stopListening();
 				return;
 			default:
 				return;
