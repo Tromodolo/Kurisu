@@ -1,7 +1,7 @@
 import { Message } from "eris";
-import Command from "../../models/Command";
-import { DatabaseEntities } from "../../handlers/DatabaseHandler";
 import { Bot } from "../../bot";
+import { DatabaseEntities } from "../../handlers/DatabaseHandler";
+import Command from "../../models/Command";
 
 export default class SetDescription extends Command {
 	constructor(){

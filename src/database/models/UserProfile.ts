@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn } from 'typeorm';
-import { UserAchievement } from './UserAchievement';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 /* tslint:disable:member-access variable-name */
 

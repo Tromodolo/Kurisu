@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Index, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Achievement } from './Achievement';
 import { User } from './User';
 

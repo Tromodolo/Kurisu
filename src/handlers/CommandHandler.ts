@@ -1,13 +1,11 @@
+import eris, { Message } from "eris";
 import fs from "fs";
 import path from "path";
-
-import eris, { Message } from "eris";
-
+import { Bot } from "../bot";
 import config from "../config";
 import CommandModule from "../models/CommandModule";
-import { Bot } from "../bot";
 
-class CommandHandler{
+export class CommandHandler{
 	private moduleList: CommandModule[] = [];
 	private bot: Bot;
 
@@ -118,7 +116,3 @@ class CommandHandler{
 		}
 	}
 }
-
-export {
-	CommandHandler,
-};

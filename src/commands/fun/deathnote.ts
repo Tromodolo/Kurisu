@@ -1,9 +1,9 @@
 import { createCanvas, Image } from "canvas";
+import drawMultilineText from "canvas-multiline-text";
 import { Message } from "eris";
 import fs from "fs";
 import path from "path";
 import Command from "../../models/Command";
-import drawMultilineText from "canvas-multiline-text";
 
 export default class Deathnote extends Command {
 	constructor(){

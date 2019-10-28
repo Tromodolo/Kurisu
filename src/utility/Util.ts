@@ -6,12 +6,11 @@
  * Last Edit - March 29, 2019 by Tromo
  */
 
-import { Client, Guild, Member, Message, Role, TextChannel, AnyGuildChannel } from "eris";
-import { google, GoogleApis } from "googleapis";
+import { Client, Guild, Member, Message, Role, TextChannel } from "eris";
+import Fuse from "fuse.js";
+import { google } from "googleapis";
 import config from "../config";
 import { DiscordEmbed } from "./DiscordEmbed";
-
-import Fuse from "fuse.js";
 
 const youtube = google.youtube({
 	version: "v3",

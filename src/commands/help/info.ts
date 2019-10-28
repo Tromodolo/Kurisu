@@ -8,10 +8,10 @@
 
 import { Message } from "eris";
 import moment from "moment";
+import { Bot } from "../../bot";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
-import { Bot } from "../../bot";
 
 export default class Info extends Command {
 	constructor(){

@@ -1,15 +1,10 @@
-import { User } from "../database/models/User";
-import { Guild } from "../database/models/Guild";
+import eris, { Message } from "eris";
 import moment from "moment";
-
-import eris, { Message, Member } from "eris";
-import { Repository } from "typeorm";
-import { DatabaseHandler, DatabaseEntities } from "./DatabaseHandler";
-import { UserLevel } from "../database/models/UserLevel";
-import { ConfigFeature } from "../database/models/GuildConfig";
 import { Bot } from "../bot";
+import { ConfigFeature } from "../database/models/GuildConfig";
+import { DatabaseEntities } from "./DatabaseHandler";
 
-class ExperienceHandler{
+export class ExperienceHandler{
 	private bot: Bot;
 
 	constructor(){
@@ -101,7 +96,3 @@ class ExperienceHandler{
 		return Math.random() * (max - min) + min;
 	}
 }
-
-export {
-	ExperienceHandler,
-};

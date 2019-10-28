@@ -1,10 +1,10 @@
 import { Member, Message, PrivateChannel } from "eris";
 import moment from "moment";
+import { Bot } from "../../bot";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getHighestRole, getUserByMessage } from "../../utility/Util";
-import { Bot } from "../../bot";
 
 export default class Ban extends Command {
 	constructor(){

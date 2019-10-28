@@ -1,7 +1,7 @@
 import { Message } from "eris";
 import pm2 from "pm2";
-import Command from "../../models/Command";
 import { Bot } from "../../bot";
+import Command from "../../models/Command";
 
 export default class Stop extends Command {
 	constructor(){

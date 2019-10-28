@@ -1,8 +1,8 @@
 import { Message } from "eris";
+import { Bot } from "../../bot";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
-import { Bot } from "../../bot";
 /**
  * help.ts
  *

@@ -1,15 +1,16 @@
-import "reflect-metadata";
-
-import config from "../config";
 import eris from "eris";
-import { User } from "../database/models/User";
-import { ConnectionManager, Connection, Repository } from "typeorm";
-import { UserLevel } from "../database/models/UserLevel";
+import "reflect-metadata";
+import { Connection, ConnectionManager, Repository } from "typeorm";
+import config from "../config";
+import { Achievement } from "../database/models/Achievement";
 import { Guild } from "../database/models/Guild";
 import { GuildConfig } from "../database/models/GuildConfig";
-import { UserProfile } from "../database/models/UserProfile";
+import { GuildRole } from "../database/models/GuildRole";
+import { GuildRoleMenu } from "../database/models/GuildRoleMenu";
+import { User } from "../database/models/User";
 import { UserAchievement } from "../database/models/UserAchievement";
-import { Achievement } from "../database/models/Achievement";
+import { UserLevel } from "../database/models/UserLevel";
+import { UserProfile } from "../database/models/UserProfile";
 
 /**
  * Creates a new DatabaseHandler based off of config file
@@ -44,11 +45,14 @@ class DatabaseHandler{
 			type: "mysql",
 			username: config.db.databaseUsername,
 			password: config.db.databasePassword,
+			charset: "utf8mb4_bin",
 			entities: [
 				User,
 				UserLevel,
 				UserProfile,
 				Guild,
+				GuildRoleMenu,
+				GuildRole,
 				GuildConfig,
 				UserAchievement,
 				Achievement,

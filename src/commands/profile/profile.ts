@@ -1,9 +1,9 @@
 import { Message } from "eris";
+import { Bot } from "../../bot";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getUserByMessage } from "../../utility/Util";
-import { Bot } from "../../bot";
 
 export default class Profile extends Command {
 	constructor(){

@@ -1,9 +1,9 @@
 import eris, { Guild, Member, Message, TextChannel } from "eris";
-import { DatabaseHandler, DatabaseEntities } from "./DatabaseHandler";
+import moment from "moment";
 import { Bot } from "../bot";
 import { ConfigFeature } from "../database/models/GuildConfig";
 import { DiscordEmbed } from "../utility/DiscordEmbed";
-import moment from "moment";
+import { DatabaseEntities } from "./DatabaseHandler";
 
 export class GuildEventHandler {
 	private bot: Bot;

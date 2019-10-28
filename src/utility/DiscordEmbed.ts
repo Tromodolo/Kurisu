@@ -21,7 +21,7 @@
  * @prop { Author } author
  * @prop { Field[] } fields
  */
-class DiscordEmbed{
+export class DiscordEmbed{
 	private title?: string;
 	private description?: string;
 	private url?: string;
@@ -203,7 +203,3 @@ class DiscordEmbed{
 		return fullEmbed;
 	}
 }
-
-export {
-	DiscordEmbed,
-};

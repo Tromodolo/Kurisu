@@ -1,7 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, ManyToMany, JoinTable, PrimaryColumn } from 'typeorm';
-import { UserLevel } from './UserLevel';
-import { Guild } from './Guild';
-import { UserProfile } from './UserProfile';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 /* tslint:disable:member-access variable-name */
 

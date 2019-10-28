@@ -1,13 +1,13 @@
+import { Client, Emoji, GuildChannel, Message, TextChannel } from "eris";
+import { Bot } from "../../bot";
 import botConfig from "../../config";
-import Command from "../../models/Command";
+import { Guild } from "../../database/models/Guild";
+import { ConfigFeature, GuildConfig } from "../../database/models/GuildConfig";
+import { DatabaseHandler } from "../../handlers";
 import ReactionListener from "../../handlers/ReactionListener";
 import ResponseListener from "../../handlers/ResponseListener";
-import { Message, Client, Emoji, GuildChannel, TextChannel } from "eris";
+import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
-import { DatabaseHandler } from "../../handlers";
-import { ConfigFeature, GuildConfig } from "../../database/models/GuildConfig";
-import { Guild } from "../../database/models/Guild";
-import { Bot } from "../../bot";
 import { getChannelByName } from "../../utility/Util";
 
 const LEVEL_UP_EMOJI = "🎉";

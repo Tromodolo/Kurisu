@@ -1,7 +1,7 @@
 /**
  * Bot.ts - Main bot entrypoint
  */
-import eris, { Client, Command } from "eris";
+import eris, { Client } from "eris";
 import config from "./config";
 import { CommandHandler, DatabaseHandler, ExperienceHandler, GuildEventHandler } from "./handlers";
 
@@ -40,7 +40,8 @@ export class Bot {
 			await this.db.init();
 			console.log("Database connection successful");
 		}
-		catch {
+		catch (e) {
+			console.error(e);
 			throw new Error("Database connection failed");
 		}
 
@@ -54,6 +55,7 @@ export class Bot {
 
 		console.log("Commands loaded successfully");
 		this.commands.loadCommands();
+
 		console.log("Registering events");
 		this.commands.hookEvent();
 		this.guildEvent.hookEvent();

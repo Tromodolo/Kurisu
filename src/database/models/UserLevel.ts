@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 /* tslint:disable:member-access variable-name */
 

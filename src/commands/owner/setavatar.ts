@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Message } from "eris";
-import Command from "../../models/Command";
 import { Bot } from "../../bot";
+import Command from "../../models/Command";
 
 export default class SetAvatar extends Command {
 	constructor(){

@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, ManyToMany, JoinTable, OneToMany, PrimaryColumn, Unique } from 'typeorm';
-import { UserLevel } from './UserLevel';
+import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { GuildConfig } from './GuildConfig';
+import { GuildRoleMenu } from './GuildRoleMenu';
 import { User } from './User';
-import { GuildConfig, ConfigFeature } from './GuildConfig';
 
 /* tslint:disable:member-access variable-name */
 
@@ -19,6 +19,9 @@ export class Guild {
 
 	@OneToMany((type) => GuildConfig, (config) => config.guild, {cascade: true})
 	configs: GuildConfig[];
+
+	@OneToMany((type) => GuildRoleMenu, (menu) => menu.guild, {cascade: true})
+	roleMenus: GuildRoleMenu[];
 
 	@ManyToMany((type) => User, {cascade: true})
 	@JoinTable()

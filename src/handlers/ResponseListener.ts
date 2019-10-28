@@ -1,5 +1,5 @@
-import { EventEmitter } from "events";
 import { Client, Message } from "eris";
+import { EventEmitter } from "events";
 
 export default class ResponseListener extends EventEmitter{
 	private client: Client;
