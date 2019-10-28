@@ -5,6 +5,9 @@ import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getUserByMessage } from "../../utility/Util";
 
+import image2base64 from "image-to-base64";
+import * as ColorThief from "colorthief";
+
 export default class Profile extends Command {
 	constructor(){
 		super();
@@ -29,10 +32,26 @@ export default class Profile extends Command {
 				}
 			}
 
+			if (user.bot){
+				message.channel.createMessage(":no_good: Bots do not have profiles.");
+				return;
+			}
+
 			const dbUser = await bot.db.getOrCreateUser(user);
 
 			const embed = new DiscordEmbed();
-			embed.setColor(parseInt(config.bot.color));
+
+			const base64 = "data:image/png;base64," + await image2base64(user.avatarURL);
+			const mainColour = await ColorThief.getColor(base64);
+			let hexColor = "";
+			if (mainColour){
+				hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
+			}
+			else{
+				hexColor = config.bot.color;
+			}
+			embed.setColor(parseInt(hexColor));
+
 			embed.setTitle("Profile");
 			embed.setThumbnail(user.avatarURL);
 			embed.addField("Name", user.username, true);

@@ -12,6 +12,9 @@ import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getUserByMessage } from "../../utility/Util";
 
+import image2base64 from "image-to-base64";
+import * as ColorThief from "colorthief";
+
 export default class Avatar extends Command {
 	constructor(){
 		super();
@@ -32,7 +35,6 @@ export default class Avatar extends Command {
 			const embed = new DiscordEmbed();
 
 			embed.setTimestamp(new Date(Date.now()).toISOString());
-			embed.setColor(parseInt(config.bot.color));
 
 			if (!user) {
 				return "User not found";
@@ -42,6 +44,17 @@ export default class Avatar extends Command {
 
 			let userAvatar = user.avatarURL.replace("jpg", "png");
 			userAvatar = userAvatar.replace("?size=128", "?size=1024");
+
+			const base64 = "data:image/png;base64," + await image2base64(userAvatar);
+			const mainColour = await ColorThief.getColor(base64);
+			let hexColor = "";
+			if (mainColour){
+				hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
+			}
+			else{
+				hexColor = config.bot.color;
+			}
+			embed.setColor(parseInt(hexColor));
 
 			embed.setUrl(userAvatar);
 			embed.setImage(userAvatar);

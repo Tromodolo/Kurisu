@@ -11,6 +11,9 @@ import moment from "moment";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getUserByMessage } from "../../utility/Util";
+import * as ColorThief from "colorthief";
+import image2base64 from "image-to-base64";
+import config from "../../config";
 
 export default class WhoIs extends Command {
 	constructor(){
@@ -40,6 +43,17 @@ export default class WhoIs extends Command {
 			}
 
 			let userAvatar = user.avatarURL.replace("jpg", "png");
+			const base64 = "data:image/png;base64," + await image2base64(userAvatar);
+			const mainColour = await ColorThief.getColor(base64);
+			let hexColor = "";
+			if (mainColour){
+				hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
+			}
+			else{
+				hexColor = config.bot.color;
+			}
+			embed.setColor(parseInt(hexColor));
+
 			userAvatar = userAvatar.replace("?size=128", "?size=1024");
 			embed.setThumbnail(userAvatar);
 
