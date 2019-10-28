@@ -6,7 +6,7 @@
  * Last Edit - March 29 2019 by Tromo
  */
 
-import { Message } from "eris";
+import { Message, GuildChannel } from "eris";
 import config from "../../config";
 import Command from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
@@ -31,33 +31,57 @@ export default class Avatar extends Command {
 
 	public exec(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
-			const user = getUserByMessage(message, args);
+			let user = getUserByMessage(message, args);
 			const embed = new DiscordEmbed();
 
 			embed.setTimestamp(new Date(Date.now()).toISOString());
 
-			if (!user) {
-				return "User not found";
-			}
+			if (args[0] && args[0].toLowerCase() === "server"){
+				embed.setTitle(`Avatar for ${(message.channel as GuildChannel).guild.name}`);
 
-			embed.setTitle(`Avatar for ${user.username}#${user.discriminator}`);
+				let avatar = ((message.channel as GuildChannel).guild.iconURL || "").replace("jpg", "png");
 
-			let userAvatar = user.avatarURL.replace("jpg", "png");
-			userAvatar = userAvatar.replace("?size=128", "?size=1024");
+				const base64 = "data:image/png;base64," + await image2base64(avatar);
+				const mainColour = await ColorThief.getColor(base64);
+				let hexColor = "";
+				if (mainColour){
+					hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
+				}
+				else{
+					hexColor = config.bot.color;
+				}
+				embed.setColor(parseInt(hexColor));
 
-			const base64 = "data:image/png;base64," + await image2base64(userAvatar);
-			const mainColour = await ColorThief.getColor(base64);
-			let hexColor = "";
-			if (mainColour){
-				hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
+				avatar = avatar.replace("?size=128", "?size=1024");
+
+				embed.setUrl(avatar);
+				embed.setImage(avatar);
 			}
 			else{
-				hexColor = config.bot.color;
-			}
-			embed.setColor(parseInt(hexColor));
+				if (!user) {
+					return "User not found";
+				}
 
-			embed.setUrl(userAvatar);
-			embed.setImage(userAvatar);
+				embed.setTitle(`Server Icon for ${user.username}#${user.discriminator}`);
+
+				let userAvatar = user.avatarURL.replace("jpg", "png");
+				userAvatar = userAvatar.replace("?size=128", "?size=1024");
+
+				const base64 = "data:image/png;base64," + await image2base64(userAvatar);
+				const mainColour = await ColorThief.getColor(base64);
+				let hexColor = "";
+				if (mainColour){
+					hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
+				}
+				else{
+					hexColor = config.bot.color;
+				}
+				embed.setColor(parseInt(hexColor));
+
+				embed.setUrl(userAvatar);
+				embed.setImage(userAvatar);
+			}
+
 
 			await message.channel.createMessage(embed.getEmbed());
 			return resolve();
