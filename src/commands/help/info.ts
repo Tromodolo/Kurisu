@@ -34,7 +34,7 @@ export default class Info extends Command {
 			embed.setColor(parseInt(config.bot.color));
 			embed.setAuthor("Bot information:", bot.client.user.avatarURL, bot.client.user.avatarURL);
 
-			embed.addField("Devs", config.bot.developers.length > 0 ? config.bot.developers.join(",\n") : "Uh Oh I don't know how this happened", true);
+			embed.addField("Devs", config.bot.developers.length > 0 ? config.bot.developers.map((x) => x.name).join(",\n") : "Uh Oh I don't know how this happened", true);
 			embed.addField("Node.js Version", process.version, true);
 			embed.addField("Discord Library", config.bot.libraryVersion, true);
 
