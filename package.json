@@ -11,15 +11,24 @@
   "bugs": {
     "url": "https://github.com/Tromodolo/Kurisu-Node/issues"
   },
+  "scripts": {
+    "run": "tsc && node build/bot.js",
+    "test": "mocha -r ts-node/register test/*.spec.ts",
+    "build": "tsc"
+  },
   "homepage": "https://github.com/Tromodolo/Kurisu-Node#readme",
   "dependencies": {
     "@types/axios": "^0.14.0",
+    "@types/chai": "^4.2.4",
     "@types/html-to-text": "^1.4.31",
     "@types/ip": "^1.1.0",
+    "@types/lodash": "^4.14.144",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^11.12.1",
     "axios": "^0.18.0",
     "canvas": "^2.6.0",
     "canvas-multiline-text": "^1.0.3",
+    "chai": "^4.2.0",
     "colorthief": "^2.3.0",
     "eris": "^0.11.0",
     "fuse.js": "^3.4.5",
@@ -27,11 +36,14 @@
     "html-to-text": "^5.0.0",
     "image-to-base64": "^2.0.1",
     "ip": "^1.1.5",
+    "lodash": "^4.17.15",
+    "mocha": "^6.2.2",
     "moment": "^2.24.0",
     "mysql": "^2.16.0",
     "pm2": "^3.4.1",
     "reflect-metadata": "^0.1.13",
     "seedrandom": "^3.0.1",
+    "ts-node": "^8.4.1",
     "typeorm": "^0.2.16"
   },
   "devDependencies": {
