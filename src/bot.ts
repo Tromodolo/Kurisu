@@ -59,6 +59,8 @@ export class Bot {
 		this.commands.hookEvent();
 		this.guildEvent.hookEvent();
 		this.exp.hookEvent();
+
+		this.client.connect();
 	}
 }
 const bot = new Bot(config, false);
