@@ -31,10 +31,10 @@ export default class Avatar extends Command {
 
 	public exec(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
-			let user = getUserByMessage(message, args);
+			const user = getUserByMessage(message, args);
 			const embed = new DiscordEmbed();
 
-			embed.setTimestamp(new Date(Date.now()).toISOString());
+			embed.setTimestamp(new Date());
 
 			if (args[0] && args[0].toLowerCase() === "server"){
 				embed.setTitle(`Avatar for ${(message.channel as GuildChannel).guild.name}`);

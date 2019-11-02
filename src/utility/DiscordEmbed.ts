@@ -5,201 +5,164 @@
  *
  */
 
+export type Footer = {
+	text: string;
+	icon_url?: string;
+}
+
+export type Thumbnail = {
+	url?: string;
+}
+
+export type Image = {
+	url?: string;
+}
+
+export type Author = {
+	name: string;
+	url?: string;
+	icon_url?: string;
+}
+
+export type Field = {
+	name: string,
+	value: string,
+	inline?: boolean,
+}
+
+export type Embed = {
+	title?: string;
+	description?: string;
+	url?: string;
+	color?: number;
+	timestamp?: string;
+	footer?: Footer;
+	thumbnail?: Thumbnail;
+	image?: Image;
+	author?: Author;
+	fields?: Field[];
+}
+
 /**
- * Creates a embeded message
+ * Creates a embedded message
  *
- * TODO - add descriptions to JSDoc
  * @class DiscordEmbed
- * @prop { string } title
- * @prop { string } description
- * @prop { string } url
- * @prop { number } color
- * @prop { string } timestamp
- * @prop { Footer } footer
- * @prop { Thumbnail } thumbnail
- * @prop { Image } image
- * @prop { Author } author
- * @prop { Field[] } fields
  */
 export class DiscordEmbed{
-	private title?: string;
-	private description?: string;
-	private url?: string;
-	private color?: number;
-	private timestamp?: string;
-	private footer?: {
-		icon_url?: string,
-		text?: string,
-	};
-	private thumbnail?: {
-		url?: string,
-	};
-	private image?: {
-		url?: string,
-	};
-	private author?: {
-		name: string,
-		url?: string,
-		icon_url?: string,
-	};
-	private fields?: Array<{
-		name: string,
-		value: string,
-		inline?: boolean,
-	}>;
+	private _embed: Embed = {};
 
 	/**
-	 * @param { string } title set the title field
+	 * @param { string } title Title
 	 */
 	public setTitle(title: string) {
-		this.title = title;
+		this._embed.title = title;
 	}
 
 	/**
-	 * @param { string } description set the description field
+	 * @param { string } description Description
 	 */
-	public  setDescription(description: string) {
-		this.description = description;
+	public setDescription(description: string) {
+		this._embed.description = description;
 	}
 
 	/**
-	 * @param { string } url set the url field
+	 * @param { string } url URL
 	 */
-	public  setUrl(url: string) {
-		this.url = url;
+	public setUrl(url: string) {
+		this._embed.url = url;
 	}
 
 	/**
-	 * @param { string } color set the color field
+	 * @param { string } color Color of embed. Color is an RGB Int
 	 */
-	public  setColor(color: number) {
-		this.color = color;
+	public setColor(color: number) {
+		this._embed.color = color;
 	}
 
 	/**
-	 * @param { string } timestamp set the timestamp field
+	 * @param { Date } timestamp Timestamp of embed
 	 */
-	public setTimestamp(timestamp: string) {
-		this.timestamp = timestamp;
+	public setTimestamp(timestamp: Date) {
+		this._embed.timestamp = timestamp.toISOString();
 	}
 
 	/**
-	 * @param { string } icon_url set the icon_url of a footer
-	 * @param { string } text set the text field of the footer
+	 * @param { string } text Footer text
+	 * @param { string } icon_url (Optional) Footer 
 	 */
-	public setFooter(icon_url: string, text: string) {
-		this.footer = {
-			icon_url,
+	public setFooter(text: string, icon_url?: string) {
+		const footer: Footer = {
 			text,
-		 };
+		}
+		if (icon_url){
+			footer.icon_url = icon_url;
+		}
+		this._embed.footer = footer;
 	}
 
 	/**
-	 * @param { string } url set the url of the thumbnail image
+	 * @param { string } url Thumbnail URL
 	 */
 	public setThumbnail(url: string) {
-		this.thumbnail = {
+		this._embed.thumbnail = {
 			url,
 		};
 	}
 
 	/**
-	 * @param { string } url set the url of the image
+	 * @param { string } url Image URL
 	 */
 	public setImage(url: string) {
-		this.image = {
+		this._embed.image = {
 			url,
 		};
 	}
 
 	/**
-	 * @param { string } name set the title field of the author section
-	 * @param { string } url add a link to the author text
-	 * @param { string } icon_url add a image next to the author text
+	 * @param { string } name Author Name
+	 * @param { string } url (Optional) Author URL
+	 * @param { string } icon_url (Optional) Author Icon
 	 */
-	public  setAuthor(name: string, url: string, icon_url: string) {
-		this.author = {
+	public setAuthor(name: string, url?: string, icon_url?: string) {
+		const author: Author = {
 			name,
-			url,
-			icon_url,
 		};
+		if (url){
+			author.url = url;
+		}
+		if (icon_url){
+			author.icon_url = icon_url;
+		}
+		this._embed.author = author;
 	}
 
 	/**
-	 * Might change this later to take in a (name[], value[], inline[])
-	 *
-	 * @param { Field[] } fields An array of Field objects
-	 */
-	public setFields(fields: Array<{name: string, value: string, inline: boolean}>) {
-		this.fields = fields;
-	}
-
-	/**
-	 * Adds a field to the current embed instance
-	 *
 	 * @param { string } name Name of field
 	 * @param { string } value Value of field
-	 * @param { boolean } [ inline ] inline Whether or not the field should be inline
+	 * @param { boolean } [ inline ] (Optional) Whether the field is inline or not
 	 */
 	public addField(name: string, value: string, inline?: boolean) {
-		if (!this.fields){
-			this.fields = [];
+		if (!this._embed.fields){
+			this._embed.fields = [];
 		}
-		const newField = {
+		const newField: Field = {
 			name,
 			value,
-			inline,
 		};
-		this.fields.push(newField);
+
+		if (inline){
+			newField.inline = inline;
+		}
+
+		this._embed.fields.push(newField);
 	}
 
 	/**
 	 * get the Embed object
 	 *
-	 * @returns { EmbedObject }An Embed object
+	 * @returns { Embed } A JSON Embed object
 	 */
 	public getEmbed(){
-		const embed: any = {};
-
-		if (this.title) {
-			embed.title = this.title;
-		}
-
-		if (this.description) {
-			embed.description = this.description;
-		}
-
-		if (this.url) {
-			embed.url = this.url;
-		}
-
-		if (this.color) {
-			embed.color = this.color;
-		}
-
-		if (this.timestamp) {
-			embed.timestamp = this.timestamp;
-		}
-
-		if (this.footer) {
-			embed.footer = this.footer;
-		}
-
-		if (this.thumbnail) {
-			embed.thumbnail = this.thumbnail;
-		}
-
-		if (this.image) {
-			embed.image = this.image;
-		}
-
-		if (this.author) {
-			embed.author = this.author;
-		}
-
-		embed.fields = this.fields;
-
-		const fullEmbed = { embed };
-		return fullEmbed;
+		return { embed: this._embed };
 	}
 }

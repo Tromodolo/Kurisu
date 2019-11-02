@@ -64,7 +64,7 @@ export default class Ban extends Command {
 				embed.setTitle(`**You were banned from ${message.member ? message.member.guild.name : "_Unavailable_"}**`);
 				embed.addField("Reason", `${reason}`);
 
-				embed.setTimestamp(moment(Date.now()).toISOString());
+				embed.setTimestamp(moment().toDate());
 
 				try{
 					user.user.getDMChannel().then(async (channel: PrivateChannel) => {
