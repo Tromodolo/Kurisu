@@ -30,10 +30,9 @@ export class Bot {
 			console.log("Successfully connected as: " + this.client.user.username + "#" + this.client.user.discriminator); // Log "Ready!"
 			await this.client.editStatus("online", {name: `${this.cnf.bot.defaultPrefix}help to get command list`});
 		});
-
-		this.initialize().then(() => this.client.connect());
 	}
-	private async initialize(){
+
+	public async connect(){
 		this.db = new DatabaseHandler();
 		try{
 			// Connect to database
@@ -62,5 +61,9 @@ export class Bot {
 		this.exp.hookEvent();
 	}
 }
+const bot = new Bot(config, false);
+bot.connect();
 
-export const bot = new Bot(config, false);
+export {
+	bot,
+};
