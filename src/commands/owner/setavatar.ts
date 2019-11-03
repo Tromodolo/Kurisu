@@ -1,23 +1,21 @@
 import axios from "axios";
 import { Message } from "eris";
 import { Bot } from "../../bot";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 
-export default class SetAvatar extends Command {
-	constructor(){
-		super();
-		this.commandName = "setavatar";
-		this.aliases = [];
-		this.description = "Sets the avatar of the bot";
-		this.fullDescription = "Sets the avatar of the bot";
-		this.usage = "setname [url]";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class SetAvatar extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "setavatar",
+			description: "Sets the avatar of the bot",
+			usage: "setavatar {url}",
+			aliases: [],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[], bot: Bot) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			if (args.length < 1){
 				message.channel.createMessage("You need to specify a url");
@@ -29,7 +27,7 @@ export default class SetAvatar extends Command {
 				.then((response) => {
 					const buffer = Buffer.from(response.data, "utf8");
 					const avatarBase = "data:image/png;base64," + buffer.toString("base64");
-					bot.client.editSelf({ avatar: avatarBase });
+					this.bot.client.editSelf({ avatar: avatarBase });
 				});
 			}
 			return resolve();

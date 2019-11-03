@@ -8,28 +8,27 @@
 
 import { Message, GuildChannel } from "eris";
 import config from "../../config";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getUserByMessage } from "../../utility/Util";
 
 import image2base64 from "image-to-base64";
 import * as ColorThief from "colorthief";
+import { Bot } from "../../bot";
 
-export default class Avatar extends Command {
-	constructor(){
-		super();
-		this.commandName = "avatar";
-		this.aliases = ["ava", "pfp", "proflepicture"];
-		this.description = "Gets avatar for a user";
-		this.fullDescription = "Gets avatar for a user, or your own if unspecified";
-		this.usage = "avatar [user]";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Avatar extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "avatar",
+			description: "Gets avatar for user/server, or your own if unspecified",
+			usage: "avatar {user}",
+			aliases: ["ava", "pfp", "proflepicture"],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[]) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			const user = getUserByMessage(message, args);
 			const embed = new DiscordEmbed();

@@ -2,27 +2,23 @@ import { Member, Message, PrivateChannel } from "eris";
 import moment from "moment";
 import { Bot } from "../../bot";
 import config from "../../config";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getHighestRole, getUserByMessage } from "../../utility/Util";
 
-export default class Ban extends Command {
-	constructor(){
-		super();
-		this.commandName = "ban";
-		this.aliases = [
-			"b",
-		];
-		this.description = "Bans a user";
-		this.fullDescription = "Bans a specified user from the server.";
-		this.usage = "ban {user} [reason]";
-		this.requirements = [
-			"banMembers",
-		];
-		this.deleteCommand = false;
+export default class Ban extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "ban",
+			description: "Bans a specified user from the server.",
+			usage: "ban {user} {reason}",
+			aliases: ["b"],
+			requirements: ["banMembers"],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[], bot: Bot) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			let user: Member | undefined;
 
@@ -37,7 +33,7 @@ export default class Ban extends Command {
 				}
 				const targetedUserRole = getHighestRole(user.guild, user);
 				const kickerRole = getHighestRole(message.member.guild, message.member);
-				const botUser = message.member.guild.members.get(bot.client.user.id);
+				const botUser = message.member.guild.members.get(this.bot.client.user.id);
 
 				if (!botUser){
 					return resolve();

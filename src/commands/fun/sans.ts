@@ -3,25 +3,24 @@ import drawMultilineText from "canvas-multiline-text";
 import { Message } from "eris";
 import fs from "fs";
 import path from "path";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
+import { Bot } from "../../bot";
 
 registerFont(path.join(__dirname, "../../../data/Comic Sans UT.ttf"), { family: "Sans" });
 
-export default class Sans extends Command {
-	constructor(){
-		super();
-		this.commandName = "sans";
-		this.aliases = [];
-		this.description = "Makes sans say something";
-		this.fullDescription = "Makes sans say something";
-		this.usage = "sans {message}";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Sans extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "sans",
+			description: "Makes sans say something",
+			usage: "sans {message}",
+			aliases: [],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[]) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			if (args.length < 1){
 				message.channel.createMessage("You need to specify a message. :<");

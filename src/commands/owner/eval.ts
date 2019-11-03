@@ -1,24 +1,21 @@
 import { Message } from "eris";
 import util from "util";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
+import { Bot } from "../../bot";
 
-export default class Eval extends Command {
-	constructor(){
-		super();
-		this.commandName = "eval";
-		this.aliases = [
-			"evaluate",
-		];
-		this.description = "Evaluates code";
-		this.fullDescription = "Evaluates code";
-		this.usage = "eval 5+5";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Eval extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "eval",
+			description: "Evaluates code",
+			usage: "info",
+			aliases: ["evaluate"],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[]) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			const before = Date.now();
 			let retStr: string = "";

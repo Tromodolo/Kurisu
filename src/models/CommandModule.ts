@@ -1,7 +1,8 @@
 import eris from "eris";
 import fs from "fs";
 import path from "path";
-import Command from "./Command";
+import KurisuCommand from "./Command";
+import { Bot } from "../bot";
 
 /**
  * Class definition for Command Modules
@@ -11,26 +12,30 @@ import Command from "./Command";
  * @prop {Command[]} commands Array of all the commands within the command group
  * @prop {string[]} permissions Array of all the different permissions needed
  */
-export default class CommandModule {
+export default class KurisuModule {
 	public name: string = "";
-	public commands: Command[] = [];
+	public commands: KurisuCommand[] = [];
 	public permissions: string[] = [];
+
+	private bot: Bot;
 
 	/**
 	 * @param name The module that the particular command belongs to
 	 * @param permissions Array of all the commands within the command module
 	 * @param commandPath Array of all the different permissions needed
 	 */
-	constructor(name: string, permissions: string[], commandPath: string){
+	constructor(bot: Bot, name: string, permissions: string[], commandPath: string){
+		this.bot = bot;
 		this.name = name;
 		this.permissions = permissions;
 
 		fs.readdir(path.join(commandPath, "./"), (folderErr, files) => {
 			for (const file of files){
-				if (!(file === "index.ts")){
+				if (!(file === "index.ts" || file === "index.js")){
 					const command = require(path.join(commandPath, `/${file}`));
 					try{
-						this.commands.push(new command.default());
+						const Command = command.default;
+						this.commands.push(new Command(this.bot));
 					}
 					catch (e){
 						continue;
@@ -57,12 +62,12 @@ export default class CommandModule {
 	/**
 	 * Checks to see whether or not a command exists in a module. Returns undefined if not found
 	 * @param name Name of command to find
-	 * @returns {undefined | Command}
+	 * @returns {undefined | KurisuCommand}
 	 */
-	public findCommand(name: string): undefined | Command {
+	public findCommand(name: string): undefined | KurisuCommand {
 		let command;
 		for (const com of this.commands){
-			if (com.commandName === name){
+			if (com.metadata.name === name || com.metadata.aliases.includes(name)){
 				command = com;
 			}
 		}

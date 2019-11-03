@@ -8,27 +8,27 @@
 export type Footer = {
 	text: string;
 	icon_url?: string;
-}
+};
 
 export type Thumbnail = {
 	url?: string;
-}
+};
 
 export type Image = {
 	url?: string;
-}
+};
 
 export type Author = {
 	name: string;
 	url?: string;
 	icon_url?: string;
-}
+};
 
 export type Field = {
 	name: string,
 	value: string,
 	inline?: boolean,
-}
+};
 
 export type Embed = {
 	title?: string;
@@ -41,7 +41,7 @@ export type Embed = {
 	image?: Image;
 	author?: Author;
 	fields?: Field[];
-}
+};
 
 /**
  * Creates a embedded message
@@ -88,12 +88,12 @@ export class DiscordEmbed{
 
 	/**
 	 * @param { string } text Footer text
-	 * @param { string } icon_url (Optional) Footer 
+	 * @param { string } icon_url (Optional) Footer
 	 */
 	public setFooter(text: string, icon_url?: string) {
 		const footer: Footer = {
 			text,
-		}
+		};
 		if (icon_url){
 			footer.icon_url = icon_url;
 		}

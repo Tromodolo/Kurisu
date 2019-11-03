@@ -1,7 +1,7 @@
 import { Message } from "eris";
 import { Bot } from "../../bot";
 import config from "../../config";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 /**
  * help.ts
@@ -11,42 +11,40 @@ import { DiscordEmbed } from "../../utility/DiscordEmbed";
  * Last Edit - March 29 2019 by Tromo
  */
 
-export default class Help extends Command {
-	constructor(){
-		super();
-		this.commandName = "help";
-		this.aliases = [];
-		this.description = "Gets list of commands or information about a specific command";
-		this.fullDescription = "Gets list of commands or information about a specific command";
-		this.usage = "help [command]";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Help extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "help",
+			description: "Gets list of commands or information about a specific command",
+			usage: "help {command}",
+			aliases: [],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[], bot: Bot) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			const embed = new DiscordEmbed();
 
 			embed.setColor(parseInt(config.bot.color));
 
 			if (!args[0]){
-				embed.setAuthor("List of commands", bot.client.user.avatarURL, bot.client.user.avatarURL);
+				embed.setAuthor("List of commands", this.bot.client.user.avatarURL, this.bot.client.user.avatarURL);
 				embed.setDescription("If you want information about a specific command, type 'help command-name'");
 
-				bot.commands.modules.forEach((module) => {
+				this.bot.commands.modules.forEach((module) => {
 					if (module.name.toLowerCase() === "owner"){
 						return;
 					}
-					const moduleCommands = module.commands.map((x) => x.commandName).join(" **|** ");
+					const moduleCommands = module.commands.map((x) => x.metadata.name).join(" **|** ");
 					embed.addField(module.name, moduleCommands, false);
 				});
 			}
 			else{
-				let helpCommand: Command | undefined;
+				let helpCommand: KurisuCommand | undefined;
 
-				bot.commands.modules.forEach((commandModule) => {
+				this.bot.commands.modules.forEach((commandModule) => {
 					const com = commandModule.findCommand(args[0]);
 					if (com){
 						helpCommand = com;
@@ -58,13 +56,13 @@ export default class Help extends Command {
 					return resolve();
 				}
 				else{
-					embed.setAuthor(`Help for command '${helpCommand.commandName}'`, bot.client.user.avatarURL, bot.client.user.avatarURL);
+					embed.setAuthor(`Help for command '${helpCommand.metadata.name}'`, this.bot.client.user.avatarURL, this.bot.client.user.avatarURL);
 
-					embed.addField("Description",  helpCommand.fullDescription, false);
-					embed.addField("Aliases", helpCommand.aliases.length > 0  ? helpCommand.aliases.join(", ").toString() : "**none**", true);
-					embed.addField("Usage",  helpCommand.usage, true);
-					embed.addField("Auto-delete", helpCommand.deleteCommand ? "true" : "false", true);
-					embed.addField("Requirements",  helpCommand.requirements.length > 0 ? helpCommand.requirements.join(",\n").toString() : "**none**", true);
+					embed.addField("Description",  helpCommand.metadata.description, false);
+					embed.addField("Aliases", helpCommand.metadata.aliases.length > 0  ? helpCommand.metadata.aliases.join(", ").toString() : "**none**", true);
+					embed.addField("Usage",  helpCommand.metadata.usage, true);
+					embed.addField("Auto-delete", helpCommand.metadata.delete ? "true" : "false", true);
+					embed.addField("Requirements",  helpCommand.metadata.requirements.length > 0 ? helpCommand.metadata.requirements.join(",\n").toString() : "**none**", true);
 				}
 			}
 			await message.channel.createMessage(embed.getEmbed());

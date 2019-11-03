@@ -9,25 +9,24 @@
 import { Message } from "eris";
 import fs from "fs";
 import config from "../../config";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getUserByMessage } from "../../utility/Util";
+import { Bot } from "../../bot";
 
-export default class Pet extends Command {
-	constructor(){
-		super();
-		this.commandName = "pet";
-		this.aliases = [];
-		this.description = "Pets someone";
-		this.fullDescription = "Pets someone or gets petted if unspecified";
-		this.usage = "pet [user]";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Pet extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "pet",
+			description: "Pets someone or gets patted if unspecified",
+			usage: "pet {user}",
+			aliases: [],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[]) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			if (!message.member){
 				return resolve();
@@ -47,12 +46,12 @@ export default class Pet extends Command {
 			}
 
 			let fileNum = 1;
-			fs.readdir("./data/pet", (err: Error, files: any) => {
+			fs.readdir("../data/pet", (err: Error, files: any) => {
 				fileNum = files.length;
 
 				const randomFile = Math.floor(Math.random() * fileNum);
 
-				fs.readFile(`./data/pet/${randomFile}.gif`, (err2: Error, data: Buffer ) => {
+				fs.readFile(`../data/pet/${randomFile}.gif`, (err2: Error, data: Buffer ) => {
 					embed.setDescription(embedMessage);
 					embed.setImage("attachment://pet.gif");
 					message.channel.createMessage(embed.getEmbed(), { file: data, name: "pet.gif" });

@@ -6,32 +6,31 @@ import fs from "fs";
 import moment from "moment";
 import path from "path";
 import seedrandom from "seedrandom";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { getLoveUsers } from "../../utility/Util";
+import { Bot } from "../../bot";
 
 registerFont(path.join(__dirname, "../../../data/love/VCR_OSD_MONO_1.001.ttf"), { family: "VCR" });
 registerFont(path.join(__dirname, "../../../data/deathnote/IndieFlower.ttf"), { family: "Indie Flower" });
 registerFont(path.join(__dirname, "../../../data/deathnote/ShadowsIntoLight.ttf"), { family: "Shadows Into Light" });
 
-export default class Love extends Command {
-	constructor(){
-		super();
-		this.commandName = "love";
-		this.aliases = [
-			"ship",
-			"love",
-			"match",
-		];
-		this.description = "Love tests for two people";
-		this.fullDescription = "Love tests two people and generates image.";
-		this.usage = "love {First-Person} {Second-Person}";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Love extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "love",
+			description: "Love tests two people and generates image",
+			usage: "love {First Person} {Second Person}",
+			aliases: [
+				"ship",
+				"love",
+				"match",
+			],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[]) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			const users: { first?: Member, second?: Member } = getLoveUsers(message, args);
 			if (!(users.first && users.second)){

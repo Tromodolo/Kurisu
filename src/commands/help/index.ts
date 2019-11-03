@@ -1,12 +1,13 @@
-import CommandModule from "../../models/CommandModule";
+import KurisuModule from "../../models/CommandModule";
+import { Bot } from "../../bot";
 
-const moduleName: string = "Help";
-const permissions: string[] = [];
-
-const commandModule = new CommandModule(
-	moduleName,
-	permissions,
-	__dirname,
-);
-
-export default commandModule;
+export default class HelpModule extends KurisuModule{
+	constructor(bot: Bot){
+		super(
+			bot,
+			"Help",
+			[],
+			__dirname,
+		);
+	}
+}

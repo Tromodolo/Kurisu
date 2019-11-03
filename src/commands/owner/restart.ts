@@ -1,29 +1,27 @@
 import { Message } from "eris";
 import pm2 from "pm2";
 import { Bot } from "../../bot";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 
-export default class Restart extends Command {
-	constructor(){
-		super();
-		this.commandName = "restart";
-		this.aliases = [
-			"reboot",
-			"dmail",
-		];
-		this.description = "Restarts the bot";
-		this.fullDescription = "Restarts the bot";
-		this.usage = "restart";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Restart extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "restart",
+			description: "Restarts the bot",
+			usage: "restart",
+			aliases: [
+				"reboot",
+				"dmail",
+			],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[], bot: Bot) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			message.channel.createMessage("Restarting, will be back soon");
-			bot.client.disconnect({ reconnect: false });
+			this.bot.client.disconnect({ reconnect: false });
 			pm2.restart("Kurisu", (err) => {
 				if (err){
 					return;

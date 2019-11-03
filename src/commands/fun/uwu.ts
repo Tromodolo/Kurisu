@@ -1,25 +1,24 @@
 import { Message } from "eris";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
+import { Bot } from "../../bot";
 
-export default class PleaseHelpMe extends Command {
-	constructor(){
-		super();
-		this.commandName = "uwu";
-		this.aliases = [
-			"owo",
-			"curse",
-			"kezspeak",
-		];
-		this.description = "Takes a sentence and makes it cursed";
-		this.fullDescription = "Takes a sentence and makes it cursed";
-		this.usage = "uwu [sentence]";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class PleaseHelpMe extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "uwu",
+			description: "Takes a sentence and makes it cursed",
+			usage: "uwu {sentence}",
+			aliases: [
+				"owo",
+				"curse",
+				"kezspeak",
+			],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[]) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			let content = args.join(" ");
 

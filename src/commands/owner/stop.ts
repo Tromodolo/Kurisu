@@ -1,29 +1,27 @@
 import { Message } from "eris";
 import pm2 from "pm2";
 import { Bot } from "../../bot";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 
-export default class Stop extends Command {
-	constructor(){
-		super();
-		this.commandName = "stop";
-		this.aliases = [
-			"kill",
-			"die",
-		];
-		this.description = "Stops the bot";
-		this.fullDescription = "Stops the bot";
-		this.usage = "stop";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Stop extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "stop",
+			description: "Stops the bot",
+			usage: "stop",
+			aliases: [
+				"kill",
+				"die",
+			],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[], bot: Bot) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			message.channel.createMessage("Shutting down...");
-			bot.client.disconnect({ reconnect: false });
+			this.bot.client.disconnect({ reconnect: false });
 			pm2.stop("Kurisu", (err) => {
 				if (err){
 					return;

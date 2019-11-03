@@ -7,24 +7,23 @@
  */
 
 import { Message } from "eris";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { getUserByMessage } from "../../utility/Util";
+import { Bot } from "../../bot";
 
-export default class HighFive extends Command {
-	constructor(){
-		super();
-		this.commandName = "highfive";
-		this.aliases = [];
-		this.description = "High fives another user";
-		this.fullDescription = "High fives another user";
-		this.usage = "highfive [user]";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class HighFive extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "highfive",
+			description: "Highfives another user",
+			usage: "highfive {user}",
+			aliases: ["ava", "pfp", "proflepicture"],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[]) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			const user = getUserByMessage(message, args);
 

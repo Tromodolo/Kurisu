@@ -10,29 +10,27 @@ import { Message } from "eris";
 import moment from "moment";
 import { Bot } from "../../bot";
 import config from "../../config";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 
-export default class Info extends Command {
-	constructor(){
-		super();
-		this.commandName = "info";
-		this.aliases = [];
-		this.description = "Show information about the bot";
-		this.fullDescription = "Show information about the bot";
-		this.usage = "info]";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Info extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "info",
+			description: "Show information about the bot",
+			usage: "info",
+			aliases: [],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[], bot: Bot) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			const embed = new DiscordEmbed();
 
 			embed.setColor(parseInt(config.bot.color));
-			embed.setAuthor("Bot information:", bot.client.user.avatarURL, bot.client.user.avatarURL);
+			embed.setAuthor("Bot information:", this.bot.client.user.avatarURL, this.bot.client.user.avatarURL);
 
 			embed.addField("Devs", config.bot.developers.length > 0 ? config.bot.developers.map((x) => x.name).join(",\n") : "Uh Oh I don't know how this happened", true);
 			embed.addField("Node.js Version", process.version, true);
@@ -51,9 +49,9 @@ export default class Info extends Command {
 			const megabytes = Math.round(memHeap / 1024 / 1024);
 
 			embed.addField("Memory usage", `${megabytes}MB`, true);
-			embed.addField("Shards", `${bot.client.shards.size}`, true);
-			embed.addField("Server Count", `${bot.client.guilds.size}`, true);
-			embed.addField("User Count", `${bot.client.users.size}`, true);
+			embed.addField("Shards", `${this.bot.client.shards.size}`, true);
+			embed.addField("Server Count", `${this.bot.client.guilds.size}`, true);
+			embed.addField("User Count", `${this.bot.client.users.size}`, true);
 			/* embed.addField("Invite Link", `[Link](${config.bot.inviteLink})`, true); */
 
 			await message.channel.createMessage(embed.getEmbed());

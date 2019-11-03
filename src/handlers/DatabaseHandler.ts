@@ -81,6 +81,7 @@ class DatabaseHandler{
 			relations: [
 				"configs",
 				"userList",
+				"roleMenus",
 			],
 		});
 		if (!foundGuild){

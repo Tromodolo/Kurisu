@@ -9,25 +9,25 @@
 import { Message } from "eris";
 import fs from "fs";
 import config from "../../config";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getUserByMessage } from "../../utility/Util";
+import { Bot } from "../../bot";
+import { join } from "path";
 
-export default class Hug extends Command {
-	constructor(){
-		super();
-		this.commandName = "hug";
-		this.aliases = [];
-		this.description = "Hugs someone";
-		this.fullDescription = "Hugs someone or gets hugged if unspecified";
-		this.usage = "hug [user]";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Hug extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "hug",
+			description: "Hugs someone or gets hugged if unspecified",
+			usage: "hug {user}",
+			aliases: [],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[]) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			if (!message.member){
 				return resolve();
@@ -47,12 +47,12 @@ export default class Hug extends Command {
 			}
 
 			let fileNum = 1;
-			fs.readdir("./data/hug", (err: Error, files: any) => {
+			fs.readdir("../data/hug", (err: Error, files: any) => {
 				fileNum = files.length;
 
 				const randomFile = Math.floor(Math.random() * fileNum);
 
-				fs.readFile(`./data/hug/${randomFile}.gif`, (err2: Error, data: Buffer ) => {
+				fs.readFile(`../data/hug/${randomFile}.gif`, (err2: Error, data: Buffer ) => {
 					embed.setDescription(embedMessage);
 					embed.setImage("attachment://hug.gif");
 					message.channel.createMessage(embed.getEmbed(), { file: data, name: "hug.gif" });

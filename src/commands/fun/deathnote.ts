@@ -3,25 +3,22 @@ import drawMultilineText from "canvas-multiline-text";
 import { Message } from "eris";
 import fs from "fs";
 import path from "path";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
+import { Bot } from "../../bot";
 
-export default class Deathnote extends Command {
-	constructor(){
-		super();
-		this.commandName = "deathnote";
-		this.aliases = [
-			"kirby",
-		];
-		this.description = "Puts someone's name into the death note";
-		this.fullDescription = "Puts someone's name into the death note.";
-		this.usage = "deathnote {person}";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Deathnote extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "deathnote",
+			description: "Puts someone's name into the death note",
+			usage: "deathnote {person}",
+			aliases: [],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[]) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			let text = "";
 			if (args.length < 1){

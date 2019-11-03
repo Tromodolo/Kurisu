@@ -1,23 +1,22 @@
 import { Message } from "eris";
 import config from "../../config";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
+import { Bot } from "../../bot";
 
-export default class Emote extends Command {
-	constructor(){
-		super();
-		this.commandName = "emote";
-		this.aliases = [];
-		this.description = "Shows full image of emote";
-		this.fullDescription = "Shows full image of emote, and displays general information about it.";
-		this.usage = "emote :OhISee:";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Emote extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "emote",
+			description: "Shows full image of emote, and displays general information about it.",
+			usage: "emote :OhISee:",
+			aliases: [],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[]) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			if (!args[0]){
 				await message.channel.createMessage("You need to specify an emote");

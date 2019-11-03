@@ -2,30 +2,26 @@ import { Member, Message, PrivateChannel } from "eris";
 import moment from "moment";
 import { Bot } from "../../bot";
 import config from "../../config";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getHighestRole, getUserByMessage } from "../../utility/Util";
 
-export default class Kick extends Command {
-	constructor(){
-		super();
-		this.commandName = "kick";
-		this.aliases = [
-			"k",
-			"boot",
-		];
-		this.description = "Kicks a user";
-		this.fullDescription = "Kicks a specified user from the server.";
-		this.usage = "kick {user} [reason]";
-
-		// const requirements: new Object();
-		this.requirements = [
-			"kickMembers",
-		];
-		this.deleteCommand = false;
+export default class Kick extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "kick",
+			description: "Kicks a specified user from the server.",
+			usage: "kick {user} {reason}",
+			aliases: [
+				"k",
+				"boot",
+			],
+			requirements: ["kickMembers"],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[], bot: Bot) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			let user: Member | undefined;
 
@@ -40,7 +36,7 @@ export default class Kick extends Command {
 				}
 				const targetedUserRole = getHighestRole(user.guild, user);
 				const kickerRole = getHighestRole(message.member.guild, message.member);
-				const botUser = message.member.guild.members.get(bot.client.user.id);
+				const botUser = message.member.guild.members.get(this.bot.client.user.id);
 
 				if (!botUser){
 					return resolve();

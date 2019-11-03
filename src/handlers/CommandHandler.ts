@@ -3,10 +3,10 @@ import fs from "fs";
 import path from "path";
 import { Bot } from "../bot";
 import config from "../config";
-import CommandModule from "../models/CommandModule";
+import KurisuModule from "../models/CommandModule";
 
 export class CommandHandler{
-	private moduleList: CommandModule[] = [];
+	private moduleList: KurisuModule[] = [];
 	private bot: Bot;
 
 	constructor(){
@@ -27,7 +27,8 @@ export class CommandHandler{
 				try{
 					const props = require(path.join(__dirname, `../commands/${folder}`));
 					if (props){
-						this.moduleList.push(props.default);
+						const Module = props.default;
+						this.moduleList.push(new Module(this.bot));
 					}
 					return;
 				}
@@ -95,14 +96,14 @@ export class CommandHandler{
 						return;
 					}
 
-					if (command.deleteCommand === true){
+					if (command.metadata.delete === true){
 						await message.delete();
 					}
 
 					const commandArgs = [...args];
 					commandArgs.shift();
 
-					await command.exec(message, commandArgs, this.bot);
+					await command.run(message, commandArgs);
 
 					return true;
 				}

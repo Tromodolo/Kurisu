@@ -1,28 +1,26 @@
 import { Message } from "eris";
 import { Bot } from "../../bot";
 import config from "../../config";
-import Command from "../../models/Command";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getUserByMessage } from "../../utility/Util";
 
 import image2base64 from "image-to-base64";
 import * as ColorThief from "colorthief";
 
-export default class Profile extends Command {
-	constructor(){
-		super();
-		this.commandName = "profile";
-		this.aliases = [];
-		this.description = "Shows your profile";
-		this.fullDescription = "Shows your profile";
-		this.usage = "profile";
-
-		// const requirements: new Object();
-		this.requirements = [];
-		this.deleteCommand = false;
+export default class Profile extends KurisuCommand {
+	constructor(bot: Bot){
+		super(bot, {
+			name: "profile",
+			description: "Shows your profile",
+			usage: "profile",
+			aliases: [],
+			requirements: [],
+			delete: false,
+		});
 	}
 
-	public exec(message: Message, args: string[], bot: Bot) {
+	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve) => {
 			let user = message.member!;
 			if (args.length > 0){
@@ -37,7 +35,7 @@ export default class Profile extends Command {
 				return;
 			}
 
-			const dbUser = await bot.db.getOrCreateUser(user);
+			const dbUser = await this.bot.db.getOrCreateUser(user);
 
 			const embed = new DiscordEmbed();
 
