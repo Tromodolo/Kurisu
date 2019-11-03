@@ -35,7 +35,9 @@ export default class Help extends KurisuCommand {
 
 				this.bot.commands.modules.forEach((module) => {
 					if (module.name.toLowerCase() === "owner"){
-						return;
+						if (!config.bot.developerIds.includes(message.author.id)){
+							return;
+						}
 					}
 					const moduleCommands = module.commands.map((x) => x.metadata.name).join(" **|** ");
 					embed.addField(module.name, moduleCommands, false);
