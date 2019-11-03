@@ -39,7 +39,7 @@ export default class Help extends Command {
 					if (module.name.toLowerCase() === "owner"){
 						return;
 					}
-					const moduleCommands = module.commands.map((x) => x.commandName).join(", ");
+					const moduleCommands = module.commands.map((x) => x.commandName).join(" **|** ");
 					embed.addField(module.name, moduleCommands, false);
 				});
 			}
