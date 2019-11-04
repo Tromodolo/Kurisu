@@ -44,9 +44,10 @@
     "reflect-metadata": "^0.1.13",
     "seedrandom": "^3.0.1",
     "ts-node": "^8.4.1",
+    "tslint": "^5.0.0-dev.0",
     "typeorm": "^0.2.16"
   },
   "devDependencies": {
-    "typescript": "^3.7.1-rc"
+    "typescript": "^3.8.0-dev.20191102"
   }
 }
