@@ -36,11 +36,11 @@ export default class Avatar extends KurisuCommand {
 			embed.setTimestamp(new Date());
 
 			if (args[0] && args[0].toLowerCase() === "server"){
-				embed.setTitle(`Avatar for ${(message.channel as GuildChannel).guild.name}`);
+				embed.setTitle(`Server Icon for ${(message.channel as GuildChannel).guild.name}`);
 
 				let avatar = ((message.channel as GuildChannel).guild.iconURL || "").replace("jpg", "png");
 
-				const base64 = "data:image/png;base64," + await image2base64(avatar);
+				const base64 = "data:image/png;base64," + await image2base64(avatar.replace(".gif", ".png"));
 				const mainColour = await ColorThief.getColor(base64);
 				let hexColor = "";
 				if (mainColour){
@@ -61,12 +61,12 @@ export default class Avatar extends KurisuCommand {
 					return "User not found";
 				}
 
-				embed.setTitle(`Server Icon for ${user.username}#${user.discriminator}`);
+				embed.setTitle(`Avatar for ${user.username}#${user.discriminator}`);
 
 				let userAvatar = user.avatarURL.replace("jpg", "png");
 				userAvatar = userAvatar.replace("?size=128", "?size=1024");
 
-				const base64 = "data:image/png;base64," + await image2base64(userAvatar);
+				const base64 = "data:image/png;base64," + await image2base64(userAvatar.replace(".gif", ".png"));
 				const mainColour = await ColorThief.getColor(base64);
 				let hexColor = "";
 				if (mainColour){

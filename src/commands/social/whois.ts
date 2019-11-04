@@ -42,7 +42,7 @@ export default class WhoIs extends KurisuCommand {
 			}
 
 			let userAvatar = user.avatarURL.replace("jpg", "png");
-			const base64 = "data:image/png;base64," + await image2base64(userAvatar);
+			const base64 = "data:image/png;base64," + await image2base64(userAvatar.replace(".gif", ".png"));
 			const mainColour = await ColorThief.getColor(base64);
 			let hexColor = "";
 			if (mainColour){

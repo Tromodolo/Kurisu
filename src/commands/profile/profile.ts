@@ -39,7 +39,7 @@ export default class Profile extends KurisuCommand {
 
 			const embed = new DiscordEmbed();
 
-			const base64 = "data:image/png;base64," + await image2base64(user.avatarURL);
+			const base64 = "data:image/png;base64," + await image2base64(user.avatarURL.replace(".gif", ".png"));
 			const mainColour = await ColorThief.getColor(base64);
 			let hexColor = "";
 			if (mainColour){
