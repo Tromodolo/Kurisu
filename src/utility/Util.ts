@@ -55,7 +55,7 @@ export function getUserByMessage(msg: Message, args: string[]): Member | undefin
 		return (channel as TextChannel).guild.members.find((x: Member) => x.id === msg.mentions[0].id);
 	}
 	else{
-		const guild: Guild | undefined = msg.member ? msg.member.guild : undefined;
+		const guild: Guild | undefined = msg.member?.guild;
 		if (!guild){
 			return undefined;
 		}

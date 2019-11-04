@@ -36,7 +36,7 @@ export default class Avatar extends KurisuCommand {
 			if (args[0]?.toLowerCase() === "server"){
 				embed.setTitle(`Server Icon for ${(message.channel as GuildChannel).guild.name}`);
 
-				let avatar = ((message.channel as GuildChannel).guild.iconURL || "").replace("jpg", "png");
+				let avatar = ((message.channel as GuildChannel).guild.iconURL ?? "").replace("jpg", "png");
 
 				const color = await getPrimaryColorFromImageUrl(avatar.replace(".gif", ".png"));
 				embed.setColor(color);

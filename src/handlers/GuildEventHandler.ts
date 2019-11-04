@@ -79,8 +79,8 @@ export class GuildEventHandler {
 				embed.setAuthor(`Message Edited (${newMessage.author.username}#${newMessage.author.discriminator})`, "", newMessage.author.avatarURL);
 				embed.setColor(0x5faafa);
 
-				embed.addField("Old", oldMessage.content.length > 250 ? oldMessage.content.substring(0, 249) + "..." : oldMessage.content || "");
-				embed.addField("New", newMessage.content.length > 250 ? newMessage.content.substring(0, 249) + "..." : newMessage.content || "");
+				embed.addField("Old", oldMessage.content.length > 250 ? oldMessage.content.substring(0, 249) + "..." : oldMessage.content ?? "");
+				embed.addField("New", newMessage.content.length > 250 ? newMessage.content.substring(0, 249) + "..." : newMessage.content ?? "");
 
 				embed.setFooter("", moment(newMessage.createdAt).utc().format("LLL"));
 
@@ -117,7 +117,7 @@ export class GuildEventHandler {
 					}
 					embed.setAuthor("User Kicked", "", this.bot.client.user.avatarURL);
 					embed.addField("Kicked by", `${audit.user.username}#${audit.user.discriminator}`, true);
-					embed.addField("Reason", `${audit.reason || "Unspecified"}`, true);
+					embed.addField("Reason", `${audit.reason ?? "Unspecified"}`, true);
 				}
 				else{
 					embed.setAuthor("User Left", "", this.bot.client.user.avatarURL);
@@ -174,7 +174,7 @@ export class GuildEventHandler {
 				const embed = new DiscordEmbed();
 				if (audit){
 					embed.addField("Banned by", `${audit.user.username}#${audit.user.discriminator}`, true);
-					embed.addField("Reason", audit.reason || "Unspecified", true);
+					embed.addField("Reason", audit.reason ?? "Unspecified", true);
 				}
 
 				embed.setAuthor("User Banned 🔨", "", this.bot.client.user.avatarURL);

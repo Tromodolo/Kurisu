@@ -45,7 +45,7 @@ export default class Profile extends KurisuCommand {
 			embed.setTitle("Profile");
 			embed.setThumbnail(user.avatarURL);
 			embed.addField("Name", user.username, true);
-			embed.addField("Title", dbUser.profile.title ? `**${dbUser.profile.title}**` : "Wanderer", true);
+			embed.addField("Title", `**${dbUser?.profile?.title ?? "Wanderer"}**`, true);
 
 			/* Everything about this is a confusing mess, don't ask */
 			const level = getLevelFromExp(dbUser.experience.total);

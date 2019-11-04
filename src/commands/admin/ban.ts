@@ -53,11 +53,11 @@ export default class Ban extends KurisuCommand {
 					return resolve();
 				}
 
-				const reason = args[1] || "None specified";
+				const reason = args[1] ?? "None specified";
 
 				const embed = new DiscordEmbed();
 				embed.setColor(parseInt(config.bot.color));
-				embed.setTitle(`**You were banned from ${message.member ? message.member.guild.name : "_Unavailable_"}**`);
+				embed.setTitle(`**You were banned from ${message.member?.guild.name ?? "_Unavailable_"}**`);
 				embed.addField("Reason", `${reason}`);
 
 				embed.setTimestamp(moment().toDate());

@@ -103,7 +103,7 @@ async function handleSelectChannel(reactionMessage: Message, db: DatabaseHandler
 	embed.setAuthor("Admin Menu", "", bot.user.avatarURL);
 	embed.setColor(parseInt(botConfig.bot.color));
 	embed.setDescription(`Enter *channel name*, **disable** or **cancel**.
-Currently: **${config.enabled ? (activeChannel || {name: null}).name || "Deleted Channel" : "Disabled"}**`);
+Currently: **${config.enabled ? activeChannel?.name ?? "Deleted Channel" : "Disabled"}**`);
 	await reactionMessage.edit(embed.getEmbed());
 
 	const responseHandler = new ResponseListener(bot, userId, 30 * 1000);

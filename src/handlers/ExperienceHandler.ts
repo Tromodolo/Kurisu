@@ -38,7 +38,7 @@ export class ExperienceHandler{
 			const exp = this.getRandomExp(15, 25);
 
 			// If user does not exist in guild list, then add them
-			if ((dbGuild.userList && !dbGuild.userList.find((x) => x.id === dbUser.id))){
+			if (!(dbGuild?.userList?.find((x) => x.id === dbUser.id))){
 				dbGuild.userList.push(dbUser);
 				await this.bot.db.saveEntity(dbGuild, DatabaseEntities.Guild);
 			}

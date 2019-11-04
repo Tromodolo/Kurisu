@@ -88,7 +88,7 @@ class DatabaseHandler{
 			foundGuild = new Guild();
 			foundGuild.id = guild.id;
 			foundGuild.name = guild.name;
-			foundGuild.avatarURL = guild.iconURL || "";
+			foundGuild.avatarURL = guild.iconURL ?? "";
 			foundGuild.configs = [];
 			foundGuild.userList = [];
 			return foundGuild;

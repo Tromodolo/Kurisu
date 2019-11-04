@@ -58,19 +58,19 @@ export default class WhoIs extends KurisuCommand {
 
 			embed.addField(
 				"Playing",
-				user.game ? user.game.name : "Nothing",
+				user.game?.name ?? "Nothing",
 				false,
 			);
 
 			embed.addField(
 				"Status",
-				user.status || "*unavailable*",
+				user.status ?? "*unavailable*",
 				true,
 			);
 
 			embed.addField(
 				"Nickname",
-				user.nick || "*unavailable*",
+				user.nick ?? "*unavailable*",
 				true,
 			);
 
