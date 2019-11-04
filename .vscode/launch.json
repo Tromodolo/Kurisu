@@ -14,19 +14,7 @@
 				"ts-node/register"
 			],
 			"args": [
-				"${workspaceFolder}/bot.ts"
-			]
-		},
-		{
-			"type": "node",
-			"request": "launch",
-			"name": "backend",
-			"runtimeArgs": [
-				"-r",
-				"ts-node/register"
-			],
-			"args": [
-				"${workspaceFolder}/backend/server.ts"
+				"${workspaceFolder}/src/bot.ts"
 			]
 		}
 	
