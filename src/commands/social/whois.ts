@@ -10,7 +10,7 @@ import { Message } from "eris";
 import moment from "moment";
 import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
-import { getUserByMessage } from "../../utility/Util";
+import { getUserByMessage, getPrimaryColorFromImageUrl } from "../../utility/Util";
 import * as ColorThief from "colorthief";
 import image2base64 from "image-to-base64";
 import config from "../../config";
@@ -41,17 +41,9 @@ export default class WhoIs extends KurisuCommand {
 				user = message.member;
 			}
 
-			let userAvatar = user.avatarURL.replace("jpg", "png");
-			const base64 = "data:image/png;base64," + await image2base64(userAvatar.replace(".gif", ".png"));
-			const mainColour = await ColorThief.getColor(base64);
-			let hexColor = "";
-			if (mainColour){
-				hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
-			}
-			else{
-				hexColor = config.bot.color;
-			}
-			embed.setColor(parseInt(hexColor));
+			let userAvatar = user.avatarURL;
+			const color = await getPrimaryColorFromImageUrl(userAvatar?.replace(".gif", ".png"));
+			embed.setColor(color);
 
 			userAvatar = userAvatar.replace("?size=128", "?size=1024");
 			embed.setThumbnail(userAvatar);

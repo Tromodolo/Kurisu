@@ -3,7 +3,7 @@ import { Bot } from "../../bot";
 import config from "../../config";
 import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
-import { getUserByMessage } from "../../utility/Util";
+import { getUserByMessage, getPrimaryColorFromImageUrl } from "../../utility/Util";
 
 import image2base64 from "image-to-base64";
 import * as ColorThief from "colorthief";
@@ -39,16 +39,8 @@ export default class Profile extends KurisuCommand {
 
 			const embed = new DiscordEmbed();
 
-			const base64 = "data:image/png;base64," + await image2base64(user.avatarURL.replace(".gif", ".png"));
-			const mainColour = await ColorThief.getColor(base64);
-			let hexColor = "";
-			if (mainColour){
-				hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
-			}
-			else{
-				hexColor = config.bot.color;
-			}
-			embed.setColor(parseInt(hexColor));
+			const color = await getPrimaryColorFromImageUrl(user.avatarURL?.replace(".gif", ".png"));
+			embed.setColor(color);
 
 			embed.setTitle("Profile");
 			embed.setThumbnail(user.avatarURL);

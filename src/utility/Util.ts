@@ -12,20 +12,23 @@ import { google } from "googleapis";
 import config from "../config";
 import { DiscordEmbed } from "./DiscordEmbed";
 
+import image2base64 from "image-to-base64";
+import * as ColorThief from "colorthief";
+
 const youtube = google.youtube({
 	version: "v3",
-	 auth: config.bot.googleApiKey,
-  });
+	auth: config.bot.googleApiKey,
+});
 const customSearch = google.customsearch("v1");
 
 const userSearchOpts = {
 	shouldSort: true,
-	  threshold: 0.6,
-	  location: 0,
-	  distance: 100,
-	  maxPatternLength: 32,
-	  minMatchCharLength: 1,
-	  keys: [
+	threshold: 0.6,
+	location: 0,
+	distance: 100,
+	maxPatternLength: 32,
+	minMatchCharLength: 1,
+	keys: [
 		"username",
 		"nick",
 		"id",
@@ -152,110 +155,17 @@ export function getChannelByName(channels: TextChannel[], searchWord: string){
 	return found[0];
 }
 
-/**
- * Looks up a google query and sends out messages with the result
- * @param bot eris.js Client object to handle the messages
- * @param message Message object of the chat message that created the query
- * @param query Query string to pass to api
- * @param inMessage Whether or not the query was in-line of a message or through a command
- */
-export function googleLookup(bot: Client, message: Message, query: string, inMessage: boolean): Promise<{}>{
-	return new Promise(async (resolve) => {
-		// Doing this to get an index between 0 and 5 for the reactions
-		const search = Math.floor(Math.random() * (searchReactions.length - 1));
-
-		// Found and Not Found do the same thing here, only with other indexes
-		const notFound = Math.floor(Math.random() * (notFoundReactions.length - 1));
-		const found = Math.floor(Math.random() * (foundReactions.length - 1));
-
-		if (inMessage){
-			message.channel.createMessage(searchReactions[search]);
-		}
-
-		const res = await customSearch.cse.list({
-			cx: config.bot.googleCustomSearchId,
-			q: query,
-			auth: config.bot.googleApiKey,
-		});
-
-		const data = res.data;
-
-		if (data.searchInformation === 0){
-			if (inMessage){
-				message.channel.createMessage(notFoundReactions[notFound]);
-			}
-			else{
-				message.channel.createMessage("No results found");
-			}
-		}
-		else{
-			if (inMessage){
-				message.channel.createMessage(foundReactions[found]);
-			}
-			const embed = new DiscordEmbed();
-
-			if (data.items){
-
-				embed.setColor(parseInt(config.bot.color));
-				embed.setTitle(data.items[0].title || "Unavailable");
-				embed.setUrl(data.items[0].formattedUrl || "https://google.com/");
-				embed.setDescription(`${data.items[0].snippet ? data.items[0].snippet.replace("\n", " ") : "Description unavailable"}`);
-				embed.setAuthor(`Google Search for '${query}'`, data.items[0].formattedUrl || "https://google.com/", bot.user.avatarURL);
-			}
-
-			await message.channel.createMessage(embed.getEmbed());
-		}
-		return resolve();
-	});
-}
-
-/**
- * Looks up a youtube query and sends out messages with the result
- * @param bot eris.js Client object to handle the messages
- * @param message Message object of the chat message that created the query
- * @param query Query string to pass to api
- * @param inMessage Whether or not the query was in-line of a message or through a command
- */
-export function youtubeLookup(bot: Client, message: Message, query: string, inMessage: boolean): Promise<{}>{
-	return new Promise(async (resolve) => {
-		// Doing this to get an index between 0 and 5 for the reactions
-		const search = Math.floor(Math.random() * (searchReactions.length - 1));
-
-		// Found and Not Found do the same thing here, only with other indexes
-		const notFound = Math.floor(Math.random() * (notFoundReactions.length - 1));
-		const found = Math.floor(Math.random() * (foundReactions.length - 1));
-
-		if (inMessage){
-			message.channel.createMessage(searchReactions[search]);
-		}
-		const res = await youtube.search.list({
-			part: "id,snippet",
-			q: query,
-		});
-
-		const data = res.data;
-
-		if (data.pageInfo){
-			if (data.pageInfo.totalResults === 0){
-				if (inMessage){
-					message.channel.createMessage(notFoundReactions[notFound]);
-				}
-				else{
-					message.channel.createMessage("No results found");
-				}
-			}
-			else{
-				if (inMessage){
-					message.channel.createMessage(foundReactions[found]);
-				}
-				if (data.items){
-					message.channel.createMessage(`https://www.youtube.com/watch?v=${data.items[0].id ? data.items[0].id.videoId : "6n3pFFPSlW4"}`);
-				}
-			}
-		}
-
-		return resolve();
-	});
+export async  function getPrimaryColorFromImageUrl(url: string): Promise<number> {
+	const base64 = "data:image/png;base64," + await image2base64(url);
+	const mainColour = await ColorThief.getColor(base64);
+	let hexColor = "";
+	if (mainColour){
+		hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
+	}
+	else{
+		hexColor = config.bot.color;
+	}
+	return parseInt(hexColor);
 }
 
 const searchReactions: string[] =

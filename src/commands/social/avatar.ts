@@ -10,10 +10,8 @@ import { Message, GuildChannel } from "eris";
 import config from "../../config";
 import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
-import { getUserByMessage } from "../../utility/Util";
+import { getUserByMessage, getPrimaryColorFromImageUrl } from "../../utility/Util";
 
-import image2base64 from "image-to-base64";
-import * as ColorThief from "colorthief";
 import { Bot } from "../../bot";
 
 export default class Avatar extends KurisuCommand {
@@ -35,21 +33,13 @@ export default class Avatar extends KurisuCommand {
 
 			embed.setTimestamp(new Date());
 
-			if (args[0] && args[0].toLowerCase() === "server"){
+			if (args[0]?.toLowerCase() === "server"){
 				embed.setTitle(`Server Icon for ${(message.channel as GuildChannel).guild.name}`);
 
 				let avatar = ((message.channel as GuildChannel).guild.iconURL || "").replace("jpg", "png");
 
-				const base64 = "data:image/png;base64," + await image2base64(avatar.replace(".gif", ".png"));
-				const mainColour = await ColorThief.getColor(base64);
-				let hexColor = "";
-				if (mainColour){
-					hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
-				}
-				else{
-					hexColor = config.bot.color;
-				}
-				embed.setColor(parseInt(hexColor));
+				const color = await getPrimaryColorFromImageUrl(avatar.replace(".gif", ".png"));
+				embed.setColor(color);
 
 				avatar = avatar.replace("?size=128", "?size=1024");
 
@@ -66,21 +56,12 @@ export default class Avatar extends KurisuCommand {
 				let userAvatar = user.avatarURL.replace("jpg", "png");
 				userAvatar = userAvatar.replace("?size=128", "?size=1024");
 
-				const base64 = "data:image/png;base64," + await image2base64(userAvatar.replace(".gif", ".png"));
-				const mainColour = await ColorThief.getColor(base64);
-				let hexColor = "";
-				if (mainColour){
-					hexColor = `0x${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
-				}
-				else{
-					hexColor = config.bot.color;
-				}
-				embed.setColor(parseInt(hexColor));
+				const color = await getPrimaryColorFromImageUrl(userAvatar.replace(".gif", ".png"));
+				embed.setColor(color);
 
 				embed.setUrl(userAvatar);
 				embed.setImage(userAvatar);
 			}
-
 
 			await message.channel.createMessage(embed.getEmbed());
 			return resolve();
