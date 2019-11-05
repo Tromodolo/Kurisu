@@ -150,4 +150,12 @@ describe('Utility Functions', () => {
 			expect(channel?.id).to.equal("1");
 		});
 	});
+			       
+	it('Getting image from url', () => {
+		return new Promise(async (resolve) => {
+			const color = await getPrimaryColorFromImageUrl("https://tro.moe/img/HonkConfused.png");
+			expect(typeof color).to.equal("number");
+			return resolve();
+		});
+	});
 });
