@@ -1,6 +1,5 @@
-import config from "../src/config";
-import { DiscordEmbed } from '../src/utility/DiscordEmbed';
-import _ from "lodash";
+import config from "../../src/config";
+import { DiscordEmbed } from '../../src/utility/DiscordEmbed';
 
 import { expect } from "chai";
 import "mocha";
@@ -41,8 +40,8 @@ describe('DiscordEmbed', () => {
 					inline: true,
 				},
 			],
-		}
-	}
+		},
+	};
 
 	beforeEach(() => {
 		embed = new DiscordEmbed();

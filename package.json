@@ -13,7 +13,7 @@
   },
   "scripts": {
     "run": "tsc && node build/bot.js",
-    "test": "mocha -r ts-node/register test/*.spec.ts",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "build": "tsc"
   },
   "homepage": "https://github.com/Tromodolo/Kurisu-Node#readme",

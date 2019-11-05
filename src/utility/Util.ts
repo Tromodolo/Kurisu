@@ -55,7 +55,7 @@ export function getUserByMessage(msg: Message, args: string[]): Member | undefin
 		return (channel as TextChannel).guild.members.find((x: Member) => x.id === msg.mentions[0].id);
 	}
 	else{
-		const guild: Guild | undefined = msg.member?.guild;
+		const guild: Guild | undefined = (msg.channel as TextChannel)?.guild;
 		if (!guild){
 			return undefined;
 		}
@@ -76,7 +76,7 @@ export function getUserByMessage(msg: Message, args: string[]): Member | undefin
  */
 export function getLoveUsers(msg: Message, args: string[]): { first?: Member, second?: Member }{
 	const users: { first?: Member, second?: Member } = {};
-	const guild: Guild = msg.member!.guild;
+	const guild: Guild = (msg.channel as TextChannel).guild;
 	const mentionCheck: RegExp = /<@!?[0-9]*>/g;
 
 	if (!guild){
@@ -122,7 +122,7 @@ export function getHighestRole(guild: Guild, member: Member) {
 	let highestRole: Role | undefined;
 
 	member.roles.forEach((roleId) => {
-		const role: Role | undefined = guild.roles.get(roleId);
+		const role: Role | undefined = guild.roles.find((x) => x.id === roleId);
 
 		if (role){
 			if (!highestRole) {
@@ -155,7 +155,7 @@ export function getChannelByName(channels: TextChannel[], searchWord: string){
 	return found[0];
 }
 
-export async  function getPrimaryColorFromImageUrl(url: string): Promise<number> {
+export async function getPrimaryColorFromImageUrl(url: string): Promise<number> {
 	const base64 = "data:image/png;base64," + await image2base64(url);
 	const mainColour = await ColorThief.getColor(base64);
 	let hexColor = "";
