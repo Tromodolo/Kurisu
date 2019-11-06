@@ -13,6 +13,7 @@ type BotConfig = {
 	devToken: string;
 	googleApiKey: string;
 	googleCustomSearchId: string;
+	wolframAlphaAppId: string;
 };
 
 // tslint:disable-next-line: interface-over-type-literal
@@ -36,6 +37,7 @@ let bot: BotConfig = {
 	devToken: "",
 	googleApiKey: "",
 	googleCustomSearchId: "",
+	wolframAlphaAppId: "",
 };
 
 // empty db.json
