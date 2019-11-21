@@ -66,7 +66,7 @@ export default class Love extends KurisuCommand {
 
 				// Checks the love power that was generated and sets the message accordingly
 				if (lovePower <= 20){
-					loveMessage = `${users.first.username} and ${users.second.username} don't seem to fit well together at all. 💔`;
+					loveMessage = `${users.first.username} and ${users.second.username} don't seem to fit well together at all. :(`;
 				}
 				else if (lovePower <= 40){
 					loveMessage = `${users.first.username} and ${users.second.username} are not likely to work out.`;
@@ -78,7 +78,7 @@ export default class Love extends KurisuCommand {
 					loveMessage = `${users.first.username} and ${users.second.username} fit well for each other.`;
 				}
 				else if (lovePower <= 100){
-					loveMessage = `${users.first.username} and ${users.second.username} are perfect for each other! ❤`;
+					loveMessage = `${users.first.username} and ${users.second.username} are perfect for each other! <3`;
 				}
 
 				if ((users.first.username.length + users.second.username.length >= 64)){
