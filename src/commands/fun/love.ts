@@ -93,7 +93,7 @@ export default class Love extends KurisuCommand {
 
 				// Draws background to image
 				const bg = new Image();
-				bg.src = fs.readFileSync(path.join(__dirname, "../../../data/love/LoveBg.jpg"));
+				bg.src = fs.readFileSync(path.join(__dirname, "../../../data/love/lovebg.jpg"));
 				ctx.drawImage(bg, 0, 0, 400, 300);
 
 				const firstAvatarFile = new Image();
@@ -107,10 +107,10 @@ export default class Love extends KurisuCommand {
 				// Draws all images and text to the image
 				// https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API
 				const heartFilled = new Image();
-				heartFilled.src = fs.readFileSync(path.join(__dirname, `../../../data/love/HeartFull.png`));
+				heartFilled.src = fs.readFileSync(path.join(__dirname, `../../../data/love/heartfull.png`));
 
 				const heartBg = new Image();
-				heartBg.src = fs.readFileSync(path.join(__dirname, `../../../data/love/HeartBg.png`));
+				heartBg.src = fs.readFileSync(path.join(__dirname, `../../../data/love/heartbg.png`));
 
 				ctx.drawImage(bg, -100, -50, 500, 500);
 
