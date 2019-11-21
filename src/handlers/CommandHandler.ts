@@ -86,15 +86,15 @@ export class CommandHandler{
 						return;
 					}
 				}
+
+				try{
 				const command = module.findCommand(args[0]);
 				if (command){
 					if (!command.checkPermissions(message.member.permission)){
-						message.channel.createMessage("You don't have permission to use this command");
-						return;
+							throw {title: "No permission", message: "You don't have permission to use this command"};
 					}
 					if (!module.checkPermissions(message.member.permission)){
-						message.channel.createMessage("You don't have permission to use this command");
-						return;
+							throw {title: "No permission", message: "You don't have permission to use this command"};
 					}
 
 					if (command.metadata.delete === true){
@@ -104,8 +104,13 @@ export class CommandHandler{
 					const commandArgs = [...args];
 					commandArgs.shift();
 
-					try{
 						await command.run(message, commandArgs);
+
+						return true;
+					}
+					else{
+						return false;
+					}
 					}
 					catch (e) {
 						const errorImg = "https://i.imgur.com/CYmk4fS.png";
