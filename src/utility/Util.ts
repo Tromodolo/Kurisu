@@ -85,7 +85,7 @@ export function getLoveUsers(msg: Message, args: string[]): { first?: Member, se
 
 	if (args[0]){
 		if (args[0].match(mentionCheck)){
-			users.first = guild.members.find((x: Member) => x.id === msg.mentions[0].id);
+			users.first = guild.members.find((x: Member) => x.id === msg.mentions[0]?.id);
 		}
 		else {
 			const guildMembs = new Fuse(guild.members.map((x) => x), userSearchOpts);
@@ -94,15 +94,19 @@ export function getLoveUsers(msg: Message, args: string[]): { first?: Member, se
 		}
 	}
 	if (args[1]){
+			const guildMembs = new Fuse(guild.members.map((x) => x), userSearchOpts);
+
 		if (args[1].match(mentionCheck)){
 			// A bit tricky here because the second user could be the first mention
-			users.second =
-				args[0].match(mentionCheck) ?
-					guild.members.find((x: Member) => x.id === msg.mentions[1].id)
-					: guild.members.find((x: Member) => x.id === msg.mentions[0].id);
+			if (msg.mentions[1]){
+				const found = guildMembs.search(msg.mentions[1]?.id);
+				users.second = found[0];
+			}
+			else if(msg.mentions[0]){
+				const found = guildMembs.search(msg.mentions[0]?.id);
+				users.second = found[0];			}
 		}
 		else {
-			const guildMembs = new Fuse(guild.members.map((x) => x), userSearchOpts);
 			const found = guildMembs.search(args[1]);
 			users.second = found[0];
 		}
