@@ -22,7 +22,7 @@ export default class Roll extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			if (args.length < 1) {
 				message.channel.createMessage("Please add a question you'd like the answer to.\nEg: '>wolfram Density of steel'");
 				return;
@@ -42,14 +42,12 @@ export default class Roll extends KurisuCommand {
 			catch (e) {
 				firstMessage.delete();
 				console.error(e);
-				message.channel.createMessage("Sorry, we have currently run out of Wolfram|Alpha queries, please try again later.");
-				return;
+				return reject("Sorry, we have currently run out of Wolfram|Alpha queries, please try again later.");
 			}
 
 			const numberPods = data?.queryresult?.numpods;
 			if (numberPods === 0) {
-				message.channel.createMessage("Sorry, Wolfram|Alpha could not figure our your question. Please reword it or try again later.");
-				return;
+				return reject({title: "Nothing found", message: "Sorry, Wolfram|Alpha could not figure our your question. Please reword it or try again later."});
 			}
 
 			const embed = new DiscordEmbed();

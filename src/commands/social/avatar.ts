@@ -27,7 +27,7 @@ export default class Avatar extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			const user = getUserByMessage(message, args);
 			const embed = new DiscordEmbed();
 
@@ -48,7 +48,7 @@ export default class Avatar extends KurisuCommand {
 			}
 			else{
 				if (!user) {
-					return "User not found";
+					return reject("User not found");
 				}
 
 				embed.setTitle(`Avatar for ${user.username}#${user.discriminator}`);

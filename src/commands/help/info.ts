@@ -26,7 +26,7 @@ export default class Info extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			const embed = new DiscordEmbed();
 
 			embed.setColor(parseInt(config.bot.color));

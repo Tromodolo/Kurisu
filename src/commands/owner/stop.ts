@@ -19,7 +19,7 @@ export default class Stop extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			message.channel.createMessage("Shutting down...");
 			this.bot.client.disconnect({ reconnect: false });
 			pm2.stop("Kurisu", (err) => {

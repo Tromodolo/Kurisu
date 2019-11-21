@@ -17,10 +17,9 @@ export default class Emote extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			if (!args[0]){
-				await message.channel.createMessage("You need to specify an emote");
-				return resolve();
+				return reject("You need to specify an emote");
 			}
 
 			// Save potential emote to a string variable
@@ -32,7 +31,7 @@ export default class Emote extends KurisuCommand {
 			let animated: string = "False";
 
 			if (!result){
-				await message.channel.createMessage(":exclamation: That's not a valid emote.");
+				return reject(":exclamation: That's not a valid emote.");
 			}
 			else {
 				// First check of regex

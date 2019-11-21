@@ -24,7 +24,7 @@ export default class Help extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			const embed = new DiscordEmbed();
 
 			embed.setColor(parseInt(config.bot.color));
@@ -54,8 +54,7 @@ export default class Help extends KurisuCommand {
 				});
 
 				if (!helpCommand){
-					await message.channel.createMessage("Command was not found.");
-					return resolve();
+					return reject("Command was not found.");
 				}
 				else{
 					embed.setAuthor(`Help for command '${helpCommand.metadata.name}'`, this.bot.client.user.avatarURL, this.bot.client.user.avatarURL);

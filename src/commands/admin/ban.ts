@@ -19,7 +19,7 @@ export default class Ban extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			let user: Member | undefined;
 
 			user = getUserByMessage(message, args);
@@ -45,12 +45,10 @@ export default class Ban extends KurisuCommand {
 				}
 
 				if (targetedUserRole.position >= kickerRole.position){
-					message.channel.createMessage("You can't ban someone with equal or higher role position than you");
-					return resolve();
+					return reject({title: "Action failed", message: "You can't ban someone with equal or higher role position than you"});
 				}
 				if (targetedUserRole.position >= botRole.position){
-					message.channel.createMessage("I can't ban someone with equal or higher role position than me");
-					return resolve();
+					return reject({title: "Action failed", message: "I can't ban someone with equal or higher role position than me"});
 				}
 
 				const reason = args[1] ?? "None specified";
@@ -73,7 +71,7 @@ export default class Ban extends KurisuCommand {
 					await message.channel.createMessage(`${user.username}#${user.discriminator} was successfully banned`);
 				}
 				catch (e){
-					await message.channel.createMessage("User couldn't be banned");
+					return reject({title: "Action failed", message: "User couldn't be banned"});
 				}
 			}
 			return resolve();

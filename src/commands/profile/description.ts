@@ -16,14 +16,12 @@ export default class SetDescription extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			if (args.length < 1){
-				await message.channel.createMessage("You need to specify a description message.");
-				return resolve();
+				return reject({title: "Could not update description", message: "You need to specify a description message."});
 			}
 			if (args.join(" ").length > 256){
-				await message.channel.createMessage("That message is too long. The maximum description length is 256 characters");
-				return resolve();
+				return reject({title: "Could not update description", message: "That message is too long. The maximum description length is 256 characters"});
 			}
 			const dbUser = await this.bot.db.getOrCreateUser(message.member!);
 			dbUser.profile.description = args.join(" ");

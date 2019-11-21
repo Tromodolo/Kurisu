@@ -21,7 +21,7 @@ export default class Profile extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			let user = message.member!;
 			if (args.length > 0){
 				const found = getUserByMessage(message, args);
@@ -31,8 +31,7 @@ export default class Profile extends KurisuCommand {
 			}
 
 			if (user.bot){
-				message.channel.createMessage(":no_good: Bots do not have profiles.");
-				return;
+				return reject({title: "Could not view profile", message: ":no_good: Bots do not have profiles."});
 			}
 
 			const dbUser = await this.bot.db.getOrCreateUser(user);

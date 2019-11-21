@@ -17,7 +17,7 @@ export default class Prune extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			let messages = 0;
 			if (!args[0]){
 				messages = 10;
@@ -41,7 +41,7 @@ export default class Prune extends KurisuCommand {
 						message.channel.createMessage(`🗑 ${messages} messages deleted`);
 					});
 				}
-			});
+			}).catch((err) => reject(err));
 			return resolve();
 		});
 	}

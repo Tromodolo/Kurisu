@@ -19,7 +19,7 @@ export default class Deathnote extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			let text = "";
 			if (args.length < 1){
 				text = `${message.author.username}#${message.author.discriminator}`;

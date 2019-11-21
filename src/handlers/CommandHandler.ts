@@ -4,6 +4,7 @@ import path from "path";
 import { Bot } from "../bot";
 import config from "../config";
 import KurisuModule from "../models/CommandModule";
+import { DiscordEmbed } from "../utility/DiscordEmbed";
 
 export class CommandHandler{
 	private moduleList: KurisuModule[] = [];
@@ -103,7 +104,21 @@ export class CommandHandler{
 					const commandArgs = [...args];
 					commandArgs.shift();
 
-					await command.run(message, commandArgs);
+					try{
+						await command.run(message, commandArgs);
+					}
+					catch (e) {
+						const errorImg = "https://i.imgur.com/CYmk4fS.png";
+
+						const embed = new DiscordEmbed();
+						embed.setAuthor(e.title || "Something went wrong!", undefined, errorImg);
+						embed.setColor(parseInt("0xe6675e"));
+						embed.setDescription(e.message || e);
+						embed.setFooter("If this is a bug, please contact tromo#7430");
+						embed.setTimestamp(new Date());
+
+						await message.channel.createMessage(embed.getEmbed());
+					}
 
 					return true;
 				}

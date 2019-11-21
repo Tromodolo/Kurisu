@@ -16,14 +16,12 @@ export default class SetTitle extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			if (args.length < 1){
-				await message.channel.createMessage("You need to specify a title.");
-				return resolve();
+				return reject({title: "Could not update title", message: "You need to specify a title."});
 			}
 			if (args.join(" ").length > 32){
-				await message.channel.createMessage("That message is too long. The maximum title length is 32 characters");
-				return resolve();
+				return reject({title: "Could not update title", message: "That message is too long. The maximum title length is 32 characters"});
 			}
 			const dbUser = await this.bot.db.getOrCreateUser(message.member!);
 			dbUser.profile.title = args.join(" ");

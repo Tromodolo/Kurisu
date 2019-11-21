@@ -16,13 +16,13 @@ export default class SetAvatar extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			if (args.length < 1){
-				message.channel.createMessage("You need to specify a url");
+				return reject("You need to specify a url");
 			}
 			else{
 				axios.get(args[0], {
-				  responseType: "arraybuffer",
+					responseType: "arraybuffer",
 				})
 				.then((response) => {
 					const buffer = Buffer.from(response.data, "utf8");

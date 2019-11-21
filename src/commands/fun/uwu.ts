@@ -19,7 +19,7 @@ export default class PleaseHelpMe extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			let content = args.join(" ");
 
 			content = content.replace(/l/gi, "w");

@@ -15,9 +15,9 @@ export default class SetName extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			if (args.length < 1){
-				message.channel.createMessage("You need to specify a name");
+				return reject("You need to specify a name");
 			}
 			else{
 				this.bot.client.editSelf({username: args.join(" ")});

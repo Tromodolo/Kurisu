@@ -31,10 +31,10 @@ export default class Love extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			const users: { first?: Member, second?: Member } = getLoveUsers(message, args);
 			if (!(users.first && users.second)){
-				await message.channel.createMessage("You need to specify two people.");
+				return reject("You need to specify two people");
 			}
 			else{
 				const firstAvatar = users.first.avatarURL.replace(".jpg", ".png");

@@ -16,7 +16,7 @@ export default class Eval extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			const before = Date.now();
 			let retStr: string = "";
 			try {
@@ -35,10 +35,10 @@ export default class Eval extends KurisuCommand {
 			catch (err) {
 				const after = Date.now();
 
-				retStr = "```javascript\n" +
+				return reject("```javascript\n" +
 					`Input: ${args.join(" ")}\n` +
 					`Error: ${err}\n` +
-					`Time: ${(after - before)} ms\`\`\``;
+					`Time: ${(after - before)} ms\`\`\``);
 			}
 			await message.channel.createMessage(retStr);
 			return resolve();

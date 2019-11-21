@@ -21,10 +21,9 @@ export default class Sans extends KurisuCommand {
 	}
 
 	public run(message: Message, args: string[]) {
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			if (args.length < 1){
-				message.channel.createMessage("You need to specify a message. :<");
-				return resolve();
+				return reject("You need to specify a message. :<");
 			}
 
 			const canvas = createCanvas(578, 152);
