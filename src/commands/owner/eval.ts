@@ -2,6 +2,8 @@ import { Message } from "eris";
 import util from "util";
 import KurisuCommand from "../../models/Command";
 import { Bot } from "../../bot";
+import { DiscordEmbed } from "../../utility/DiscordEmbed";
+import { getPrimaryColorFromImageUrl } from "../../utility/Util";
 
 export default class Eval extends KurisuCommand {
 	constructor(bot: Bot){
@@ -31,6 +33,19 @@ export default class Eval extends KurisuCommand {
 					`Input: ${args.join(" ")}\n` +
 					`Output: ${evald}\n` +
 					`Time: ${(after - before)} ms\`\`\``;
+
+				const authorImg = "https://cdn.discordapp.com/emojis/587566059855282196.gif?v=1";
+
+				const embed = new DiscordEmbed();
+				embed.setAuthor("Eval Results", undefined, authorImg);
+
+				const color = await getPrimaryColorFromImageUrl(this.bot.client.user.avatarURL);
+
+				embed.setColor(color);
+				embed.setDescription(retStr);
+
+				await message.channel.createMessage(embed.getEmbed());
+				return resolve();
 			}
 			catch (err) {
 				const after = Date.now();
@@ -40,8 +55,6 @@ export default class Eval extends KurisuCommand {
 					`Error: ${err}\n` +
 					`Time: ${(after - before)} ms\`\`\``);
 			}
-			await message.channel.createMessage(retStr);
-			return resolve();
 		});
 	}
 }
