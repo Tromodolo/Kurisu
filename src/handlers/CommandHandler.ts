@@ -120,7 +120,6 @@ export class CommandHandler{
 						embed.setColor(parseInt("0xe6675e"));
 						embed.setDescription(e.message || e);
 						embed.setFooter("If this is a bug, please contact tromo#7430");
-						embed.setTimestamp(new Date());
 
 						await message.channel.createMessage(embed.getEmbed());
 					}
