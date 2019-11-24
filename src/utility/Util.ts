@@ -160,6 +160,8 @@ export function getChannelByName(channels: TextChannel[], searchWord: string){
 }
 
 export async function getPrimaryColorFromImageUrl(url: string): Promise<number> {
+	url = url.replace(".gif", ".png");
+
 	const base64 = "data:image/png;base64," + await image2base64(url);
 	const mainColour = await ColorThief.getColor(base64);
 	let hexColor = "";
