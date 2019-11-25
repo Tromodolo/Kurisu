@@ -45,7 +45,7 @@ class DatabaseHandler{
 			type: "mariadb",
 			username: config.db.databaseUsername,
 			password: config.db.databasePassword,
-			charset: "utf8_unicode_ci",
+			charset: "utf8mb4_bin",
 			entities: [
 				User,
 				UserLevel,
