@@ -8,7 +8,7 @@ import { UserProfile } from './UserProfile';
 @Entity()
 export class User {
 	@Index()
-	@Column({primary: true})
+	@Column({primary: true, length: 64})
 	id: string;
 
 	@OneToOne((type) => UserLevel, {cascade: true, eager: true})

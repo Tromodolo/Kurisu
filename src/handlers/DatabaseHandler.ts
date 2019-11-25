@@ -42,10 +42,10 @@ class DatabaseHandler{
 			host: config.db.databaseHost,
 			name: config.db.databaseName,
 			database: config.db.databaseName,
-			type: "mysql",
+			type: "mariadb",
 			username: config.db.databaseUsername,
 			password: config.db.databasePassword,
-			charset: "utf8mb4_bin",
+			charset: "utf8_unicode_ci",
 			entities: [
 				User,
 				UserLevel,

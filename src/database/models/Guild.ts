@@ -8,7 +8,7 @@ import { User } from './User';
 @Entity()
 export class Guild {
 	@Index()
-	@Column({primary: true, nullable: false})
+	@Column({primary: true, nullable: false, length: 64})
 	id: string;
 
 	@Column()
