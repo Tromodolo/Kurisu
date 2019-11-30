@@ -4,6 +4,7 @@ import { Bot } from "../bot";
 import { ConfigFeature } from "../database/models/GuildConfig";
 import { DiscordEmbed } from "../utility/DiscordEmbed";
 import { DatabaseEntities } from "./DatabaseHandler";
+import { GuildRoleMenu } from "../database/models/GuildRoleMenu";
 
 export class GuildEventHandler {
 	private bot: Bot;
@@ -14,6 +15,8 @@ export class GuildEventHandler {
 		this.userBanned = this.userBanned.bind(this);
 		this.messageDelete = this.messageDelete.bind(this);
 		this.messageEdit = this.messageEdit.bind(this);
+		this.messageReactionAdd = this.messageReactionAdd.bind(this);
+		this.messageReactionRemove = this.messageReactionRemove.bind(this);
 	}
 
 	initialize(bot: Bot){
@@ -26,6 +29,8 @@ export class GuildEventHandler {
 		this.bot.client.on("guildBanAdd", this.userBanned);
 		this.bot.client.on("messageDelete", this.messageDelete);
 		this.bot.client.on("messageUpdate", this.messageEdit);
+		this.bot.client.on("messageReactionAdd", this.messageReactionAdd);
+		this.bot.client.on("messageReactionRemove", this.messageReactionRemove);
 	}
 
 	public unhookEvent(){
@@ -34,6 +39,54 @@ export class GuildEventHandler {
 		this.bot.client.off("guildBanAdd", this.userBanned);
 		this.bot.client.off("messageDelete", this.messageDelete);
 		this.bot.client.off("messageUpdate", this.messageEdit);
+		this.bot.client.off("messageReactionAdd", this.messageReactionAdd);
+		this.bot.client.off("messageReactionRemove", this.messageReactionRemove);
+	}
+
+	private async messageReactionAdd(message: Message, emoji: {id?: string, name: string}, userID: string){
+		const guild = (message.channel as TextChannel).guild;
+		if (!guild){
+			return;
+		}
+		const MenuRepo = this.bot.db.connection.getRepository(GuildRoleMenu);
+		const menu = await MenuRepo.findOne({
+			relations: [
+				"roles",
+			],
+			where: {
+				activeMessageId: message.id,
+			},
+		});
+		if (menu){
+			const foundReaction = menu.roles.find((x) => x.emoji === emoji.name);
+			if (foundReaction){
+				const user = (message.channel as TextChannel).guild?.members.get(userID);
+				user?.addRole(foundReaction.roleId);
+			}
+		}
+	}
+
+	private async messageReactionRemove(message: Message, emoji: {id?: string, name: string}, userID: string){
+		const guild = (message.channel as TextChannel).guild;
+		if (!guild){
+			return;
+		}
+		const MenuRepo = this.bot.db.connection.getRepository(GuildRoleMenu);
+		const menu = await MenuRepo.findOne({
+			relations: [
+				"roles",
+			],
+			where: {
+				activeMessageId: message.id,
+			},
+		});
+		if (menu){
+			const foundReaction = menu.roles.find((x) => x.emoji === emoji.name);
+			if (foundReaction){
+				const user = (message.channel as TextChannel).guild?.members.get(userID);
+				user?.removeRole(foundReaction.roleId);
+			}
+		}
 	}
 
 	private async messageDelete(message: Message){
@@ -91,7 +144,7 @@ export class GuildEventHandler {
 
 	private async userLeft(guild: eris.Guild, member: eris.Member){
 		const dbUser = await this.bot.db.getOrCreateUser(member);
-		const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+		const dbGuild = await this.bot.db.getOrCreateGuild(guild, ["configs", "userList"]);
 
 		if (dbGuild.userList.find((x) => x.id === dbUser.id)){
 			const index = dbGuild.userList.findIndex((x) => x.id === dbUser.id);
@@ -136,7 +189,7 @@ export class GuildEventHandler {
 
 	private async userJoin(guild: eris.Guild, member: eris.Member){
 		const dbUser = await this.bot.db.getOrCreateUser(member);
-		const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+		const dbGuild = await this.bot.db.getOrCreateGuild(guild, ["configs", "userList"]);
 
 		if (!dbGuild.userList.find((x) => x.id === dbUser.id)){
 			dbGuild.userList.push(dbUser);
@@ -165,7 +218,7 @@ export class GuildEventHandler {
 	}
 
 	private async userBanned(guild: Guild, member: Member){
-		const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+		const dbGuild = await this.bot.db.getOrCreateGuild(guild, ["configs", "userList"]);
 
 		const config = dbGuild.configs.find((x) => x.configType === ConfigFeature.JoinLeaveNotification);
 		if (config){

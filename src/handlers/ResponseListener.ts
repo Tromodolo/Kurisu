@@ -5,15 +5,14 @@ export default class ResponseListener extends EventEmitter{
 	private client: Client;
 	private _userId: string;
 
-	constructor(client: Client, userId: string, time: number = 60000){
+	constructor(client: Client, userId: string, time?: number){
 		super();
 		this.messageEvent = this.messageEvent.bind(this);
 		this.client = client;
 		this._userId = userId;
 
-		this.client.on("messageCreate", this.messageEvent);
-
-		if (time !== 0){
+		if (time){
+			this.startListening();
 			setTimeout(() => this.stopListening(), time);
 		}
 	}
@@ -21,6 +20,10 @@ export default class ResponseListener extends EventEmitter{
 	public stopListening(){
 		this.client.off("messageCreate", this.messageEvent);
 		this.emit("stopListening");
+	}
+
+	public startListening(){
+		this.client.on("messageCreate", this.messageEvent);
 	}
 
 	private messageEvent(message: Message){

@@ -33,7 +33,7 @@ export class ExperienceHandler{
 			const guild = member.guild;
 
 			const dbUser = await this.bot.db.getOrCreateUser(member);
-			const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+			const dbGuild = await this.bot.db.getOrCreateGuild(guild, ["configs", "userList"]);
 
 			const exp = this.getRandomExp(15, 25);
 

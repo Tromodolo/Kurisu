@@ -159,6 +159,23 @@ export function getChannelByName(channels: TextChannel[], searchWord: string){
 	return found[0];
 }
 
+export function getRoleByName(roles: Role[], searchWord: string){
+	const guildRoles = new Fuse(roles, {
+		shouldSort: true,
+		threshold: 0.6,
+		location: 0,
+		distance: 100,
+		maxPatternLength: 32,
+		minMatchCharLength: 1,
+		keys: [
+			"id",
+			"name",
+		],
+	});
+	const found = guildRoles.search(searchWord);
+	return found[0];
+}
+
 export async function getPrimaryColorFromImageUrl(url: string): Promise<number> {
 	url = url.replace(".gif", ".png");
 

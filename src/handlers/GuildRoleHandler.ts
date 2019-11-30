@@ -91,7 +91,7 @@ export class GuildRoleHandler {
 
 	private async userLeft(guild: eris.Guild, member: eris.Member){
 		const dbUser = await this.bot.db.getOrCreateUser(member);
-		const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+		const dbGuild = await this.bot.db.getOrCreateGuild(guild, ["configs", "userList"]);
 
 		if (dbGuild.userList.find((x) => x.id === dbUser.id)){
 			const index = dbGuild.userList.findIndex((x) => x.id === dbUser.id);
@@ -136,7 +136,7 @@ export class GuildRoleHandler {
 
 	private async userJoin(guild: eris.Guild, member: eris.Member){
 		const dbUser = await this.bot.db.getOrCreateUser(member);
-		const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+		const dbGuild = await this.bot.db.getOrCreateGuild(guild, ["configs", "userList"]);
 
 		if (!dbGuild.userList.find((x) => x.id === dbUser.id)){
 			dbGuild.userList.push(dbUser);
@@ -165,7 +165,7 @@ export class GuildRoleHandler {
 	}
 
 	private async userBanned(guild: Guild, member: Member){
-		const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+		const dbGuild = await this.bot.db.getOrCreateGuild(guild, ["configs", "userList"]);
 
 		const config = dbGuild.configs.find((x) => x.configType === ConfigFeature.JoinLeaveNotification);
 		if (config){

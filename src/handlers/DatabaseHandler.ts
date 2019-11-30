@@ -73,16 +73,12 @@ class DatabaseHandler{
 		this.achievementRepo = this._connection.getRepository(Achievement);
 	}
 
-	public async getOrCreateGuild(guild: eris.Guild): Promise<Guild>{
+	public async getOrCreateGuild(guild: eris.Guild, relations: string[] = ["configs"]): Promise<Guild>{
 		let foundGuild = await this.guildRepo.findOne({
 			where: {
 				id: guild.id,
 			},
-			relations: [
-				"configs",
-				"userList",
-				"roleMenus",
-			],
+			relations,
 		});
 		if (!foundGuild){
 			foundGuild = new Guild();
