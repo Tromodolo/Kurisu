@@ -7,7 +7,7 @@
 
 <div align="center">
 
-  [![Build Status](https://travis-ci.com/Tromodolo/Kurisu-Node.svg?branch=master)](https://travis-ci.com/Tromodolo/Kurisu-Node)
+  [![Build Status](https://travis-ci.com/Tromodolo/Kurisu.svg?branch=master)](https://travis-ci.com/Tromodolo/Kurisu)
   [![Platform](https://img.shields.io/badge/platform-discord-purple.svg)](https://discord.gg/G9EY7Sw)
   [![GitHub Issues](https://img.shields.io/github/issues/Tromodolo/Kurisu-Node.svg)](https://github.com/Tromodolo/Kurisu-Node/issues)
   [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/Tromodolo/Kurisu-Node.svg)](https://github.com/Tromodolo/Kurisu-Node/pulls)
