@@ -5,7 +5,7 @@ import { Bot } from "../../bot";
 import fetch from "node-fetch";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 
-export default class Roll extends KurisuCommand {
+export default class Wolfram extends KurisuCommand {
 	constructor(bot: Bot){
 		super(bot, {
 			name: "wolfram",
@@ -24,8 +24,7 @@ export default class Roll extends KurisuCommand {
 	public run(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			if (args.length < 1) {
-				message.channel.createMessage("Please add a question you'd like the answer to.\nEg: '>wolfram Density of steel'");
-				return;
+				return reject("Please add a question you'd like the answer to.\nEg: '>wolfram Density of steel'");
 			}
 
 			const firstMessage = await message.channel.createMessage("Looking up your question, please wait...");
