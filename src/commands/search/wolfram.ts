@@ -60,13 +60,15 @@ export default class Wolfram extends KurisuCommand {
 
 			let foundImage = false;
 			for (const pod of data.queryresult.pods){
+				console.log(pod);
 				if (pod.title){
 					if (!foundImage && pod.subpods[0]?.img?.src && !(pod.id === "Input")){
 						embed.setImage(pod.subpods[0]?.img?.src);
 						foundImage = true;
 					}
-
-					embed.addField(pod.title, pod.subpods[0]?.plaintext ?? "", false);
+					if (pod.subpods[0]?.plaintext){
+						embed.addField(pod.title, pod.subpods[0]?.plaintext ?? "", false);
+					}
 				}
 			}
 
