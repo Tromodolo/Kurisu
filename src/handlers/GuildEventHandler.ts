@@ -107,7 +107,7 @@ export class GuildEventHandler {
 				embed.setAuthor(`Message Deleted (${message.author.username}#${message.author.discriminator})`, "", message.author.avatarURL);
 				embed.setColor(0xfa5f5f);
 				embed.setDescription(message.content);
-				embed.setFooter("", moment(message.createdAt).utc().format());
+				embed.setFooter(moment().utc().format("LLL"));
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
@@ -135,7 +135,7 @@ export class GuildEventHandler {
 				embed.addField("Old", oldMessage.content.length > 250 ? oldMessage.content.substring(0, 249) + "..." : oldMessage.content ?? "");
 				embed.addField("New", newMessage.content.length > 250 ? newMessage.content.substring(0, 249) + "..." : newMessage.content ?? "");
 
-				embed.setFooter("", moment(newMessage.createdAt).utc().format("LLL"));
+				embed.setFooter(moment().utc().format("LLL"));
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
@@ -180,7 +180,7 @@ export class GuildEventHandler {
 				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
 				embed.addField("ID", `${member.id}`, true);
 				embed.setThumbnail(member.avatarURL);
-				embed.setFooter("", moment().utc().format("LLL"));
+				embed.setFooter(moment().utc().format("LLL"));
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
@@ -210,7 +210,7 @@ export class GuildEventHandler {
 				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
 				embed.addField("ID", `${member.id}`, true);
 				embed.setThumbnail(member.avatarURL);
-				embed.setFooter("", moment().utc().format("LLL"));
+				embed.setFooter(moment().utc().format("LLL"));
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
@@ -235,7 +235,7 @@ export class GuildEventHandler {
 				embed.addField("ID", `${member.id}`, true);
 				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
 				embed.setThumbnail(member.avatarURL);
-				embed.setFooter("", moment().utc().format("LLL"));
+				embed.setFooter(moment().utc().format("LLL"));
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
