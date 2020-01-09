@@ -107,7 +107,7 @@ export class GuildEventHandler {
 				embed.setAuthor(`Message Deleted (${message.author.username}#${message.author.discriminator})`, "", message.author.avatarURL);
 				embed.setColor(0xfa5f5f);
 				embed.setDescription(message.content);
-				embed.setFooter(moment().utc().format("LLL"));
+				embed.setTimestamp(new Date());
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
@@ -135,7 +135,7 @@ export class GuildEventHandler {
 				embed.addField("Old", oldMessage.content.length > 250 ? oldMessage.content.substring(0, 249) + "..." : oldMessage.content ?? "");
 				embed.addField("New", newMessage.content.length > 250 ? newMessage.content.substring(0, 249) + "..." : newMessage.content ?? "");
 
-				embed.setFooter(moment().utc().format("LLL"));
+				embed.setTimestamp(new Date());
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
@@ -164,6 +164,12 @@ export class GuildEventHandler {
 				const embed = new DiscordEmbed();
 				const audit = await this.getAuditLog(guild, member);
 
+				embed.setColor(0xfa5f5f);
+				embed.addField("Username", `${member.username}#${member.discriminator}`);
+				embed.addField("ID", `${member.id}`);
+				embed.setThumbnail(member.avatarURL);
+				embed.setTimestamp(new Date());
+
 				if (audit){
 					if (audit.actionType === 22){
 						return;
@@ -175,12 +181,6 @@ export class GuildEventHandler {
 				else{
 					embed.setAuthor("User Left", "", this.bot.client.user.avatarURL);
 				}
-
-				embed.setColor(0xfa5f5f);
-				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
-				embed.addField("ID", `${member.id}`, true);
-				embed.setThumbnail(member.avatarURL);
-				embed.setFooter(moment().utc().format("LLL"));
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
@@ -207,10 +207,10 @@ export class GuildEventHandler {
 
 				embed.setAuthor("User Joined", "", this.bot.client.user.avatarURL);
 				embed.setColor(0xa6f28f);
-				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
-				embed.addField("ID", `${member.id}`, true);
+				embed.addField("Username", `${member.username}#${member.discriminator}`);
+				embed.addField("ID", `${member.id}`);
 				embed.setThumbnail(member.avatarURL);
-				embed.setFooter(moment().utc().format("LLL"));
+				embed.setTimestamp(new Date());
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
@@ -225,17 +225,18 @@ export class GuildEventHandler {
 			if (config.enabled){
 				const audit = await this.getAuditLog(guild, member);
 				const embed = new DiscordEmbed();
+
+				embed.setAuthor("User Banned 🔨", "", this.bot.client.user.avatarURL);
+				embed.setColor(0xfa5f5f);
+				embed.addField("ID", `${member.id}`);
+				embed.addField("Username", `${member.username}#${member.discriminator}`);
+				embed.setThumbnail(member.avatarURL);
+				embed.setTimestamp(new Date());
+
 				if (audit){
 					embed.addField("Banned by", `${audit.user.username}#${audit.user.discriminator}`, true);
 					embed.addField("Reason", audit.reason ?? "Unspecified", true);
 				}
-
-				embed.setAuthor("User Banned 🔨", "", this.bot.client.user.avatarURL);
-				embed.setColor(0xfa5f5f);
-				embed.addField("ID", `${member.id}`, true);
-				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
-				embed.setThumbnail(member.avatarURL);
-				embed.setFooter(moment().utc().format("LLL"));
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
