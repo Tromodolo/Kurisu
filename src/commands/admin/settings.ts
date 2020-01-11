@@ -53,31 +53,28 @@ ${EDIT_DELETE_EMOJI} - Edited/Deleted Messages
 			sentMessage.addReaction(JOIN_LEAVE_EMOJI);
 			sentMessage.addReaction(EDIT_DELETE_EMOJI);
 
-			const reactions = new ReactionListener(this.bot.client, sentMessage, 30 * 1000);
-			reactions.on("reactionAdd", async (reactionMessage: Message, emoji: Emoji, userId: string) => {
-				if (userId === message.author.id){
-					switch (emoji.name){
-						case LEVEL_UP_EMOJI:
-							await reactionMessage.removeReactions();
-							await handleEnabled(reactionMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.LevelUpMessage);
-							return resolve();
-						case KICK_BAN_EMOJI:
-							await reactionMessage.removeReactions();
-							await handleSelectChannel(reactionMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.KickBanNotification);
-							return resolve();
-						case JOIN_LEAVE_EMOJI:
-							await reactionMessage.removeReactions();
-							await handleSelectChannel(reactionMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.JoinLeaveNotification);
-							return resolve();
-						case EDIT_DELETE_EMOJI:
-							await reactionMessage.removeReactions();
-							await handleSelectChannel(reactionMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.EditMessageNotification);
-							return resolve();
-						default:
-							return resolve();
-					}
-				}
-			});
+			const {emoji, userId} = await ReactionListener.waitForReaction(this.bot.client, sentMessage, message.author.id, 30 * 1000);
+			console.log(emoji, userId);
+			switch (emoji.name){
+				case LEVEL_UP_EMOJI:
+					await sentMessage.removeReactions();
+					await handleEnabled(sentMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.LevelUpMessage);
+					break;
+				case KICK_BAN_EMOJI:
+					await sentMessage.removeReactions();
+					await handleSelectChannel(sentMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.KickBanNotification);
+					break;
+				case JOIN_LEAVE_EMOJI:
+					await sentMessage.removeReactions();
+					await handleSelectChannel(sentMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.JoinLeaveNotification);
+					break;
+				case EDIT_DELETE_EMOJI:
+					await sentMessage.removeReactions();
+					await handleSelectChannel(sentMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.EditMessageNotification);
+					break;
+				default:
+					break;
+			}
 			return resolve();
 		});
 	}
@@ -106,41 +103,36 @@ async function handleSelectChannel(reactionMessage: Message, db: DatabaseHandler
 Currently: **${config.enabled ? activeChannel?.name ?? "Deleted Channel" : "Disabled"}**`);
 	await reactionMessage.edit(embed.getEmbed());
 
-	const responseHandler = new ResponseListener(bot, userId, 30 * 1000);
-	responseHandler.on("response", async (responseMessage: Message) => {
-		switch (responseMessage.content.toLowerCase()){
-			case "disable":
-				config.enabled = false;
-				embed.setDescription(":x: Setting successfully disabled.");
-				await reactionMessage.edit(embed.getEmbed());
-				responseHandler.stopListening();
-				break;
-			case "cancel":
-				embed.setDescription(":exclamation: Menu canceled.");
-				await reactionMessage.edit(embed.getEmbed());
-				responseHandler.stopListening();
-				break;
-			default:
-				const channels = (reactionMessage.channel as TextChannel).guild.channels.filter((x) => x.type === 0).map((x) => x);
-				const channel = getChannelByName((channels as TextChannel[]), responseMessage.content);
-				embed.setDescription(`:white_check_mark: Channel set to **#${channel.name}**`);
-				await reactionMessage.edit(embed.getEmbed());
-				responseHandler.stopListening();
+	const settingResponse = await ResponseListener.waitForMessage(bot, userId, 30 * 1000);
+	switch (settingResponse.content.toLowerCase()){
+		case "disable":
+			config.enabled = false;
+			embed.setDescription(":x: Setting successfully disabled.");
+			await reactionMessage.edit(embed.getEmbed());
+			break;
+		case "cancel":
+			embed.setDescription(":exclamation: Menu canceled.");
+			await reactionMessage.edit(embed.getEmbed());
+			break;
+		default:
+			const channels = (reactionMessage.channel as TextChannel).guild.channels.filter((x) => x.type === 0).map((x) => x);
+			const channel = getChannelByName((channels as TextChannel[]), settingResponse.content);
+			embed.setDescription(`:white_check_mark: Channel set to **#${channel.name}**`);
+			await reactionMessage.edit(embed.getEmbed());
 
-				config.enabled = true;
-				config.value = channel.id;
-				break;
-		}
+			config.enabled = true;
+			config.value = channel.id;
+			break;
+	}
 
-		if (index < 0){
-			guild.configs.push(config);
-		}
-		else{
-			guild.configs[index] = config;
-		}
+	if (index < 0){
+		guild.configs.push(config);
+	}
+	else{
+		guild.configs[index] = config;
+	}
 
-		await db.guildRepo.save(guild);
-	});
+	await db.guildRepo.save(guild);
 }
 
 async function handleEnabled(reactionMessage: Message, db: DatabaseHandler, guild: Guild, bot: Client, userId: string, type: ConfigFeature){
@@ -164,37 +156,32 @@ async function handleEnabled(reactionMessage: Message, db: DatabaseHandler, guil
 Currently: ${config.enabled ? "Enabled" : "Disabled"}`);
 	await reactionMessage.edit(embed.getEmbed());
 
-	const responseHandler = new ResponseListener(bot, userId, 30 * 1000);
-	responseHandler.on("response", async (responseMessage: Message) => {
-		switch (responseMessage.content.toLowerCase()){
-			case "enable":
-				responseHandler.stopListening();
-				config.enabled = true;
-				embed.setDescription(":white_check_mark: Setting successfully enabled.");
-				await reactionMessage.edit(embed.getEmbed());
-				break;
-			case "disable":
-				responseHandler.stopListening();
-				config.enabled = false;
-				embed.setDescription(":x: Setting successfully disabled.");
-				await reactionMessage.edit(embed.getEmbed());
-				break;
-			case "cancel":
-				responseHandler.stopListening();
-				embed.setDescription(":exclamation: Menu canceled.");
-				await reactionMessage.edit(embed.getEmbed());
-				return;
-			default:
-				return;
-		}
+	const settingResponse = await ResponseListener.waitForMessage(bot, userId, 30 * 1000);
+	switch (settingResponse.content.toLowerCase()){
+		case "enable":
+			config.enabled = true;
+			embed.setDescription(":white_check_mark: Setting successfully enabled.");
+			await reactionMessage.edit(embed.getEmbed());
+			break;
+		case "disable":
+			config.enabled = false;
+			embed.setDescription(":x: Setting successfully disabled.");
+			await reactionMessage.edit(embed.getEmbed());
+			break;
+		case "cancel":
+			embed.setDescription(":exclamation: Menu canceled.");
+			await reactionMessage.edit(embed.getEmbed());
+			return;
+		default:
+			return;
+	}
 
-		if (index < 0){
-		guild.configs.push(config);
-		}
-		else{
-			guild.configs[index] = config;
-		}
+	if (index < 0){
+	guild.configs.push(config);
+	}
+	else{
+		guild.configs[index] = config;
+	}
 
-		await db.guildRepo.save(guild);
-	});
+	await db.guildRepo.save(guild);
 }

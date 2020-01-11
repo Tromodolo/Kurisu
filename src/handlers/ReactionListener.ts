@@ -2,31 +2,32 @@ import { Client, Emoji, Message } from "eris";
 import { EventEmitter } from "events";
 
 export default class ReactionListener extends EventEmitter{
-	private client: Client;
-	private message: Message;
+	public static waitForReaction(client: Client, origMessage: Message, userId?: string, time?: number): Promise<{message: Message, emoji: Emoji, userId: string}>{
+		return new Promise((resolve, reject) => {
+			const handleReaction = (newMessage: Message, emoji: Emoji, reactedUserId: string) => {
+				if (origMessage.id === newMessage.id){
+					if (userId){
+						if(userId !== reactedUserId){
+							return;
+						}
+					}
+					client.off("messageReactionAdd", handleReaction);
+					return resolve({
+						message: newMessage,
+						emoji,
+						userId: reactedUserId,
+					});
+				}
+			};
 
-	constructor(client: Client, message: Message, time: number = 60000){
-		super();
-		this.messageEvent = this.messageEvent.bind(this);
+			client.on("messageReactionAdd", handleReaction);
 
-		this.client = client;
-		this.message = message;
-
-		this.client.on("messageReactionAdd", this.messageEvent);
-
-		if (time !== 0){
-			setTimeout(() => this.stopListening(), time);
-		}
-	}
-
-	public stopListening(){
-		this.client.off("messageReactionAdd", this.messageEvent);
-		this.emit("stopListening");
-	}
-
-	private messageEvent(message: Message, emoji: Emoji, userId: string){
-		if (this.message.id === message.id){
-			this.emit("reactionAdd", message, emoji, userId);
-		}
+			if (time){
+				setTimeout(() => {
+					client.off("messageReactionAdd", handleReaction);
+					return reject();
+				}, time);
+			}
+		});
 	}
 }
