@@ -53,9 +53,20 @@ ${EDIT_DELETE_EMOJI} - Edited/Deleted Messages
 			sentMessage.addReaction(JOIN_LEAVE_EMOJI);
 			sentMessage.addReaction(EDIT_DELETE_EMOJI);
 
-			const {emoji, userId} = await ReactionListener.waitForReaction(this.bot.client, sentMessage, message.author.id, 30 * 1000);
-			console.log(emoji, userId);
-			switch (emoji.name){
+			let emoji: Emoji;
+			let userId: string = "";
+
+			try {
+				try{
+					const reactionRes = await ReactionListener.waitForReaction(this.bot.client, sentMessage, message.author.id, 30 * 1000);
+					emoji = reactionRes.emoji;
+					userId = reactionRes.userId;
+				}
+				catch{
+					throw new Error("Menu timed out. Please try again.");
+				}
+
+				switch (emoji.name){
 				case LEVEL_UP_EMOJI:
 					await sentMessage.removeReactions();
 					await handleEnabled(sentMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.LevelUpMessage);
@@ -74,6 +85,10 @@ ${EDIT_DELETE_EMOJI} - Edited/Deleted Messages
 					break;
 				default:
 					break;
+				}
+			}
+			catch (error) {
+				return reject(error.message);
 			}
 			return resolve();
 		});
@@ -103,7 +118,13 @@ async function handleSelectChannel(reactionMessage: Message, db: DatabaseHandler
 Currently: **${config.enabled ? activeChannel?.name ?? "Deleted Channel" : "Disabled"}**`);
 	await reactionMessage.edit(embed.getEmbed());
 
-	const settingResponse = await ResponseListener.waitForMessage(bot, userId, 30 * 1000);
+	let settingResponse: Message;
+	try{
+		settingResponse = await ResponseListener.waitForMessage(bot, userId, 30 * 1000);
+	}
+	catch{
+		throw new Error("Menu timed out. Please try again.");
+	}
 	switch (settingResponse.content.toLowerCase()){
 		case "disable":
 			config.enabled = false;
@@ -156,7 +177,13 @@ async function handleEnabled(reactionMessage: Message, db: DatabaseHandler, guil
 Currently: ${config.enabled ? "Enabled" : "Disabled"}`);
 	await reactionMessage.edit(embed.getEmbed());
 
-	const settingResponse = await ResponseListener.waitForMessage(bot, userId, 30 * 1000);
+	let settingResponse: Message;
+	try{
+		settingResponse = await ResponseListener.waitForMessage(bot, userId, 30 * 1000);
+	}
+	catch{
+		throw new Error("Menu timed out. Please try again.");
+	}
 	switch (settingResponse.content.toLowerCase()){
 		case "enable":
 			config.enabled = true;
