@@ -2,33 +2,29 @@ import { Client, Message } from "eris";
 import { EventEmitter } from "events";
 
 export default class ResponseListener extends EventEmitter{
-	private client: Client;
-	private _userId: string;
+	public static waitForMessage(client: Client, userId?: string, time?: number): Promise<Message>{
+		return new Promise((resolve, reject) => {
+			const handleMessage = (message: Message) => {
+				if (userId){
+					if (userId === message.author.id){
+						client.off("messageCreate", handleMessage);
+						return resolve(message);
+					}
+				}
+				else{
+					client.off("messageCreate", handleMessage);
+					return resolve(message);
+				}
+			};
 
-	constructor(client: Client, userId: string, time?: number){
-		super();
-		this.messageEvent = this.messageEvent.bind(this);
-		this.client = client;
-		this._userId = userId;
+			client.on("messageCreate", handleMessage);
 
-		if (time){
-			this.startListening();
-			setTimeout(() => this.stopListening(), time);
-		}
-	}
-
-	public stopListening(){
-		this.client.off("messageCreate", this.messageEvent);
-		this.emit("stopListening");
-	}
-
-	public startListening(){
-		this.client.on("messageCreate", this.messageEvent);
-	}
-
-	private messageEvent(message: Message){
-		if (message.author.id === this._userId){
-			this.emit("response", message);
-		}
+			if (time){
+				setTimeout(() => {
+					client.off("messageCreate", handleMessage);
+					return reject();
+				}, time);
+			}
+		});
 	}
 }
