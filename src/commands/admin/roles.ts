@@ -89,7 +89,7 @@ export default class Roles extends KurisuCommand {
 
 		let menuResponse: Message;
 		try{
-			menuResponse = await ResponseListener.waitForMessage(this.bot.client, message.author.id, 60 * 1000);
+			menuResponse = await ResponseListener.waitForMessage(this.bot.client, message.channel, message.author.id, 60 * 1000);
 		}
 		catch (e) {
 			throw new Error("Menu timed out. Please try again.");
@@ -102,7 +102,7 @@ export default class Roles extends KurisuCommand {
 		while(enteringRoles){
 			let roleResponse: Message;
 			try{
-				roleResponse = await ResponseListener.waitForMessage(this.bot.client, message.author.id, 60 * 1000);
+				roleResponse = await ResponseListener.waitForMessage(this.bot.client, message.channel, message.author.id, 60 * 1000);
 			}
 			catch (e) {
 				throw new Error("Menu timed out. Please try again.");
@@ -155,7 +155,7 @@ export default class Roles extends KurisuCommand {
 		this.sendEmbed(message.channel, "Enter name", "Enter name of new menu you want to view, or 'cancel' to cancel");
 		let viewRes: Message;
 		try{
-			viewRes = await ResponseListener.waitForMessage(this.bot.client, message.author.id, 60 * 1000);
+			viewRes = await ResponseListener.waitForMessage(this.bot.client, message.channel, message.author.id, 60 * 1000);
 		}
 		catch (e) {
 			throw new Error("Menu timed out. Please try again.");
@@ -187,7 +187,7 @@ ${dbGuild.roleMenus[foundIndex].roles.map((x) => `${x.emoji} - ${x.roleName}`).j
 		this.sendEmbed(message.channel, "Enter name", "Enter name of new menu you want to delete, or 'cancel' to cancel");
 		let deleteRes: Message;
 		try{
-			deleteRes = await ResponseListener.waitForMessage(this.bot.client, message.author.id, 60 * 1000);
+			deleteRes = await ResponseListener.waitForMessage(this.bot.client, message.channel, message.author.id, 60 * 1000);
 		}
 		catch (e) {
 			throw new Error("Menu timed out. Please try again.");

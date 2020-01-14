@@ -120,7 +120,7 @@ Currently: **${config.enabled ? activeChannel?.name ?? "Deleted Channel" : "Disa
 
 	let settingResponse: Message;
 	try{
-		settingResponse = await ResponseListener.waitForMessage(bot, userId, 30 * 1000);
+		settingResponse = await ResponseListener.waitForMessage(bot, reactionMessage.channel, userId, 30 * 1000);
 	}
 	catch{
 		throw new Error("Menu timed out. Please try again.");
@@ -179,7 +179,7 @@ Currently: ${config.enabled ? "Enabled" : "Disabled"}`);
 
 	let settingResponse: Message;
 	try{
-		settingResponse = await ResponseListener.waitForMessage(bot, userId, 30 * 1000);
+		settingResponse = await ResponseListener.waitForMessage(bot, reactionMessage.channel, userId, 30 * 1000);
 	}
 	catch{
 		throw new Error("Menu timed out. Please try again.");
