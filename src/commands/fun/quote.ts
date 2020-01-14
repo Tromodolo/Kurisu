@@ -65,6 +65,7 @@ export default class Quote extends KurisuCommand {
 			embed.setTimestamp(new Date(quoteMessage.createdAt));
 
 			await message.channel.createMessage(embed.getEmbed());
+			return resolve();
 		});
 	}
 }
