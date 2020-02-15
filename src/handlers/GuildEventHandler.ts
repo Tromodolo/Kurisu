@@ -118,6 +118,11 @@ export class GuildEventHandler {
 		if (!oldMessage || !newMessage || newMessage.author.bot){
 			return;
 		}
+		// This is to make sure it doesn't trigger when embeds pop up for links.
+		// Because apparently that is a message edit.
+		if (oldMessage.embeds.length === 0 && newMessage.embeds.length > 0){
+			return;
+		}
 		const guild = (newMessage.channel as TextChannel).guild;
 		if (!guild){
 			return;
