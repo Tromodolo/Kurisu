@@ -134,6 +134,15 @@ export class GuildEventHandler {
 
 				embed.addField("Old", oldMessage.content.length > 250 ? oldMessage.content.substring(0, 249) + "..." : oldMessage.content ?? "");
 				embed.addField("New", newMessage.content.length > 250 ? newMessage.content.substring(0, 249) + "..." : newMessage.content ?? "");
+				embed.addField(
+					"Channel",
+					`[Open Channel](https://discordapp.com/channels/${(newMessage.channel as TextChannel).guild.id}/${newMessage.channel.id} )`,
+					true);
+
+				embed.addField(
+					"Message",
+					`[Open Message](https://discordapp.com/channels/${(newMessage.channel as TextChannel).guild.id}/${newMessage.channel.id}/${newMessage.id})`,
+					true);
 
 				embed.setTimestamp(new Date());
 
