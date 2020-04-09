@@ -19,16 +19,15 @@ export class Bot {
 		this.cnf = e_cnf;
 
 		this.client = new eris.Client(production ? this.cnf.bot.botToken : this.cnf.bot.devToken, {
-			getAllUsers: true,
 			defaultImageFormat: "png",
 			defaultImageSize: 1024,
 			disableEveryone: true,
 			autoreconnect: true,
 		});
 
-		this.client.on("ready", async () => {
-			console.log("Successfully connected as: " + this.client.user.username + "#" + this.client.user.discriminator); // Log "Ready!"
-			await this.client.editStatus("online", {name: `${this.cnf.bot.defaultPrefix}help to get command list`});
+		this.client.once("ready", async () => {
+			console.log("Successfully connected as: " + this.client.user.username + "#" + this.client.user.discriminator);
+			this.client.editStatus("online", {name: `${this.cnf.bot.defaultPrefix}help to get command list`});
 		});
 	}
 
