@@ -34,7 +34,7 @@ export default class WordCloud extends KurisuCommand {
 			for (const msg of lastMessages){
 				if (msg.content?.length > 0){
 					const msgContent = msg.cleanContent?.toLowerCase()
-					.replace(/[-_,.?!:*^@]/, " ")
+					.replace(/[-_,.?!:*^@]/g, " ")
 					.replace(/[\\\/\"\']/g, "").split(" ") ?? [];
 
 					for (const word of msgContent){
