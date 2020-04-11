@@ -35,7 +35,8 @@ export class ExperienceHandler{
 			const dbUser = await this.bot.db.getOrCreateUser(member);
 			const dbGuild = await this.bot.db.getOrCreateGuild(guild, ["configs", "userList"]);
 
-			const exp = this.getRandomExp(15, 25);
+			// Used to be random from 15-25, but its just better to have the same exp and no rng.
+			const exp = 20;
 
 			// If user does not exist in guild list, then add them
 			if (!(dbGuild?.userList?.find((x) => x.id === dbUser.id))){
@@ -88,11 +89,5 @@ export class ExperienceHandler{
 	// x ^ 2 = Y / 50
 	private getLevelFromExp(exp: number){
 		return Math.floor(Math.sqrt(exp / 50)) + 1;
-	}
-
-	/* private async getOrCreateGuildScore */
-
-	private getRandomExp(min: number, max: number){
-		return Math.random() * (max - min) + min;
 	}
 }
