@@ -21,13 +21,25 @@ export class Bot {
 		this.client = new eris.Client(production ? this.cnf.bot.botToken : this.cnf.bot.devToken, {
 			defaultImageFormat: "png",
 			defaultImageSize: 1024,
-			disableEveryone: true,
+			allowedMentions: {
+				everyone: false,
+				roles: false,
+				users: false,
+			},
+			getAllUsers: false,
+			intents: [
+				"guildBans",
+				"guildMembers",
+				"guildMessageReactions",
+				"guildMessages",
+				"guilds",
+			],
 			autoreconnect: true,
 		});
 
 		this.client.once("ready", async () => {
 			console.log("Successfully connected as: " + this.client.user.username + "#" + this.client.user.discriminator);
-			this.client.editStatus("online", {name: `${this.cnf.bot.defaultPrefix}help to get command list`});
+			this.client.editStatus("online", {name: `${this.cnf.bot.defaultPrefix}help to get command list`, type: 0});
 		});
 	}
 
@@ -62,7 +74,7 @@ export class Bot {
 		this.client.connect();
 	}
 }
-const bot = new Bot(config, false);
+const bot = new Bot(config, true);
 bot.connect();
 
 export {
