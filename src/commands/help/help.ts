@@ -32,6 +32,7 @@ export default class Help extends KurisuCommand {
 			if (!args[0]){
 				embed.setAuthor("List of commands", this.bot.client.user.avatarURL, this.bot.client.user.avatarURL);
 				embed.setDescription("If you want information about a specific command, type 'help command-name'");
+				embed.setFooter(`Use ${config.bot.defaultPrefix}invite to add me to your server`);
 
 				this.bot.commands.modules.forEach((module) => {
 					if (module.name.toLowerCase() === "owner"){
