@@ -35,7 +35,7 @@ export class CommandHandler{
 					return;
 				}
 				catch (ex){
-					console.log(ex);
+					console.error(ex);
 					return;
 				}
 			});

@@ -38,7 +38,7 @@ export class Bot {
 		});
 
 		this.client.once("ready", async () => {
-			console.log("Successfully connected as: " + this.client.user.username + "#" + this.client.user.discriminator);
+			console.info("Successfully connected as: " + this.client.user.username + "#" + this.client.user.discriminator);
 			this.client.editStatus("online", {name: `${this.cnf.bot.defaultPrefix}help to get command list`, type: 0});
 		});
 	}
@@ -48,7 +48,7 @@ export class Bot {
 		try{
 			// Connect to database
 			await this.db.init();
-			console.log("Database connection successful");
+			console.info("Database connection successful");
 		}
 		catch (e) {
 			console.error(e);
@@ -63,10 +63,10 @@ export class Bot {
 		this.commands.initialize(this);
 		this.guildEvent.initialize(this);
 
-		console.log("Commands loaded successfully");
+		console.info("Commands loaded successfully");
 		this.commands.loadCommands();
 
-		console.log("Registering events");
+		console.info("Registering events");
 		this.commands.hookEvent();
 		this.guildEvent.hookEvent();
 		this.exp.hookEvent();

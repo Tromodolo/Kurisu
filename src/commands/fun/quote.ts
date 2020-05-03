@@ -44,7 +44,6 @@ export default class Quote extends KurisuCommand {
 				}
 			}
 
-			console.log(quoteMessage);
 			if (!quoteMessage){
 				return reject({title: "Message not found", message: "Message wasn't found, is it in this text channel?"});
 			}
