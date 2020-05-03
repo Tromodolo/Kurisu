@@ -191,6 +191,22 @@ export async function getPrimaryColorFromImageUrl(url: string): Promise<number> 
 	return parseInt(hexColor);
 }
 
+
+export async function getPrimaryColorHexFromImageUrl(url: string): Promise<string> {
+	url = url.replace(".gif", ".png");
+
+	const base64 = "data:image/png;base64," + await image2base64(url);
+	const mainColour = await ColorThief.getColor(base64);
+	let hexColor = "";
+	if (mainColour){
+		hexColor = `#${mainColour[0].toString(16)}${mainColour[1].toString(16)}${mainColour[2].toString(16)}`;
+	}
+	else {
+		hexColor = config.bot.color.replace("0x", "#");
+	}
+	return hexColor;
+}
+
 const searchReactions: string[] =
 [
 	"Sure, give me a second.",
