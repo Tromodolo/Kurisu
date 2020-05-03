@@ -26,7 +26,7 @@ export class Bot {
 				roles: false,
 				users: false,
 			},
-			getAllUsers: false,
+			getAllUsers: true,
 			intents: [
 				"guildBans",
 				"guildMembers",
