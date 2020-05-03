@@ -47,21 +47,17 @@ export class ExperienceHandler{
 			const then = moment(dbUser.experience.lastUpdated).add(1, "minute");
 			const now = moment();
 			if (now.isAfter(then)){
-				if (dbUser?.statistics?.totalMessages){
-					dbUser.statistics.totalMessages++;
-				}
-				else {
-					if (dbUser.statistics){
-						dbUser.statistics.totalMessages = 1;
-					}
-				}
-
 				dbUser.experience.total += exp;
 				dbUser.experience.lastUpdated = moment().toDate();
-
 				// This is to make sure that experience is always in increments of 20
 				let diff = dbUser.experience.total % 20;
 				dbUser.experience.total = dbUser.experience.total - diff;
+
+				// Always match total messages to exp
+				if (dbUser.statistics){
+					dbUser.statistics.totalMessages = Math.floor(dbUser.experience.total / 20);
+				}
+
 				await this.bot.db.saveEntity(dbUser, DatabaseEntities.User);
 
 				const oldExp = dbUser.experience.total - exp;
