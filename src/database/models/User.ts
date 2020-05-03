@@ -2,6 +2,7 @@ import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, OneToOne } fr
 import { Guild } from './Guild';
 import { UserLevel } from './UserLevel';
 import { UserProfile } from './UserProfile';
+import { UserStatistics } from './UserStatistics';
 
 /* tslint:disable:member-access variable-name */
 
@@ -19,6 +20,10 @@ export class User {
 	@JoinColumn()
 	profile: UserProfile;
 
+	@OneToOne((type) => UserStatistics, {cascade: true, eager: true})
+	@JoinColumn()
+	statistics?: UserStatistics;
+
 	@ManyToMany((type) => Guild, {cascade: true, eager: true})
 	@JoinTable()
 	guilds: Guild[];
@@ -34,6 +39,9 @@ export class User {
 		}
 		if (!this.profile){
 			this.profile = new UserProfile();
+		}
+		if (!this.statistics){
+			this.statistics = new UserStatistics();
 		}
 		return this;
 	}

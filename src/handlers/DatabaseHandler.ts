@@ -11,6 +11,7 @@ import { User } from "../database/models/User";
 import { UserAchievement } from "../database/models/UserAchievement";
 import { UserLevel } from "../database/models/UserLevel";
 import { UserProfile } from "../database/models/UserProfile";
+import { UserStatistics } from "../database/models/UserStatistics";
 
 /**
  * Creates a new DatabaseHandler based off of config file
@@ -56,6 +57,7 @@ class DatabaseHandler{
 				GuildConfig,
 				UserAchievement,
 				Achievement,
+				UserStatistics,
 			],
 			cache: {
 				duration: 5000,
@@ -123,6 +125,7 @@ enum DatabaseEntities{
 	GuildConfig = "GuildConfig",
 	UserLevel = "UserLevel",
 	UserProfile = "UserProfile",
+	UserStatistics = "UserStatistics",
 }
 
 export {
