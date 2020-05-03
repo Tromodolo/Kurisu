@@ -5,6 +5,7 @@ import { Bot } from "../bot";
 import config from "../config";
 import KurisuModule from "../models/CommandModule";
 import { DiscordEmbed } from "../utility/DiscordEmbed";
+import { DatabaseEntities } from "./DatabaseHandler";
 
 export class CommandHandler{
 	private moduleList: KurisuModule[] = [];
@@ -105,6 +106,11 @@ export class CommandHandler{
 						const commandArgs = [...args];
 						commandArgs.shift();
 
+						const dbUser = await this.bot.db.getOrCreateUser(message.member);
+						if (dbUser?.statistics){
+							dbUser.statistics.commandsUsed = (dbUser.statistics.commandsUsed ?? 0) + 1;
+							await this.bot.db.saveEntity(dbUser, DatabaseEntities.User);
+						}
 						await command.run(message, commandArgs);
 
 						return true;
