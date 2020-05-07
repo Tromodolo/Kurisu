@@ -13,6 +13,8 @@ import config from "../../config";
 import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 
+import childProcess from "child_process";
+
 export default class Info extends KurisuCommand {
 	constructor(bot: Bot){
 		super(bot, {
@@ -35,6 +37,11 @@ export default class Info extends KurisuCommand {
 			embed.addField("Devs", config.bot.developers.length > 0 ? config.bot.developers.map((x) => x.name).join(",\n") : "Uh Oh I don't know how this happened", true);
 			embed.addField("Node.js Version", process.version, true);
 			embed.addField("Discord Library", config.bot.libraryVersion, true);
+
+			const gitHash = childProcess.execSync("git rev-parse HEAD");
+			if (gitHash){
+				embed.addField("Git Commit", gitHash.toString("utf8").substr(0, 7), true);
+			}
 
 			// Process.uptime returns in seconds, so here i multiply by 1000 to get miliseconds
 			const timeNow = Date.now();
