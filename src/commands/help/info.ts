@@ -61,6 +61,8 @@ export default class Info extends KurisuCommand {
 			embed.addField("User Count", `${this.bot.client.users.size}`, true);
 			/* embed.addField("Invite Link", `[Link](${config.bot.inviteLink})`, true); */
 
+			embed.setFooter("https://github.com/Tromodolo/Kurisu");
+
 			await message.channel.createMessage(embed.getEmbed());
 			return resolve();
 		});
