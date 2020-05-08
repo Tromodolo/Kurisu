@@ -18,6 +18,9 @@
 		"types": [
 			"node"
 		],
+		"plugins": [
+			{ "transform": "ts-auto-mock/transformer" }
+		],
 		"outDir": "build"
   	},
 	"exclude": [
