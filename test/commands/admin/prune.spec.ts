@@ -1,7 +1,6 @@
 
 import { expect } from "chai";
 import "mocha";
-import sinon from "sinon";
 import { createMock } from "ts-auto-mock";
 
 import { Message,TextableChannel } from "eris";
@@ -30,10 +29,6 @@ describe('Prune', () => {
 		};
 
 		pruneCommand = new PruneCommand(botMock);
-	});
-
-	afterEach(() => {
-		sinon.restore();
 	});
 
 	it('should prune the amount of messages specified', () => {
