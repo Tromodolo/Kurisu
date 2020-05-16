@@ -1,4 +1,4 @@
-import { Message } from "eris";
+import { Message, TextChannel } from "eris";
 import { Bot } from "../../bot";
 import KurisuCommand from "../../models/Command";
 
@@ -18,6 +18,10 @@ export default class Prune extends KurisuCommand {
 
 	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
+			if ((message.channel as TextChannel)?.guild === undefined){
+				return;
+			}
+
 			let messages = 0;
 			if (!args[0]){
 				messages = 10;
@@ -33,15 +37,18 @@ export default class Prune extends KurisuCommand {
 			}
 			let messageIds: string[] = [];
 
-			message.channel.getMessages(messages + 1).then((messageList) => {
-				messageIds = messageList.map((msg) => msg.id);
-
+			try{
+				const messageList = await message.channel.getMessages(messages + 1);
+				messageIds = (messageList as Array<Message<TextChannel>>).map((msg) => msg.id);
 				if 	(messageIds.length > 0){
 					this.bot.client.deleteMessages(message.channel.id, messageIds, "Prune command").then(() => {
 						message.channel.createMessage(`🗑 ${messages} messages deleted`);
 					});
 				}
-			}).catch((err) => reject(err));
+			}
+			catch (err) {
+				return reject(err);
+			}
 			return resolve();
 		});
 	}

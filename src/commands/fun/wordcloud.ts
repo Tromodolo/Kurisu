@@ -1,4 +1,4 @@
-import { Message } from "eris";
+import { Message, TextChannel } from "eris";
 import { createCanvas, Canvas, registerFont } from "canvas";
 import d3 from "d3-cloud";
 import randomColor from "randomcolor";
@@ -28,7 +28,7 @@ export default class WordCloud extends KurisuCommand {
 		return new Promise(async (resolve, reject) => {
 			let lastMessages = await message.channel.getMessages(100, message.id);
 			// Remove bot messages
-			lastMessages = lastMessages.filter((m) => !m.member?.bot);
+			lastMessages = (lastMessages as Array<Message<TextChannel>>).filter((m) => !m.member?.bot);
 
 			let words: any[] = [];
 			for (const msg of lastMessages){

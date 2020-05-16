@@ -1,4 +1,4 @@
-import { Message } from "eris";
+import { Message, TextChannel, Collection } from "eris";
 import KurisuCommand from "../../models/Command";
 import { Bot } from "../../bot";
 import { getPrimaryColorFromImageUrl } from "../../utility/Util";
@@ -28,7 +28,7 @@ export default class Quote extends KurisuCommand {
 				}
 			}
 			else{
-				for (const mes of message.channel.messages.map((x) => x)){
+				for (const mes of (message.channel.messages as Collection<Message<TextChannel>>).map((x) => x)){
 					if (mes.id === message.id || mes.author.bot){
 						continue;
 					}
