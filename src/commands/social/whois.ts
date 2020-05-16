@@ -28,7 +28,7 @@ export default class WhoIs extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			let user = getUserByMessage(message, args);
 			const embed = new DiscordEmbed();

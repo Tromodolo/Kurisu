@@ -16,7 +16,7 @@ export default class Emote extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			if (!args[0]){
 				return reject("You need to specify an emote");

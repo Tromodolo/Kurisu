@@ -26,7 +26,7 @@ export default class Pet extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			if (!message.member){
 				return resolve();

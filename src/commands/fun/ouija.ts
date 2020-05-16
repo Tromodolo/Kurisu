@@ -17,7 +17,7 @@ export default class Ouija extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			const promptQuestion = await message.channel.createMessage("Please enter a question.");
 			let question: Message;

@@ -16,7 +16,7 @@ export default class Quote extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			let quoteMessage: Message | undefined;
 			if (args[0]){

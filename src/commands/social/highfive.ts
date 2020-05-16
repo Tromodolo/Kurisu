@@ -23,7 +23,7 @@ export default class HighFive extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			const user = getUserByMessage(message, args);
 

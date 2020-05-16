@@ -18,7 +18,7 @@ export default class Restart extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			message.channel.createMessage("Restarting, will be back soon");
 			this.bot.client.disconnect({ reconnect: false });

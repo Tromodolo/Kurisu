@@ -33,7 +33,7 @@ export default class KurisuCommand {
 	 * @arg {string[]} args Array of all the args sent with the command
 	 * @returns {Promise<*>}
 	 */
-	public run(message: eris.Message, args: string[]): Promise<any>{
+	public execute(message: eris.Message, args: string[]): Promise<any>{
 		return new Promise((resolve) => resolve());
 	}
 

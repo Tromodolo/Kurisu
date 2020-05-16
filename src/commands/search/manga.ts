@@ -17,7 +17,7 @@ export default class Anime extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			if (args.length < 1) {
 				return reject("Please enter an manga you'd like to look up.");

@@ -17,7 +17,7 @@ export default class Roll extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			let randomNum: number = 0;
 			if (args[0]){

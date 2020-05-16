@@ -23,7 +23,7 @@ export default class Help extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			const embed = new DiscordEmbed();
 

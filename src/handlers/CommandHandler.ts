@@ -111,7 +111,7 @@ export class CommandHandler{
 							dbUser.statistics.commandsUsed = (dbUser.statistics.commandsUsed ?? 0) + 1;
 							await this.bot.db.saveEntity(dbUser, DatabaseEntities.User);
 						}
-						await command.run(message, commandArgs);
+						await command.execute(message, commandArgs);
 
 						return true;
 					}

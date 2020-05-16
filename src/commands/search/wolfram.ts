@@ -21,7 +21,7 @@ export default class Wolfram extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			if (args.length < 1) {
 				return reject("Please add a question you'd like the answer to.\nEg: '>wolfram Density of steel'");

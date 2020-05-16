@@ -30,7 +30,7 @@ export default class Love extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			const users: { first?: Member, second?: Member } = getLoveUsers(message, args);
 			if (!(users.first && users.second)){

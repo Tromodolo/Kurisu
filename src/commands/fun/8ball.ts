@@ -38,7 +38,7 @@ export default class Roll extends KurisuCommand {
 		});
 	}
 
-	public run(message: Message, args: string[]) {
+	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			const rng = Math.floor(Math.random() * this.responses.length);
 			const chosenResponse = this.responses[rng];
