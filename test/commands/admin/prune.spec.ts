@@ -3,7 +3,7 @@ import { expect } from "chai";
 import "mocha";
 import { createMock } from "ts-auto-mock";
 
-import { Message,TextableChannel } from "eris";
+import { Message,TextableChannel, TextChannel } from "eris";
 import PruneCommand from "../../../src/commands/admin/prune";
 import { Bot } from "../../../src/bot";
 
@@ -23,8 +23,8 @@ describe('Prune', () => {
 			messageList.splice(0, messageIDs.length - 1);
 		};
 		mockMessage.channel.getMessages = async (limit?: number, before?: string, after?: string, around?: string) => {
-			const messages: Message[] = Array(limit);
-			messages.fill(createMock<Message>(), 0, -1);
+			const messages: Array<Message<TextChannel>> = Array(limit);
+			messages.fill(createMock<Message<TextChannel>>(), 0, -1);
 			return messages;
 		};
 
