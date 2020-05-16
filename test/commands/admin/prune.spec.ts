@@ -33,21 +33,21 @@ describe('Prune', () => {
 
 	it('should prune the amount of messages specified', () => {
 		mockMessage.content = "k>prune 5";
-		pruneCommand.run(mockMessage as Message, ["5"]).then(() => {
+		pruneCommand.execute(mockMessage as Message, ["5"]).then(() => {
 			expect(messageList.length).to.equal(145);
 		});
 	});
 
 	it('should should default to 10 messages if unspecified', () => {
 		mockMessage.content = "k>prune";
-		pruneCommand.run(mockMessage as Message, []).then(() => {
+		pruneCommand.execute(mockMessage as Message, []).then(() => {
 			expect(messageList.length).to.equal(140);
 		});
 	});
 
 	it('should not allow more than 100 messages to be ', () => {
 		mockMessage.content = "k>prune 200";
-		pruneCommand.run(mockMessage as Message, ["200"]).then(() => {
+		pruneCommand.execute(mockMessage as Message, ["200"]).then(() => {
 			expect(messageList.length).to.equal(50);
 		});
 	});
