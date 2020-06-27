@@ -5,7 +5,7 @@ import { Bot } from "../../bot";
 import fetch from "node-fetch";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 
-export default class Anime extends KurisuCommand {
+export default class Manga extends KurisuCommand {
 	constructor(bot: Bot){
 		super(bot, {
 			name: "manga",
