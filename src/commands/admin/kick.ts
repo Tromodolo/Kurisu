@@ -25,7 +25,7 @@ export default class Kick extends KurisuCommand {
 		return new Promise(async (resolve, reject) => {
 			let user: Member | undefined;
 
-			user = getUserByMessage(message, args);
+			user = getUserByMessage(message, [args[0]]);
 
 			if (!user){
 				message.channel.createMessage("User not found.");
@@ -54,12 +54,17 @@ export default class Kick extends KurisuCommand {
 					return reject({title: "Action failed", message: "I can't kick someone with equal or higher role position than me"});
 				}
 
-				const reason = args[1] ?? "None specified";
+				args.shift();
+				const reason = args.join(" ") ?? "None specified";
 
 				const embed = new DiscordEmbed();
 				embed.setColor(parseInt(config.bot.color));
 				embed.setTitle(`**You were kicked from ${message.member?.guild.name ?? "_Unavailable_"}**`);
-				embed.addField("Reason", `${reason}`);
+				embed.addField("Reason", `
+\`\`\`
+${reason}
+\`\`\`
+`);
 
 				embed.setTimestamp(moment().toDate());
 
