@@ -179,21 +179,25 @@ export class GuildEventHandler {
 				const audit = await this.getAuditLog(guild, member);
 
 				embed.setColor(0xfa5f5f);
-				embed.addField("Username", `${member.username}#${member.discriminator}`);
-				embed.addField("ID", `${member.id}`);
-				embed.setThumbnail(member.avatarURL);
+				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
 				embed.setTimestamp(new Date());
 
 				if (audit){
 					if (audit.actionType === 22){
 						return;
 					}
-					embed.setAuthor("User Kicked", "", this.bot.client.user.avatarURL);
-					embed.addField("Kicked by", `${audit.user.username}#${audit.user.discriminator}`, true);
-					embed.addField("Reason", `${audit.reason ?? "Unspecified"}`, true);
+					embed.setAuthor("User Kicked", "", member.avatarURL);
+					embed.addField("Kicked by", `${audit.user.mention}`, true);
+					embed.addField("ID", `${member.id}`, true);
+					embed.addField("Reason", `
+\`\`\`
+${audit.reason ?? "Unspecified"}
+\`\`\`
+`, false);
 				}
 				else{
-					embed.setAuthor("User Left", "", this.bot.client.user.avatarURL);
+					embed.addField("ID", `${member.id}`, true);
+					embed.setAuthor("User Left", "", member.avatarURL);
 				}
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
@@ -240,17 +244,24 @@ export class GuildEventHandler {
 				const audit = await this.getAuditLog(guild, member);
 				const embed = new DiscordEmbed();
 
-				embed.setAuthor("User Banned 🔨", "", this.bot.client.user.avatarURL);
+				embed.setAuthor("User Banned 🔨", "", member.avatarURL);
 				embed.setColor(0xfa5f5f);
-				embed.addField("ID", `${member.id}`);
-				embed.addField("Username", `${member.username}#${member.discriminator}`);
-				embed.setThumbnail(member.avatarURL);
+				embed.addField("Username", `${member.username}#${member.discriminator}`, true);
 				embed.setTimestamp(new Date());
 
 				if (audit){
-					embed.addField("Banned by", `${audit.user.username}#${audit.user.discriminator}`, true);
-					embed.addField("Reason", audit.reason ?? "Unspecified", true);
+					embed.addField("Banned by", `${audit.user.mention}`, true);
+					embed.addField("ID", `${member.id}`, true);
+					embed.addField("Reason", `
+\`\`\`
+${audit.reason ?? "Unspecified"}
+\`\`\`
+`, false);
 				}
+				else {
+					embed.addField("ID", `${member.id}`, true);
+				}
+
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
