@@ -14,6 +14,7 @@ type BotConfig = {
 	googleApiKey: string;
 	googleCustomSearchId: string;
 	wolframAlphaAppId: string;
+	openWeatherMapAppId?: string;
 };
 
 // tslint:disable-next-line: interface-over-type-literal
@@ -38,6 +39,7 @@ let bot: BotConfig = {
 	googleApiKey: "",
 	googleCustomSearchId: "",
 	wolframAlphaAppId: "",
+	openWeatherMapAppId: "",
 };
 
 // empty db.json
