@@ -62,7 +62,7 @@ export default class Weather extends KurisuCommand {
 	public execute(message: Message, args: string[]) {
 		return new Promise(async (resolve, reject) => {
 			if (args.length < 1) {
-				return reject("Please enter an manga you'd like to look up.");
+				return reject("Please enter an city.");
 			}
 
 			if (!this.bot.cnf.bot.openWeatherMapAppId){
@@ -82,11 +82,11 @@ export default class Weather extends KurisuCommand {
 			catch (e) {
 				firstMessage.delete();
 				console.error(e);
-				return reject("Sorry, we found no matching manga, please try again later.");
+				return reject("Sorry, something went wrong when trying to find city.");
 			}
 
-			if (!data){
-				return reject("Sorry, we found no matching manga, please try again later.");
+			if (!data || !data?.name){
+				return reject("Sorry, something went wrong when trying to find city.");
 			}
 
 			const embed = new DiscordEmbed();
