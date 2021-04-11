@@ -14,6 +14,7 @@ import {
 	ProfileModule,
 	SearchModule,
 	SocialModule,
+	OwnerModule,
 } from "../commands";
 
 export class CommandHandler {
@@ -40,6 +41,7 @@ export class CommandHandler {
 			ProfileModule,
 			SearchModule,
 			SocialModule,
+			OwnerModule,
 		];
 	}
 
@@ -83,7 +85,7 @@ export class CommandHandler {
 				if (!message.member){
 					return;
 				}
-				if (module.name.toLowerCase() === "owner"){
+				if (module.name.toLowerCase().includes("owner")){
 					const devs: any = config.bot.developerIds;
 					if (!devs.includes(message.author.id)){
 						return;
