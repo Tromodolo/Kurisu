@@ -12,14 +12,14 @@ import KurisuCommand from "./Command";
 export default class KurisuModule {
 	public name: string = "";
 	public commands: KurisuCommand[] = [];
-	public permissions: string[] = [];
+	public permissions: Array<keyof eris.Constants["Permissions"]> = [];
 
 	/**
 	 * @param name The module that the particular command belongs to
 	 * @param permissions Array of all the commands within the command module
 	 * @param commands Array of all the commands
 	 */
-	constructor(name: string, permissions: string[], commands: KurisuCommand[]){
+	constructor(name: string, permissions: Array<keyof eris.Constants["Permissions"]>, commands: KurisuCommand[]){
 		this.name = name;
 		this.permissions = permissions;
 		this.commands = commands;

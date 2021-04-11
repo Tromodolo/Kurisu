@@ -6,7 +6,7 @@ type CommandMetadata = {
 	description: string;
 	usage: string;
 	aliases: string[];
-	requirements: string[];
+	requirements: Array<keyof eris.Constants["Permissions"]>;
 	delete: boolean;
 };
 

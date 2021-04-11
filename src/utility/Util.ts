@@ -47,7 +47,7 @@ export function getUserByMessage(msg: Message, args: string[]): Member | undefin
 
 	// if no args were passed with command
 	if (args.length === 0) {
-		return msg.member;
+		return msg.member ?? undefined;
 	}
 
 	if (args[0].match(mentionRegex)){

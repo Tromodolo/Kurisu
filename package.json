@@ -33,7 +33,7 @@
     "chai": "^4.2.0",
     "colorthief": "^2.3.0",
     "d3-cloud": "^1.2.5",
-    "eris": "^0.13.1",
+    "eris": "^0.15.0",
     "fuse.js": "^3.4.5",
     "googleapis": "^39.1.0",
     "html-to-text": "^5.0.0",
