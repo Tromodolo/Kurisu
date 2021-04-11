@@ -12,7 +12,7 @@ import PleaseHelpMe from "./uwu";
 import WordCloud from "./wordcloud";
 
 export default new KurisuModule (
-	"Fun",
+	"✨ Fun",
 	[],
 	[
 		EightBall,

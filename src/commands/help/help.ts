@@ -32,13 +32,13 @@ export default new KurisuCommand (
 				embed.setFooter(`Use ${config.bot.defaultPrefix}invite to add me to your server`);
 
 				bot.commands.modules.forEach((module) => {
-					if (module.name.toLowerCase() === "owner"){
+					if (module.name.toLowerCase().includes("owner")){
 						if (!config.bot.developerIds.includes(message.author.id)){
 							return;
 						}
 					}
-					const moduleCommands = module.commands.map((x) => x.metadata.name).join(" **|** ");
-					embed.addField(module.name, moduleCommands, false);
+					const moduleCommands = module.commands.map((x) => x.metadata.name).join(", ");
+					embed.addField(module.name, moduleCommands, true);
 				});
 			}
 			else{

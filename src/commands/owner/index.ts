@@ -8,7 +8,7 @@ import Stop from "./stop";
 import Update from "./update";
 
 export default new KurisuModule (
-	"Owner",
+	"🛠️ Owner",
 	[],
 	[
 		Eval,

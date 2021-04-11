@@ -8,7 +8,7 @@ import Pet from "./pet";
 import WhoIs from "./whois";
 
 export default new KurisuModule (
-	"Social",
+	"💬 Social",
 	[],
 	[
 		Avatar,

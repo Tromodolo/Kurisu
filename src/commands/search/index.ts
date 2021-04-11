@@ -6,7 +6,7 @@ import Weather from "./weather";
 import Wolfram from "./wolfram";
 
 export default new KurisuModule (
-	"Search",
+	"🔍 Search",
 	[],
 	[
 		Anime,

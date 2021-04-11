@@ -5,7 +5,7 @@ import Profile from "./profile";
 import Title from "./title";
 
 export default new KurisuModule (
-	"Profile",
+	"😊 Profile",
 	[],
 	[
 		Description,

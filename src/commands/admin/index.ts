@@ -7,7 +7,7 @@ import Roles from "./roles";
 import Settings from "./settings";
 
 export default new KurisuModule (
-	"Admin",
+	"🛠️ Admin",
 	[],
 	[
 		Ban,
