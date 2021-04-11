@@ -12,9 +12,10 @@
     "url": "https://github.com/Tromodolo/Kurisu-Node/issues"
   },
   "scripts": {
-    "run": "tsc && node build/bot.js",
+    "dev": "tsc && node build/bot.js",
     "test": "ts-patch install && mocha",
-    "build": "tsc"
+    "build": "tsc",
+    "production": "set production=true && tsc"
   },
   "homepage": "https://github.com/Tromodolo/Kurisu-Node#readme",
   "dependencies": {
@@ -24,7 +25,7 @@
     "@types/ip": "^1.1.0",
     "@types/lodash": "^4.14.144",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^11.12.1",
+    "@types/node": "^14.14.37",
     "@types/node-fetch": "^2.5.3",
     "@types/sinon": "^9.0.0",
     "axios": "^0.18.0",
