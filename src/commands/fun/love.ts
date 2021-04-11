@@ -14,23 +14,20 @@ registerFont(path.join(__dirname, "../../../data/love/VCR_OSD_MONO_1.001.ttf"), 
 registerFont(path.join(__dirname, "../../../data/deathnote/IndieFlower.ttf"), { family: "Indie Flower" });
 registerFont(path.join(__dirname, "../../../data/deathnote/ShadowsIntoLight.ttf"), { family: "Shadows Into Light" });
 
-export default class Love extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "love",
-			description: "Love tests two people and generates image",
-			usage: "love {First Person} {Second Person}",
-			aliases: [
-				"ship",
-				"love",
-				"match",
-			],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "love",
+		description: "Love tests two people and generates image",
+		usage: "love {First Person} {Second Person}",
+		aliases: [
+			"ship",
+			"love",
+			"match",
+		],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			const users: { first?: Member, second?: Member } = getLoveUsers(message, args);
 			if (!(users.first && users.second)){
@@ -163,10 +160,10 @@ export default class Love extends KurisuCommand {
 				await message.channel.createMessage("", { file: buffer, name: "love.png"});
 
 			}
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);
 
 function sendAvatarRequests(firstUrl: string, secondUrl: string) {
 	return new Promise((resolve, reject) => {

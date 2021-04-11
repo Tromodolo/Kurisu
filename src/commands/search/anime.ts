@@ -1,23 +1,19 @@
 import { Message } from "eris";
-import KurisuCommand from "../../models/Command";
-import { Bot } from "../../bot";
-
 import fetch from "node-fetch";
+import { Bot } from "../../bot";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 
-export default class Anime extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "anime",
-			description: "Looks up anime on Kitsu",
-			usage: "anime cowboy bebop",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "anime",
+		description: "Looks up anime on Kitsu",
+		usage: "anime cowboy bebop",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			if (args.length < 1) {
 				return reject("Please enter an anime you'd like to look up.");
@@ -93,7 +89,7 @@ export default class Anime extends KurisuCommand {
 
 			message.channel.createMessage(embed.getEmbed());
 
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

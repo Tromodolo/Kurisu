@@ -6,19 +6,16 @@ import path from "path";
 import KurisuCommand from "../../models/Command";
 import { Bot } from "../../bot";
 
-export default class Deathnote extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "deathnote",
-			description: "Puts someone's name into the death note",
-			usage: "deathnote {person}",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "deathnote",
+		description: "Puts someone's name into the death note",
+		usage: "deathnote {person}",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			let text = "";
 			if (args.length < 1){
@@ -62,7 +59,7 @@ export default class Deathnote extends KurisuCommand {
 			// Converts canvas to buffer and sends it to the response
 			const buffer = canvas.toBuffer();
 			await message.channel.createMessage("", { file: buffer, name: "deathnote.png"});
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

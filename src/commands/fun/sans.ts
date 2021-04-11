@@ -8,19 +8,16 @@ import { Bot } from "../../bot";
 
 registerFont(path.join(__dirname, "../../../data/Comic Sans UT.ttf"), { family: "Sans" });
 
-export default class Sans extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "sans",
-			description: "Makes sans say something",
-			usage: "sans {message}",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "sans",
+		description: "Makes sans say something",
+		usage: "sans {message}",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			if (args.length < 1){
 				return reject("You need to specify a message. :<");
@@ -60,7 +57,7 @@ export default class Sans extends KurisuCommand {
 
 			await message.channel.createMessage("", { file: buffer, name: "sans.png"});
 
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

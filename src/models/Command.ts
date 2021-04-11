@@ -1,5 +1,5 @@
-import eris from "eris";
-import { Bot } from "../bot";
+import eris, { Message } from "eris";
+import { bot, Bot } from "../bot";
 
 type CommandMetadata = {
 	name: string;
@@ -20,12 +20,11 @@ type CommandMetadata = {
  */
 export default class KurisuCommand {
 	public metadata: CommandMetadata;
-	public bot: Bot;
+	public callback: (message: Message, args: string[], bot: Bot) => Promise<any>;
 
-	constructor(bot: Bot, metadata: CommandMetadata){
-		this.bot = bot;
-
+	constructor(metadata: CommandMetadata, callback: (message: Message, args: string[], bot: Bot) => Promise<any>) {
 		this.metadata = metadata;
+		this.callback = callback;
 	}
 
 	/**
@@ -33,8 +32,8 @@ export default class KurisuCommand {
 	 * @arg {string[]} args Array of all the args sent with the command
 	 * @returns {Promise<*>}
 	 */
-	public execute(message: eris.Message, args: string[]): Promise<any>{
-		return new Promise((resolve) => resolve());
+	public async execute(message: eris.Message, args: string[]) {
+		await this.callback(message, args, bot);
 	}
 
 	public checkPermissions(permissions: eris.Permission): boolean {

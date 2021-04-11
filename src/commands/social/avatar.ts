@@ -7,26 +7,22 @@
  */
 
 import { Message, GuildChannel } from "eris";
-import config from "../../config";
 import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getUserByMessage, getPrimaryColorFromImageUrl } from "../../utility/Util";
 
 import { Bot } from "../../bot";
 
-export default class Avatar extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "avatar",
-			description: "Gets avatar for user/server, or your own if unspecified",
-			usage: "avatar {user}",
-			aliases: ["ava", "pfp", "proflepicture"],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "avatar",
+		description: "Gets avatar for user/server, or your own if unspecified",
+		usage: "avatar {user}",
+		aliases: ["ava", "pfp", "proflepicture"],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			const user = getUserByMessage(message, args);
 			const embed = new DiscordEmbed();
@@ -64,7 +60,7 @@ export default class Avatar extends KurisuCommand {
 			}
 
 			await message.channel.createMessage(embed.getEmbed());
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

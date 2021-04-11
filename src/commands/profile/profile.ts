@@ -1,29 +1,24 @@
-import { Message } from "eris";
-import { Bot } from "../../bot";
-import KurisuCommand from "../../models/Command";
-import { getUserByMessage, getPrimaryColorHexFromImageUrl } from "../../utility/Util";
-
-import fs from "fs";
-import path from "path";
 import axios from "axios";
 import { createCanvas, Image, registerFont } from "canvas";
-import moment from "moment";
+import { Message } from "eris";
+import fs from "fs";
+import path from "path";
+import { Bot } from "../../bot";
+import KurisuCommand from "../../models/Command";
+import { getPrimaryColorHexFromImageUrl, getUserByMessage } from "../../utility/Util";
 
 registerFont(path.join(__dirname, "../../../data/Nunito-Bold.ttf"), { family: "Nunito", weight: "bold" });
 
-export default class Profile extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "profile",
-			description: "Shows your profile",
-			usage: "profile",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "profile",
+		description: "Shows your profile",
+		usage: "profile",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			let user = message.member!;
 
@@ -38,7 +33,7 @@ export default class Profile extends KurisuCommand {
 				return reject({title: "Could not view profile", message: ":no_good: Bots do not have profiles."});
 			}
 
-			const dbUser = await this.bot.db.getOrCreateUser(user);
+			const dbUser = await bot.db.getOrCreateUser(user);
 			const primaryColour = await getPrimaryColorHexFromImageUrl(user.avatarURL);
 
 			const canvas = createCanvas(500, 430);
@@ -85,18 +80,18 @@ export default class Profile extends KurisuCommand {
 
 			// Render parts of stats
 			let offset = 0;
-			this.renderExp(ctx, dbUser.experience?.total ?? 0, primaryColour, offset);
+			renderExp(ctx, dbUser.experience?.total ?? 0, primaryColour, offset);
 			offset += 32;
 			if (dbUser?.statistics?.totalMessages) {
-				this.renderStat(ctx, "Time spent", this.convertMinutes(dbUser?.statistics?.totalMessages), offset);
+				renderStat(ctx, "Time spent", convertMinutes(dbUser?.statistics?.totalMessages), offset);
 				offset += 32;
 			}
 			if (dbUser?.statistics?.totalMessages){
-				this.renderStat(ctx, "Total messages", dbUser?.statistics?.totalMessages?.toString(), offset);
+				renderStat(ctx, "Total messages", dbUser?.statistics?.totalMessages?.toString(), offset);
 				offset += 32;
 			}
 			if (dbUser?.statistics?.commandsUsed){
-				this.renderStat(ctx, "Commands used", dbUser?.statistics?.commandsUsed?.toString(), offset);
+				renderStat(ctx, "Commands used", dbUser?.statistics?.commandsUsed?.toString(), offset);
 				offset += 32;
 			}
 
@@ -110,113 +105,113 @@ export default class Profile extends KurisuCommand {
 
 			ctx.fillStyle = "#CDCDCD";
 			ctx.font = "bold 14px Nunito";
-			this.renderMultilineText(ctx, dbUser?.profile?.description ?? "", 10, 170 + offset, 14, 480);
+			renderMultilineText(ctx, dbUser?.profile?.description ?? "", 10, 170 + offset, 14, 480);
 
 			// Converts canvas to buffer and sends it to the response
 			const buffer = canvas.toBuffer();
 			await message.channel.createMessage("", { file: buffer, name: "profile.png"});
-			return resolve();
+			return resolve(null);
 		});
+	},
+);
+
+function convertMinutes(input_min: number){
+	const minutes = input_min % 60;
+	let hours = 0;
+	let days = 0;
+	if (input_min > 60){
+		days = Math.floor(input_min / (60 * 24));
+		hours = Math.floor((input_min / 60) % 24);
 	}
 
-	private convertMinutes(input_min: number){
-		const minutes = input_min % 60;
-		let hours = 0;
-		let days = 0;
-		if (input_min > 60){
-			days = Math.floor(input_min / (60 * 24));
-			hours = Math.floor((input_min / 60) % 24);
-		}
-
-		let output = "~";
-		if (days > 0){
-			output += `${days}d `;
-		}
-		if (hours > 0){
-			output += `${hours}h `;
-		}
-		output += `${minutes}m`;
-		return output;
+	let output = "~";
+	if (days > 0){
+		output += `${days}d `;
 	}
+	if (hours > 0){
+		output += `${hours}h `;
+	}
+	output += `${minutes}m`;
+	return output;
+}
 
-	private renderMultilineText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, fontSize: number, maxWidth: number) {
-		const words = text.split(" ");
-		const lines: string[] = [];
-		let line = "";
-		for (const word of words) {
-			const measured = ctx.measureText(line + word);
-			if (measured.width < maxWidth){
-				line += `${word} `;
-			}
-			else {
-				lines.push(line);
-				line = `${word} `;
-			}
+function renderMultilineText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, fontSize: number, maxWidth: number) {
+	const words = text.split(" ");
+	const lines: string[] = [];
+	let line = "";
+	for (const word of words) {
+		const measured = ctx.measureText(line + word);
+		if (measured.width < maxWidth){
+			line += `${word} `;
 		}
-		lines.push(line);
-
-		let index = 0;
-		for (const l of lines){
-			ctx.fillText(l, x, y + index * (fontSize * 1.3));
-			index++;
+		else {
+			lines.push(line);
+			line = `${word} `;
 		}
 	}
+	lines.push(line);
 
-	private renderStat(ctx: CanvasRenderingContext2D, statName: string, statValue: string, offset: number = 0){
-		ctx.fillStyle = "#3B3C3D";
-		ctx.fillRect(0, 131 + offset, 500, 31);
-		ctx.fillStyle = "#525252";
-		ctx.fillRect(0, 162 + offset, 500, 1);
-
-		ctx.textBaseline = "hanging";
-		ctx.font = "bold 16px Nunito";
-		ctx.fillStyle = "#FFFFFF";
-		ctx.textAlign = "right";
-		ctx.fillText(statName, 145, 135 + offset);
-
-		ctx.textAlign = "left";
-		ctx.fillStyle = "#CDCDCD";
-		ctx.font = "bold 14px Nunito";
-		ctx.fillText(statValue, 158, 137 + offset);
+	let index = 0;
+	for (const l of lines){
+		ctx.fillText(l, x, y + index * (fontSize * 1.3));
+		index++;
 	}
+}
 
-	private renderExp(ctx: CanvasRenderingContext2D, exp: number = 0, barColor: string, offset: number = 0){
-		ctx.fillStyle = "#3B3C3D";
-		ctx.fillRect(0, 131 + offset, 500, 31);
-		ctx.fillStyle = "#525252";
-		ctx.fillRect(0, 162 + offset, 500, 1);
+function renderStat(ctx: CanvasRenderingContext2D, statName: string, statValue: string, offset: number = 0){
+	ctx.fillStyle = "#3B3C3D";
+	ctx.fillRect(0, 131 + offset, 500, 31);
+	ctx.fillStyle = "#525252";
+	ctx.fillRect(0, 162 + offset, 500, 1);
 
-		ctx.textBaseline = "hanging";
-		ctx.font = "bold 16px Nunito";
-		ctx.fillStyle = "#FFFFFF";
-		ctx.textAlign = "right";
-		ctx.fillText("Experience", 145, 135 + offset);
+	ctx.textBaseline = "hanging";
+	ctx.font = "bold 16px Nunito";
+	ctx.fillStyle = "#FFFFFF";
+	ctx.textAlign = "right";
+	ctx.fillText(statName, 145, 135 + offset);
 
-		const level = getLevelFromExp(exp);
-		const currXp = getExpForLevel(level);
-		const prevXp = getExpForLevel(level - 1);
+	ctx.textAlign = "left";
+	ctx.fillStyle = "#CDCDCD";
+	ctx.font = "bold 14px Nunito";
+	ctx.fillText(statValue, 158, 137 + offset);
+}
 
-		const xpIntolevel = exp - prevXp;
-		const xpForLevel = currXp - prevXp;
+function renderExp(ctx: CanvasRenderingContext2D, exp: number = 0, barColor: string, offset: number = 0){
+	ctx.fillStyle = "#3B3C3D";
+	ctx.fillRect(0, 131 + offset, 500, 31);
+	ctx.fillStyle = "#525252";
+	ctx.fillRect(0, 162 + offset, 500, 1);
 
-		ctx.textAlign = "left";
-		ctx.fillStyle = "#CDCDCD";
-		ctx.font = "bold 14px Nunito";
-		ctx.fillText(`Lv. ${level}`, 158, 137 + offset);
-		ctx.fillText(`${xpIntolevel}/${xpForLevel} xp`, 405, 137 + offset);
+	ctx.textBaseline = "hanging";
+	ctx.font = "bold 16px Nunito";
+	ctx.fillStyle = "#FFFFFF";
+	ctx.textAlign = "right";
+	ctx.fillText("Experience", 145, 135 + offset);
 
-		const xpBarLength = 190;
-		const xpBarHeight = 8;
+	const level = getLevelFromExp(exp);
+	const currXp = getExpForLevel(level);
+	const prevXp = getExpForLevel(level - 1);
 
-		ctx.fillStyle = "#4E4F50";
-		ctx.fillRect(205, 142 + offset, xpBarLength, xpBarHeight);
+	const xpIntolevel = exp - prevXp;
+	const xpForLevel = currXp - prevXp;
 
-		const xpPercent = xpIntolevel / xpForLevel * 100;
-		const pixelsPerPercent = xpBarLength / 100;
+	ctx.textAlign = "left";
+	ctx.fillStyle = "#CDCDCD";
+	ctx.font = "bold 14px Nunito";
+	ctx.fillText(`Lv. ${level}`, 158, 137 + offset);
+	ctx.fillText(`${xpIntolevel}/${xpForLevel} xp`, 405, 137 + offset);
 
-		ctx.fillStyle = barColor;
-		ctx.fillRect(205, 142 + offset, xpPercent * pixelsPerPercent, xpBarHeight);
-	}
+	const xpBarLength = 190;
+	const xpBarHeight = 8;
+
+	ctx.fillStyle = "#4E4F50";
+	ctx.fillRect(205, 142 + offset, xpBarLength, xpBarHeight);
+
+	const xpPercent = xpIntolevel / xpForLevel * 100;
+	const pixelsPerPercent = xpBarLength / 100;
+
+	ctx.fillStyle = barColor;
+	ctx.fillRect(205, 142 + offset, xpPercent * pixelsPerPercent, xpBarHeight);
 }
 
 // 50 * x ^ 2 = Y

@@ -1,13 +1,15 @@
 import KurisuModule from "../../models/CommandModule";
-import { Bot } from "../../bot";
 
-export default class HelpModule extends KurisuModule{
-	constructor(bot: Bot){
-		super(
-			bot,
-			"Help",
-			[],
-			__dirname,
-		);
-	}
-}
+import Help from "./help";
+import Info from "./info";
+import Invite from "./invite";
+
+export default new KurisuModule (
+	"Help",
+	[],
+	[
+		Help,
+		Info,
+		Invite,
+	],
+);

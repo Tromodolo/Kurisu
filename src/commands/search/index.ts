@@ -1,13 +1,17 @@
 import KurisuModule from "../../models/CommandModule";
-import { Bot } from "../../bot";
 
-export default class SearchModule extends KurisuModule{
-	constructor(bot: Bot){
-		super(
-			bot,
-			"Search",
-			[],
-			__dirname,
-		);
-	}
-}
+import Anime from "./anime";
+import Manga from "./manga";
+import Weather from "./weather";
+import Wolfram from "./wolfram";
+
+export default new KurisuModule (
+	"Search",
+	[],
+	[
+		Anime,
+		Manga,
+		Weather,
+		Wolfram,
+	],
+);

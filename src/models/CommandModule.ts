@@ -1,8 +1,5 @@
 import eris from "eris";
-import fs from "fs";
-import path from "path";
 import KurisuCommand from "./Command";
-import { Bot } from "../bot";
 
 /**
  * Class definition for Command Modules
@@ -17,32 +14,15 @@ export default class KurisuModule {
 	public commands: KurisuCommand[] = [];
 	public permissions: string[] = [];
 
-	private bot: Bot;
-
 	/**
 	 * @param name The module that the particular command belongs to
 	 * @param permissions Array of all the commands within the command module
-	 * @param commandPath Array of all the different permissions needed
+	 * @param commands Array of all the commands
 	 */
-	constructor(bot: Bot, name: string, permissions: string[], commandPath: string){
-		this.bot = bot;
+	constructor(name: string, permissions: string[], commands: KurisuCommand[]){
 		this.name = name;
 		this.permissions = permissions;
-
-		fs.readdir(path.join(commandPath, "./"), (folderErr, files) => {
-			for (const file of files){
-				if (!(file === "index.ts" || file === "index.js")){
-					const command = require(path.join(commandPath, `/${file}`));
-					try{
-						const Command = command.default;
-						this.commands.push(new Command(this.bot));
-					}
-					catch (e){
-						continue;
-					}
-				}
-			}
-		});
+		this.commands = commands;
 	}
 
 	/**

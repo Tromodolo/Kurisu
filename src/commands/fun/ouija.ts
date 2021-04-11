@@ -1,28 +1,24 @@
 import { Message } from "eris";
 import KurisuCommand from "../../models/Command";
 import { Bot } from "../../bot";
-import { getPrimaryColorFromImageUrl } from "../../utility/Util";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import ResponseListener from "../../handlers/ResponseListener";
 
-export default class Ouija extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "ouija",
-			description: "Asks the spirits to answer question. (Game)",
-			usage: "`ouija ______ should be avoided at any cost`",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "ouija",
+		description: "Asks the spirits to answer question. (Game)",
+		usage: "`ouija ______ should be avoided at any cost`",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			const promptQuestion = await message.channel.createMessage("Please enter a question.");
 			let question: Message;
 			try{
-				question = await ResponseListener.waitForMessage(this.bot.client, message.channel, message.author.id, 30 * 1000);
+				question = await ResponseListener.waitForMessage(bot.client, message.channel, message.author.id, 30 * 1000);
 				await promptQuestion.delete();
 
 				if (question.content.length < 1){
@@ -41,7 +37,7 @@ _Spirits need to enter one letter at a time. An answer is decided when someone e
 
 			while(waitingForLetters){
 				try{
-					const ghostAnswer = await ResponseListener.waitForMessage(this.bot.client, message.channel, undefined, 30 * 1000);
+					const ghostAnswer = await ResponseListener.waitForMessage(bot.client, message.channel, undefined, 30 * 1000);
 					if (ghostAnswer.content.length === 1){
 						answer += ghostAnswer.content;
 					}
@@ -59,7 +55,7 @@ _Spirits need to enter one letter at a time. An answer is decided when someone e
 			}
 
 			const embed = new DiscordEmbed();
-			embed.setColor(parseInt(this.bot.cnf.bot.color));
+			embed.setColor(parseInt(bot.cnf.bot.color));
 
 			embed.setTitle("The spirits have answered your question:");
 			embed.setDescription(`
@@ -72,7 +68,7 @@ _Spirits need to enter one letter at a time. An answer is decided when someone e
 
 			await message.channel.createMessage(embed.getEmbed());
 
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

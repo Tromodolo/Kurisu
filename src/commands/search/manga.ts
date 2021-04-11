@@ -1,23 +1,19 @@
 import { Message } from "eris";
-import KurisuCommand from "../../models/Command";
-import { Bot } from "../../bot";
-
 import fetch from "node-fetch";
+import { Bot } from "../../bot";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 
-export default class Manga extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "manga",
-			description: "Looks up manga on Kitsu",
-			usage: "manga one piece",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "manga",
+		description: "Looks up manga on Kitsu",
+		usage: "manga one piece",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			if (args.length < 1) {
 				return reject("Please enter an manga you'd like to look up.");
@@ -81,7 +77,7 @@ export default class Manga extends KurisuCommand {
 
 			message.channel.createMessage(embed.getEmbed());
 
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

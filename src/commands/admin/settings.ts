@@ -15,29 +15,26 @@ const KICK_BAN_EMOJI = "🛑";
 const JOIN_LEAVE_EMOJI = "🚪";
 const EDIT_DELETE_EMOJI = "📝";
 
-export default class Settings extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "settings",
-			description: "Sets up server settings",
-			usage: "settings",
-			aliases: [
-				"config",
-			],
-			requirements: ["manageGuild"],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "settings",
+		description: "Sets up server settings",
+		usage: "settings",
+		aliases: [
+			"config",
+		],
+		requirements: ["manageGuild"],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			if (!(message.channel as GuildChannel).guild){
 				return;
 			}
-			const guild = await this.bot.db.getOrCreateGuild((message.channel as GuildChannel).guild);
+			const guild = await bot.db.getOrCreateGuild((message.channel as GuildChannel).guild);
 
 			const embed = new DiscordEmbed();
-			embed.setAuthor("Admin Menu", "", this.bot.client.user.avatarURL);
+			embed.setAuthor("Admin Menu", "", bot.client.user.avatarURL);
 			embed.setColor(parseInt(botConfig.bot.color));
 			embed.setDescription(`
 **React to this message to edit settings.**
@@ -58,7 +55,7 @@ ${EDIT_DELETE_EMOJI} - Edited/Deleted Messages
 
 			try {
 				try{
-					const reactionRes = await ReactionListener.waitForReaction(this.bot.client, sentMessage, message.author.id, 30 * 1000);
+					const reactionRes = await ReactionListener.waitForReaction(bot.client, sentMessage, message.author.id, 30 * 1000);
 					emoji = reactionRes.emoji;
 					userId = reactionRes.userId;
 				}
@@ -69,19 +66,19 @@ ${EDIT_DELETE_EMOJI} - Edited/Deleted Messages
 				switch (emoji.name){
 				case LEVEL_UP_EMOJI:
 					await sentMessage.removeReactions();
-					await handleEnabled(sentMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.LevelUpMessage);
+					await handleEnabled(sentMessage, bot.db, guild, bot.client, userId, ConfigFeature.LevelUpMessage);
 					break;
 				case KICK_BAN_EMOJI:
 					await sentMessage.removeReactions();
-					await handleSelectChannel(sentMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.KickBanNotification);
+					await handleSelectChannel(sentMessage, bot.db, guild, bot.client, userId, ConfigFeature.KickBanNotification);
 					break;
 				case JOIN_LEAVE_EMOJI:
 					await sentMessage.removeReactions();
-					await handleSelectChannel(sentMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.JoinLeaveNotification);
+					await handleSelectChannel(sentMessage, bot.db, guild, bot.client, userId, ConfigFeature.JoinLeaveNotification);
 					break;
 				case EDIT_DELETE_EMOJI:
 					await sentMessage.removeReactions();
-					await handleSelectChannel(sentMessage, this.bot.db, guild, this.bot.client, userId, ConfigFeature.EditMessageNotification);
+					await handleSelectChannel(sentMessage, bot.db, guild, bot.client, userId, ConfigFeature.EditMessageNotification);
 					break;
 				default:
 					break;
@@ -90,10 +87,10 @@ ${EDIT_DELETE_EMOJI} - Edited/Deleted Messages
 			catch (error) {
 				return reject(error.message);
 			}
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);
 
 async function handleSelectChannel(reactionMessage: Message, db: DatabaseHandler, guild: Guild, bot: Client, userId: string, type: ConfigFeature){
 	const index = guild.configs.findIndex((x) => x.configType === type);

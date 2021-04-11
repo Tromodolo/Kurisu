@@ -5,19 +5,16 @@ import { Bot } from "../../bot";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getPrimaryColorFromImageUrl } from "../../utility/Util";
 
-export default class Eval extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "eval",
-			description: "Evaluates code",
-			usage: "info",
-			aliases: ["evaluate"],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "eval",
+		description: "Evaluates code",
+		usage: "info",
+		aliases: ["evaluate"],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			const before = Date.now();
 			let retStr: string = "";
@@ -39,13 +36,13 @@ export default class Eval extends KurisuCommand {
 				const embed = new DiscordEmbed();
 				embed.setAuthor("Eval Results", undefined, authorImg);
 
-				const color = await getPrimaryColorFromImageUrl(this.bot.client.user.avatarURL);
+				const color = await getPrimaryColorFromImageUrl(bot.client.user.avatarURL);
 
 				embed.setColor(color);
 				embed.setDescription(retStr);
 
 				await message.channel.createMessage(embed.getEmbed());
-				return resolve();
+				return resolve(null);
 			}
 			catch (err) {
 				const after = Date.now();
@@ -56,5 +53,5 @@ export default class Eval extends KurisuCommand {
 					`Time: ${(after - before)} ms\`\`\``);
 			}
 		});
-	}
-}
+	},
+);

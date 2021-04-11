@@ -1,13 +1,10 @@
-import { Message, Channel } from "eris";
+import { Message } from "eris";
 import fs from "fs";
-import path from "path";
-
-import KurisuCommand from "../../models/Command";
-import { Bot } from "../../bot";
-
 import fetch from "node-fetch";
+import path from "path";
+import { Bot } from "../../bot";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
-
 interface WeatherData {
 	coord: {
 		lon: number,
@@ -50,30 +47,27 @@ interface WeatherData {
 	cod: number;
 }
 
-export default class Weather extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "weather",
-			description: "Looks up weather for a location",
-			usage: "weather Karlstad",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "weather",
+		description: "Looks up weather for a location",
+		usage: "weather Karlstad",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			if (args.length < 1) {
 				return reject("Please enter an city.");
 			}
 
-			if (!this.bot.cnf.bot.openWeatherMapAppId){
-				return reject("This bot isn't configured to use OpenWeatherMap data, please configure before trying again.")
+			if (!bot.cnf.bot.openWeatherMapAppId){
+				return reject("This bot isn't configured to use OpenWeatherMap data, please configure before trying again.");
 			}
 
 			let searchTerm = args.join(",");
-			const apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${searchTerm}&units=metric&appid=${this.bot.cnf.bot.openWeatherMapAppId}`;
+			const apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${searchTerm}&units=metric&appid=${bot.cnf.bot.openWeatherMapAppId}`;
 
 			let data: WeatherData;
 			try{
@@ -91,7 +85,7 @@ export default class Weather extends KurisuCommand {
 
 			const embed = new DiscordEmbed();
 			embed.setAuthor(`${data.name ?? searchTerm} ${data.sys?.country ?? ""}`);
-			embed.setColor(parseInt(this.bot.cnf.bot.color));
+			embed.setColor(parseInt(bot.cnf.bot.color));
 
 			let iconData: Buffer | null = null;
 
@@ -124,10 +118,10 @@ export default class Weather extends KurisuCommand {
 				await message.channel.createMessage(embed.getEmbed());
 			}
 
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);
 
 function GetWeatherName(code: number): string {
 	switch(code){

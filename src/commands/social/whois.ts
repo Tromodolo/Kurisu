@@ -8,33 +8,27 @@
 
 import { Message } from "eris";
 import moment from "moment";
+import { Bot } from "../../bot";
 import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
-import { getUserByMessage, getPrimaryColorFromImageUrl } from "../../utility/Util";
-import * as ColorThief from "colorthief";
-import image2base64 from "image-to-base64";
-import config from "../../config";
-import { Bot } from "../../bot";
+import { getPrimaryColorFromImageUrl, getUserByMessage } from "../../utility/Util";
 
-export default class WhoIs extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "user",
-			description: "Gets information about a user, or yourself if unspecified",
-			usage: "user {user}",
-			aliases: ["whois"],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "user",
+		description: "Gets information about a user, or yourself if unspecified",
+		usage: "user {user}",
+		aliases: ["whois"],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			let user = getUserByMessage(message, args);
 			const embed = new DiscordEmbed();
 
 			if (!message.member){
-				return resolve();
+				return resolve(null);
 			}
 
 			if (!user){
@@ -87,7 +81,7 @@ export default class WhoIs extends KurisuCommand {
 
 			message.channel.createMessage(embed.getEmbed());
 
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

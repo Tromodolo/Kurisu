@@ -15,24 +15,21 @@ import { DiscordEmbed } from "../../utility/DiscordEmbed";
 
 import childProcess from "child_process";
 
-export default class Info extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "info",
-			description: "Show information about the bot",
-			usage: "info",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "info",
+		description: "Show information about the bot",
+		usage: "info",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			const embed = new DiscordEmbed();
 
 			embed.setColor(parseInt(config.bot.color));
-			embed.setAuthor("Bot information:", this.bot.client.user.avatarURL, this.bot.client.user.avatarURL);
+			embed.setAuthor("Bot information:", bot.client.user.avatarURL, bot.client.user.avatarURL);
 
 			embed.addField("Devs", config.bot.developers.length > 0 ? config.bot.developers.map((x) => x.name).join(",\n") : "Uh Oh I don't know how this happened", true);
 			embed.addField("Node.js Version", process.version, true);
@@ -56,15 +53,15 @@ export default class Info extends KurisuCommand {
 			const megabytes = Math.round(memHeap / 1024 / 1024);
 
 			embed.addField("Memory usage", `${megabytes}MB`, true);
-			embed.addField("Shards", `${this.bot.client.shards.size}`, true);
-			embed.addField("Server Count", `${this.bot.client.guilds.size}`, true);
-			embed.addField("User Count", `${this.bot.client.users.size}`, true);
+			embed.addField("Shards", `${bot.client.shards.size}`, true);
+			embed.addField("Server Count", `${bot.client.guilds.size}`, true);
+			embed.addField("User Count", `${bot.client.users.size}`, true);
 			/* embed.addField("Invite Link", `[Link](${config.bot.inviteLink})`, true); */
 
 			embed.setFooter("https://github.com/Tromodolo/Kurisu");
 
 			await message.channel.createMessage(embed.getEmbed());
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

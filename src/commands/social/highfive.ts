@@ -11,19 +11,16 @@ import KurisuCommand from "../../models/Command";
 import { getUserByMessage } from "../../utility/Util";
 import { Bot } from "../../bot";
 
-export default class HighFive extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "highfive",
-			description: "Highfives another user",
-			usage: "highfive {user}",
-			aliases: ["ava", "pfp", "proflepicture"],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "highfive",
+		description: "Highfives another user",
+		usage: "highfive {user}",
+		aliases: ["ava", "pfp", "proflepicture"],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			const user = getUserByMessage(message, args);
 
@@ -34,7 +31,7 @@ export default class HighFive extends KurisuCommand {
 				message.channel.createMessage("(✿･∀･)／＼(･∀･✿)");
 			}
 
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

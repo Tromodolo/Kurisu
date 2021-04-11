@@ -7,7 +7,16 @@ import KurisuModule from "../models/CommandModule";
 import { DiscordEmbed } from "../utility/DiscordEmbed";
 import { DatabaseEntities } from "./DatabaseHandler";
 
-export class CommandHandler{
+import {
+	AdminModule,
+	FunModule,
+	HelpModule,
+	ProfileModule,
+	SearchModule,
+	SocialModule,
+} from "../commands";
+
+export class CommandHandler {
 	private moduleList: KurisuModule[] = [];
 	private bot: Bot;
 
@@ -24,22 +33,14 @@ export class CommandHandler{
 	}
 
 	public loadCommands(){
-		fs.readdir(path.join(__dirname, "../commands/"), (folderErr, folders) => {
-			folders.forEach((folder) => {
-				try{
-					const props = require(path.join(__dirname, `../commands/${folder}`));
-					if (props){
-						const Module = props.default;
-						this.moduleList.push(new Module(this.bot));
-					}
-					return;
-				}
-				catch (ex){
-					console.error(ex);
-					return;
-				}
-			});
-		});
+		this.moduleList = [
+			AdminModule,
+			FunModule,
+			HelpModule,
+			ProfileModule,
+			SearchModule,
+			SocialModule,
+		];
 	}
 
 	public hookEvent(){
@@ -118,8 +119,7 @@ export class CommandHandler{
 					else{
 						return false;
 					}
-				}
-				catch (e) {
+				} catch (e) {
 					const errorImg = "https://i.imgur.com/CYmk4fS.png";
 
 					const embed = new DiscordEmbed();

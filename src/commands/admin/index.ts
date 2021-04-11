@@ -1,13 +1,19 @@
 import KurisuModule from "../../models/CommandModule";
-import { Bot } from "../../bot";
 
-export default class AdminModule extends KurisuModule{
-	constructor(bot: Bot){
-		super(
-			bot,
-			"Admin",
-			[],
-			__dirname,
-		);
-	}
-}
+import Ban from "./ban";
+import Kick from "./kick";
+import Prune from "./prune";
+import Roles from "./roles";
+import Settings from "./settings";
+
+export default new KurisuModule (
+	"Admin",
+	[],
+	[
+		Ban,
+		Kick,
+		Prune,
+		Roles,
+		Settings,
+	],
+);

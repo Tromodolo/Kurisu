@@ -4,24 +4,21 @@ import { Bot } from "../../bot";
 import { getPrimaryColorFromImageUrl } from "../../utility/Util";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 
-export default class Quote extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "quote",
-			description: "Quotes either last message sent or message from Id",
-			usage: "quote {Optional Id}",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "quote",
+		description: "Quotes either last message sent or message from Id",
+		usage: "quote {Optional Id}",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			let quoteMessage: Message | undefined;
 			if (args[0]){
 				try{
-					quoteMessage = await this.bot.client.getMessage(message.channel.id, args[0]);
+					quoteMessage = await bot.client.getMessage(message.channel.id, args[0]);
 				}
 				catch {
 					quoteMessage = undefined;
@@ -64,7 +61,7 @@ export default class Quote extends KurisuCommand {
 			embed.setTimestamp(new Date(quoteMessage.createdAt));
 
 			await message.channel.createMessage(embed.getEmbed());
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

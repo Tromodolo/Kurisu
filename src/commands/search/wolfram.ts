@@ -1,27 +1,23 @@
 import { Message } from "eris";
-import KurisuCommand from "../../models/Command";
-import { Bot } from "../../bot";
-
 import fetch from "node-fetch";
+import { Bot } from "../../bot";
+import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 
-export default class Wolfram extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "wolfram",
-			description: "Looks up question on wolfram alpha",
-			usage: "wolfram Density of steel",
-			aliases: [
-				"wa",
-				"wolframalpha",
-				"define",
-			],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "wolfram",
+		description: "Looks up question on wolfram alpha",
+		usage: "wolfram Density of steel",
+		aliases: [
+			"wa",
+			"wolframalpha",
+			"define",
+		],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			if (args.length < 1) {
 				return reject("Please add a question you'd like the answer to.\nEg: '>wolfram Density of steel'");
@@ -30,7 +26,7 @@ export default class Wolfram extends KurisuCommand {
 			const firstMessage = await message.channel.createMessage("Looking up your question, please wait...");
 
 			const searchTerm = args.join(" ");
-			const apiCall = `http://api.wolframalpha.com/v2/query?appid=${this.bot.cnf.bot.wolframAlphaAppId}&input=${encodeURIComponent(searchTerm)}&output=json`;
+			const apiCall = `http://api.wolframalpha.com/v2/query?appid=${bot.cnf.bot.wolframAlphaAppId}&input=${encodeURIComponent(searchTerm)}&output=json`;
 
 			let data;
 			try{
@@ -50,8 +46,8 @@ export default class Wolfram extends KurisuCommand {
 			}
 
 			const embed = new DiscordEmbed();
-			embed.setAuthor("Wolfram|Alpha Answer", "https://www.wolframalpha.com/", this.bot.client.user.avatarURL);
-			embed.setColor(parseInt(this.bot.cnf.bot.color));
+			embed.setAuthor("Wolfram|Alpha Answer", "https://www.wolframalpha.com/", bot.client.user.avatarURL);
+			embed.setColor(parseInt(bot.cnf.bot.color));
 			embed.setTimestamp(new Date());
 
 			if (numberPods > 5){
@@ -73,7 +69,7 @@ export default class Wolfram extends KurisuCommand {
 
 			message.channel.createMessage(embed.getEmbed());
 
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

@@ -2,23 +2,20 @@ import { Message } from "eris";
 import KurisuCommand from "../../models/Command";
 import { Bot } from "../../bot";
 
-export default class PleaseHelpMe extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "uwu",
-			description: "Takes a sentence and makes it cursed",
-			usage: "uwu {sentence}",
-			aliases: [
-				"owo",
-				"curse",
-				"kezspeak",
-			],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "uwu",
+		description: "Takes a sentence and makes it cursed",
+		usage: "uwu {sentence}",
+		aliases: [
+			"owo",
+			"curse",
+			"kezspeak",
+		],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			let content = args.join(" ");
 
@@ -32,7 +29,7 @@ export default class PleaseHelpMe extends KurisuCommand {
 			if (content.length > 0){
 				await message.channel.createMessage(content);
 			}
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

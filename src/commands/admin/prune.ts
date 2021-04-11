@@ -2,21 +2,18 @@ import { Message, TextChannel } from "eris";
 import { Bot } from "../../bot";
 import KurisuCommand from "../../models/Command";
 
-export default class Prune extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "prune",
-			description: "Prunes amount of messages specified, up to 100",
-			usage: "prune {number}",
-			aliases: [
-				"purge",
-			],
-			requirements: ["manageMessages"],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "prune",
+		description: "Prunes amount of messages specified, up to 100",
+		usage: "prune {number}",
+		aliases: [
+			"purge",
+		],
+		requirements: ["manageMessages"],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			if ((message.channel as TextChannel)?.guild === undefined){
 				return;
@@ -41,7 +38,7 @@ export default class Prune extends KurisuCommand {
 				const messageList = await message.channel.getMessages(messages + 1);
 				messageIds = (messageList as Array<Message<TextChannel>>).map((msg) => msg.id);
 				if 	(messageIds.length > 0){
-					this.bot.client.deleteMessages(message.channel.id, messageIds, "Prune command").then(() => {
+					bot.client.deleteMessages(message.channel.id, messageIds, "Prune command").then(() => {
 						message.channel.createMessage(`🗑 ${messages} messages deleted`);
 					});
 				}
@@ -49,7 +46,7 @@ export default class Prune extends KurisuCommand {
 			catch (err) {
 				return reject(err);
 			}
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

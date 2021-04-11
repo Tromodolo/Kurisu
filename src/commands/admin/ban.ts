@@ -6,19 +6,16 @@ import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { getHighestRole, getUserByMessage } from "../../utility/Util";
 
-export default class Ban extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "ban",
-			description: "Bans a specified user from the server.",
-			usage: "ban {user} {reason}",
-			aliases: ["b"],
-			requirements: ["banMembers"],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "ban",
+		description: "Bans a specified user from the server.",
+		usage: "ban {user} {reason}",
+		aliases: ["b"],
+		requirements: ["banMembers"],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			let user: Member | undefined;
 
@@ -29,19 +26,19 @@ export default class Ban extends KurisuCommand {
 			}
 			else{
 				if (!message.member){
-					return resolve();
+					return resolve(null);
 				}
 				const targetedUserRole = getHighestRole(user.guild, user);
 				const kickerRole = getHighestRole(message.member.guild, message.member);
-				const botUser = message.member.guild.members.get(this.bot.client.user.id);
+				const botUser = message.member.guild.members.get(bot.client.user.id);
 
 				if (!botUser){
-					return resolve();
+					return resolve(null);
 				}
 				const botRole = getHighestRole(botUser.guild, botUser);
 
 				if (!targetedUserRole || !kickerRole || !botRole){
-					return resolve();
+					return resolve(null);
 				}
 
 				if (targetedUserRole.position >= kickerRole.position){
@@ -79,7 +76,7 @@ ${reason}
 					return reject({title: "Action failed", message: "User couldn't be banned"});
 				}
 			}
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

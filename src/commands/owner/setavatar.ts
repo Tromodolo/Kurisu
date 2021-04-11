@@ -3,19 +3,16 @@ import { Message } from "eris";
 import { Bot } from "../../bot";
 import KurisuCommand from "../../models/Command";
 
-export default class SetAvatar extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "setavatar",
-			description: "Sets the avatar of the bot",
-			usage: "setavatar {url}",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "setavatar",
+		description: "Sets the avatar of the bot",
+		usage: "setavatar {url}",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			if (args.length < 1){
 				return reject("You need to specify a url");
@@ -27,10 +24,10 @@ export default class SetAvatar extends KurisuCommand {
 				.then((response) => {
 					const buffer = Buffer.from(response.data, "utf8");
 					const avatarBase = "data:image/png;base64," + buffer.toString("base64");
-					this.bot.client.editSelf({ avatar: avatarBase });
+					bot.client.editSelf({ avatar: avatarBase });
 				});
 			}
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

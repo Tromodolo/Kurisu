@@ -4,19 +4,16 @@ import KurisuCommand from "../../models/Command";
 import { DiscordEmbed } from "../../utility/DiscordEmbed";
 import { Bot } from "../../bot";
 
-export default class Emote extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "emote",
-			description: "Shows full image of emote, and displays general information about it.",
-			usage: "emote :OhISee:",
-			aliases: [],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "emote",
+		description: "Shows full image of emote, and displays general information about it.",
+		usage: "emote :OhISee:",
+		aliases: [],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			if (!args[0]){
 				return reject("You need to specify an emote");
@@ -60,7 +57,7 @@ export default class Emote extends KurisuCommand {
 				await message.channel.createMessage(embed.getEmbed());
 			}
 
-			return resolve();
+			return resolve(null);
 		});
-	}
-}
+	},
+);

@@ -191,7 +191,6 @@ export async function getPrimaryColorFromImageUrl(url: string): Promise<number> 
 	return parseInt(hexColor);
 }
 
-
 export async function getPrimaryColorHexFromImageUrl(url: string): Promise<string> {
 	url = url.replace(".gif", ".png");
 

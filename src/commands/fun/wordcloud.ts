@@ -9,22 +9,19 @@ import { Bot } from "../../bot";
 
 registerFont(path.join(__dirname, "../../../data/SambiLemon.ttf"), { family: "Sambi Lemon" });
 
-export default class WordCloud extends KurisuCommand {
-	constructor(bot: Bot){
-		super(bot, {
-			name: "wordcloud",
-			description: "Generates wordcloud from the last 50 messages",
-			usage: "wordcloud",
-			aliases: [
-				"wc",
-				"cloud",
-			],
-			requirements: [],
-			delete: false,
-		});
-	}
-
-	public execute(message: Message, args: string[]) {
+export default new KurisuCommand (
+	{
+		name: "wordcloud",
+		description: "Generates wordcloud from the last 50 messages",
+		usage: "wordcloud",
+		aliases: [
+			"wc",
+			"cloud",
+		],
+		requirements: [],
+		delete: false,
+	},
+	(message: Message, args: string[], bot: Bot) => {
 		return new Promise(async (resolve, reject) => {
 			let lastMessages = await message.channel.getMessages(100, message.id);
 			// Remove bot messages
@@ -99,9 +96,9 @@ export default class WordCloud extends KurisuCommand {
 				}
 
 				await message.channel.createMessage("", {file: canvas.toBuffer(), name: "wordcloud.png"});
-				return resolve();
+				return resolve(null);
 			})
 			.start();
 		});
-	}
-}
+	},
+);
