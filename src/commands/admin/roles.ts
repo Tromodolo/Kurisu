@@ -33,37 +33,42 @@ export default new KurisuCommand (
 - **${menu.menuName}** (${menu.roles?.length ?? 0} roles) `;
 						}
 						await sendEmbed(message.channel, "List of available role menus", menus, bot);
+						break;
 					}
 					else {
 						await sendEmbed(message.channel, "List of available role menus", "*No role menu configurations found*", bot);
+						break;
 					}
-					break;
 				case "delete":
 					try{
 						await deleteMenu(message, dbGuild, bot);
-					}
-					catch (e){
+						break;
+					} catch (e){
 						return reject(e.message);
 					}
-					break;
 				case "create":
 					try{
 						await createMenu(message, dbGuild, bot);
-					}
-					catch (e){
+						break;
+					} catch (e){
 						return reject(e.message);
 					}
-					break;
 				case "view":
 					try{
 						await viewMenu(message, dbGuild, bot);
-					}
-					catch (e){
+						break;
+					} catch (e){
 						return reject(e.message);
 					}
-					break;
+				case "edit":
+					try {
+						await editMenu(message, dbGuild, bot);
+						break;
+					} catch (e) {
+						return reject(e.message);
+					}
 				default:
-					return reject("The only valid options are 'list', 'view', 'delete' and 'create'");
+					return reject("The only valid options are 'list', 'view', 'delete', 'create', and 'edit'");
 			}
 			return resolve(null);
 		});
@@ -99,10 +104,9 @@ async function createMenu(message: Message, dbGuild: DbGuild, bot: Bot){
 	let enteringRoles = true;
 	while(enteringRoles){
 		let roleResponse: Message;
-		try{
+		try {
 			roleResponse = await ResponseListener.waitForMessage(bot.client, message.channel, message.author.id, 60 * 1000);
-		}
-		catch (e) {
+		} catch (e) {
 			throw new Error("Menu timed out. Please try again.");
 		}
 		if (roleResponse.content.length > 1){
@@ -149,6 +153,98 @@ async function createMenu(message: Message, dbGuild: DbGuild, bot: Bot){
 	}
 }
 
+async function editMenu(message: Message, dbGuild: DbGuild, bot: Bot){
+	sendEmbed(message.channel, "Enter name", `
+Available menus:
+${dbGuild.roleMenus.map((x) => `**${x.menuName}**`).join(", ")}
+Enter name of new menu you want to edit, or 'cancel' to cancel
+`, bot);
+	let deleteRes: Message;
+	try{
+		deleteRes = await ResponseListener.waitForMessage(bot.client, message.channel, message.author.id, 60 * 1000);
+	}
+	catch (e) {
+		throw new Error("Menu timed out. Please try again.");
+	}
+	if (deleteRes.content === "cancel"){
+		return;
+	}
+	const ind = dbGuild.roleMenus.findIndex((x) => x.menuName.toLowerCase() === deleteRes.content.toLowerCase());
+	if (ind < 0){
+		sendEmbed(message.channel, "Error", "No menu with that name found, please try again", bot);
+		return;
+	}
+	let roles = "";
+	let roleIndex = 0;
+	for (const role of dbGuild.roleMenus[ind].roles){
+		roles += `
+** ${roleIndex + 1}.** ${role.emoji}  (${role.roleName})
+`;
+		roleIndex++;
+	}
+	await sendEmbed(message.channel, "Enter role number to edit", roles, bot);
+
+	let roleNumRes: Message;
+	try {
+		roleNumRes = await ResponseListener.waitForMessage(bot.client, message.channel, message.author.id, 60 * 1000);
+	} catch (e) {
+		throw new Error("Menu timed out. Please try again.");
+	}
+
+	if (isNaN(Number(roleNumRes.content)) || Number(roleNumRes.content) > dbGuild.roleMenus[ind].roles.length) {
+		throw new Error("Sorry, that is not a valid number, please try again.");
+	}
+
+	await sendEmbed(message.channel, "Update role", `
+Enter emoji and then role name. 
+**Example: \`❤️ Meat Lover\`**`, bot);
+
+	let updatedRoleRes: Message;
+	try {
+		updatedRoleRes = await ResponseListener.waitForMessage(bot.client, message.channel, message.author.id, 60 * 1000);
+	} catch (e) {
+		throw new Error("Menu timed out. Please try again.");
+	}
+
+	const guildRoles = (message.channel as TextChannel).guild.roles.map((x) => x);
+	const roleArgs = updatedRoleRes.content.split(" ");
+	if (roleArgs.length < 2) {
+		sendEmbed(message.channel, "Error", "Role not found, please try again.", bot);
+	}
+
+	const emoji = roleArgs.shift();
+	const role = getRoleByName(guildRoles, roleArgs.join(" "));
+	if (!role) {
+		sendEmbed(message.channel, "Error", "Role not found, please try again.", bot);
+	} else {
+		sendEmbed(message.channel, "Added", ":white_check_mark: Successfully updated role", bot);
+
+		dbGuild.roleMenus[ind].roles[Number(roleNumRes.content) - 1].emoji = emoji!;
+		dbGuild.roleMenus[ind].roles[Number(roleNumRes.content) - 1].roleId = role.id;
+		dbGuild.roleMenus[ind].roles[Number(roleNumRes.content) - 1].roleName = role.name;
+
+		bot.db.guildRepo.save(dbGuild);
+
+		await updateMenu(message, dbGuild.roleMenus[ind], dbGuild, bot);
+	}
+}
+
+async function updateMenu(message: Message, menu: GuildRoleMenu, dbGuild: DbGuild, bot: Bot){
+	const embed = new DiscordEmbed();
+	embed.setColor(parseInt(bot.cnf.bot.color));
+	embed.setTitle(menu.menuName);
+	embed.setDescription(`
+*React with emoji to earn role.*
+
+${menu.roles.map((x) => `${x.emoji} - ${x.roleName}`).join(",\n")}`);
+	const messageId = menu.activeMessageId;
+	const channelId = menu.activeChannelId;
+	if (channelId && messageId) {
+		const oldMsg = await bot.client.getMessage(channelId, messageId);
+		await oldMsg.edit(embed.getEmbed());
+	}
+}
+
 async function viewMenu(message: Message, dbGuild: DbGuild, bot: Bot){
 	sendEmbed(message.channel, "Enter name", "Enter name of new menu you want to view, or 'cancel' to cancel", bot);
 	let viewRes: Message;
@@ -178,6 +274,7 @@ ${dbGuild.roleMenus[foundIndex].roles.map((x) => `${x.emoji} - ${x.roleName}`).j
 	const viewMessage = await message.channel.createMessage(embed.getEmbed());
 
 	dbGuild.roleMenus[foundIndex].activeMessageId = viewMessage.id;
+	dbGuild.roleMenus[foundIndex].activeChannelId = viewMessage.channel.id;
 	bot.db.guildRepo.save(dbGuild);
 }
 
