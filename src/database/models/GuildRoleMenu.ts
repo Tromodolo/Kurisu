@@ -15,6 +15,9 @@ export class GuildRoleMenu {
 	@Column()
 	activeMessageId: string;
 
+	@Column()
+	activeChannelId: string;
+
 	@ManyToOne((type) => Guild, (guild) => guild.roleMenus)
 	guild: Guild;
 
