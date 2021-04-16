@@ -20,8 +20,10 @@ export default new KurisuCommand (
 			await newMessage.edit("Successfully got commit, compiling typescript");
 			childProcess.execSync("tsc");
 			await newMessage.edit("Successfully compiled, restarting...");
-			bot.client.disconnect({ reconnect: false });
-			pm2.restart("Kurisu", (err) => {
+			try {
+				bot.client.disconnect({ reconnect: false });
+			} catch { // Ignore for now }
+			pm2.restart("kurisu", (err) => {
 				if (err){
 					return;
 				}
