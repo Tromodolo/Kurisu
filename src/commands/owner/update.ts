@@ -22,7 +22,9 @@ export default new KurisuCommand (
 			await newMessage.edit("Successfully compiled, restarting...");
 			try {
 				bot.client.disconnect({ reconnect: false });
-			} catch { // Ignore for now }
+			} catch (e) {
+				console.error(e);
+			}
 			pm2.restart("kurisu", (err) => {
 				if (err){
 					return;
