@@ -57,7 +57,7 @@ ${EDIT_DELETE_EMOJI} - Edited/Deleted Messages
 				try{
 					const reactionRes = await ReactionListener.waitForReaction(bot.client, sentMessage, message.author.id, 30 * 1000);
 					emoji = reactionRes.emoji;
-					userId = reactionRes.userId;
+					userId = reactionRes.user.id;
 				}
 				catch{
 					throw new Error("Menu timed out. Please try again.");

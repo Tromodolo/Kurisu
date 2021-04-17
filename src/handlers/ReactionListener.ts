@@ -1,13 +1,13 @@
-import { Client, Emoji, Message } from "eris";
+import { Client, Emoji, Member, Message } from "eris";
 import { EventEmitter } from "events";
 
 export default class ReactionListener extends EventEmitter{
-	public static waitForReaction(client: Client, origMessage: Message, userId?: string, time?: number): Promise<{message: Message, emoji: Emoji, userId: string}>{
+	public static waitForReaction(client: Client, origMessage: Message, userId?: string, time?: number): Promise<{message: Message, emoji: Emoji, user: Member | {id: string}}>{
 		return new Promise((resolve, reject) => {
-			const handleReaction = (newMessage: Message, emoji: Emoji, reactedUserId: string) => {
+			const handleReaction = (newMessage: Message, emoji: Emoji, reactedUser: Member | {id: string}) => {
 				if (origMessage.id === newMessage.id){
 					if (userId){
-						if(userId !== reactedUserId){
+						if(userId !== reactedUser.id){
 							return;
 						}
 					}
@@ -15,7 +15,7 @@ export default class ReactionListener extends EventEmitter{
 					return resolve({
 						message: newMessage,
 						emoji,
-						userId: reactedUserId,
+						user: reactedUser,
 					});
 				}
 			};
