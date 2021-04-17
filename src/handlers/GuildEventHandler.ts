@@ -94,11 +94,14 @@ export class GuildEventHandler {
 		}
 	}
 
-	private async messageDelete(message: Message){
-		if (!message.content){
+	private async messageDelete(message: Message | {id: string}){
+		// Quick and dirty check to see if it's cached or not.
+		// Ignore messages that aren't cached.
+		if (!message.hasOwnProperty("content")){
 			return;
 		}
-		const guild = (message.channel as TextChannel).guild;
+		const msg = message as Message;
+		const guild = (msg.channel as TextChannel).guild;
 		if (!guild){
 			return;
 		}
@@ -109,9 +112,9 @@ export class GuildEventHandler {
 			if (config.enabled){
 				const embed = new DiscordEmbed();
 
-				embed.setAuthor(`Message Deleted (${message.author.username}#${message.author.discriminator})`, "", message.author.avatarURL);
+				embed.setAuthor(`Message Deleted (${msg.author.username}#${msg.author.discriminator})`, "", msg.author.avatarURL);
 				embed.setColor(0xfa5f5f);
-				embed.setDescription(message.content);
+				embed.setDescription(msg.content);
 				embed.setTimestamp(new Date());
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
@@ -119,16 +122,24 @@ export class GuildEventHandler {
 		}
 	}
 
-	private async messageEdit(newMessage: Message, oldMessage?: Message){
-		if (!oldMessage || !newMessage || newMessage.author.bot){
+	private async messageEdit(newMessage: Message | {id: string}, oldMessage?: Message | {id: string}){
+		// Quick and dirty check to see if it's cached or not.
+		// Ignore messages that aren't cached.
+		if (!newMessage.hasOwnProperty("content") || !oldMessage?.hasOwnProperty("content")){
+			return;
+		}
+
+		let oldMsg = oldMessage as Message;
+		let newMsg = newMessage as Message;
+		if (!oldMsg || !newMsg || newMsg.author.bot){
 			return;
 		}
 		// This is to make sure it doesn't trigger when embeds pop up for links.
 		// Because apparently that is a message edit.
-		if (oldMessage.embeds.length === 0 && newMessage.embeds.length > 0){
+		if (oldMsg.embeds.length === 0 && newMsg.embeds.length > 0){
 			return;
 		}
-		const guild = (newMessage.channel as TextChannel).guild;
+		const guild = (newMsg.channel as TextChannel).guild;
 		if (!guild){
 			return;
 		}
@@ -139,19 +150,19 @@ export class GuildEventHandler {
 			if (config.enabled){
 				const embed = new DiscordEmbed();
 
-				embed.setAuthor(`Message Edited (${newMessage.author.username}#${newMessage.author.discriminator})`, "", newMessage.author.avatarURL);
+				embed.setAuthor(`Message Edited (${newMsg.author.username}#${newMsg.author.discriminator})`, "", newMsg.author.avatarURL);
 				embed.setColor(0x5faafa);
 
-				embed.addField("Old", oldMessage.content.length > 250 ? oldMessage.content.substring(0, 249) + "..." : oldMessage.content ?? "");
-				embed.addField("New", newMessage.content.length > 250 ? newMessage.content.substring(0, 249) + "..." : newMessage.content ?? "");
+				embed.addField("Old", oldMsg.content.length > 250 ? oldMsg.content.substring(0, 249) + "..." : oldMsg.content ?? "");
+				embed.addField("New", newMsg.content.length > 250 ? newMsg.content.substring(0, 249) + "..." : newMsg.content ?? "");
 				embed.addField(
 					"Channel",
-					`[Open Channel](https://discordapp.com/channels/${(newMessage.channel as TextChannel).guild.id}/${newMessage.channel.id} )`,
+					`[Open Channel](https://discordapp.com/channels/${(newMsg.channel as TextChannel).guild.id}/${newMsg.channel.id} )`,
 					true);
 
 				embed.addField(
 					"Message",
-					`[Open Message](https://discordapp.com/channels/${(newMessage.channel as TextChannel).guild.id}/${newMessage.channel.id}/${newMessage.id})`,
+					`[Open Message](https://discordapp.com/channels/${(newMsg.channel as TextChannel).guild.id}/${newMsg.channel.id}/${newMsg.id})`,
 					true);
 
 				embed.setTimestamp(new Date());
