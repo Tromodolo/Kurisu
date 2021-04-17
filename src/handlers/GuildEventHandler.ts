@@ -14,6 +14,7 @@ export class GuildEventHandler {
 		this.userJoin = this.userJoin.bind(this);
 		this.userBanned = this.userBanned.bind(this);
 		this.messageDelete = this.messageDelete.bind(this);
+		this.messageBulkDelete = this.messageBulkDelete.bind(this);
 		this.messageEdit = this.messageEdit.bind(this);
 		this.messageReactionAdd = this.messageReactionAdd.bind(this);
 		this.messageReactionRemove = this.messageReactionRemove.bind(this);
@@ -28,6 +29,7 @@ export class GuildEventHandler {
 		this.bot.client.on("guildMemberAdd", this.userJoin);
 		this.bot.client.on("guildBanAdd", this.userBanned);
 		this.bot.client.on("messageDelete", this.messageDelete);
+		this.bot.client.on("messageDeleteBulk", this.messageBulkDelete);
 		this.bot.client.on("messageUpdate", this.messageEdit);
 		this.bot.client.on("messageReactionAdd", this.messageReactionAdd);
 		this.bot.client.on("messageReactionRemove", this.messageReactionRemove);
@@ -38,6 +40,7 @@ export class GuildEventHandler {
 		this.bot.client.off("guildMemberAdd", this.userJoin);
 		this.bot.client.off("guildBanAdd", this.userBanned);
 		this.bot.client.off("messageDelete", this.messageDelete);
+		this.bot.client.off("messageDeleteBulk", this.messageBulkDelete);
 		this.bot.client.off("messageUpdate", this.messageEdit);
 		this.bot.client.off("messageReactionAdd", this.messageReactionAdd);
 		this.bot.client.off("messageReactionRemove", this.messageReactionRemove);
@@ -118,6 +121,52 @@ export class GuildEventHandler {
 				embed.setTimestamp(new Date());
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
+			}
+		}
+	}
+
+	private async messageBulkDelete(messages: Array<Partial<Message> | {id: string}>){
+		// Quick and dirty check to see if it's cached or not.
+		// Ignore messages that aren't cached.
+		// if (!message.hasOwnProperty("content")){
+		// 	return;
+		// }
+		const msg = messages.find((x) => {
+			if (!x.hasOwnProperty("channel")) {
+				return false;
+			}
+			if (!((x as Message).channel as TextChannel).guild) {
+				return false;
+			}
+			return true;
+		}) as Message;
+		const guild = (msg.channel as TextChannel).guild;
+		if (!guild){
+			return;
+		}
+		const dbGuild = await this.bot.db.getOrCreateGuild(guild);
+		const config = dbGuild.configs.find((x) => x.configType === ConfigFeature.EditMessageNotification);
+		if (config){
+			if (config.enabled){
+				let msgStr = "";
+				for (const mes of messages) {
+					if (mes.hasOwnProperty("content")) {
+					msgStr += `Id: ${mes.id} Time: ${new Date((mes as Message).timestamp).toLocaleString()} 
+${(mes as Message).author?.username ?? "??"}#${(mes as Message).author?.discriminator ?? "??"}
+  ${(mes as Message).content}
+
+`;
+
+					} else {
+						msgStr += `Id: ${mes.id} 
+  *Message not cached
+
+`;
+					}
+				}
+
+				let buff = Buffer.from(msgStr, "utf-8");
+				await this.bot.client.createMessage(config.value, "", { file: buff, name: `bulk-deleted-messages-${msg.author.id}.txt`});
 			}
 		}
 	}
@@ -277,7 +326,6 @@ ${audit.reason ?? "Unspecified"}
 				else {
 					embed.addField("ID", `${member.id}`, true);
 				}
-
 
 				this.bot.client.createMessage(config.value, embed.getEmbed());
 			}
