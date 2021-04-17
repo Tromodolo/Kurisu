@@ -41,6 +41,22 @@ export class Bot {
 			console.info("Successfully connected as: " + this.client.user.username + "#" + this.client.user.discriminator);
 			this.client.editStatus("online", {name: `${this.cnf.bot.defaultPrefix}help to get command list`, type: 0});
 		});
+
+		this.client.on("error", (err: Error) => {
+			if (this.cnf.bot.developerIds.length > 0) {
+				const firstDev = this.cnf.bot.developerIds[0];
+				this.client.getDMChannel(firstDev).then((channel) => {
+					channel.createMessage(`**Unhandled Error**
+	Name: ${err.name}
+	Message: ${err.message}
+	Stack: ${err.stack}
+`);
+
+				});
+			}
+		});
+
+		this.connect();
 	}
 
 	public async connect(){
@@ -74,9 +90,4 @@ export class Bot {
 		this.client.connect();
 	}
 }
-const bot = new Bot(config, true);
-bot.connect();
-
-export {
-	bot,
-};
+export const bot = new Bot(config, process.env.production !== undefined);
