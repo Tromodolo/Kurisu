@@ -90,4 +90,4 @@ export class Bot {
 		this.client.connect();
 	}
 }
-export const bot = new Bot(config, process.env.production !== undefined);
+export const bot = new Bot(config, true);
