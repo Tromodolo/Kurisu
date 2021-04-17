@@ -1,4 +1,4 @@
-import eris, { Guild, Member, Message, TextChannel } from "eris";
+import eris, { Guild, Member, Message, TextChannel, User } from "eris";
 import moment from "moment";
 import { Bot } from "../bot";
 import { ConfigFeature } from "../database/models/GuildConfig";
@@ -43,7 +43,7 @@ export class GuildEventHandler {
 		this.bot.client.off("messageReactionRemove", this.messageReactionRemove);
 	}
 
-	private async messageReactionAdd(message: Message, emoji: {id?: string, name: string}, userID: string){
+	private async messageReactionAdd(message: Message, emoji: {id?: string, name: string}, member: User | { id: string }){
 		const guild = (message.channel as TextChannel).guild;
 		if (!guild){
 			return;
@@ -60,7 +60,12 @@ export class GuildEventHandler {
 		if (menu){
 			const foundReaction = menu.roles.find((x) => x.emoji === emoji.name);
 			if (foundReaction){
-				const user = (message.channel as TextChannel).guild?.members.get(userID);
+				let user: Member | undefined;
+				if (Object.hasOwnProperty("user")) {
+					user = (member as Member);
+				} else {
+					user = (message.channel as TextChannel).guild?.members.get(member.id);
+				}
 				user?.addRole(foundReaction.roleId);
 			}
 		}
