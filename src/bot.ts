@@ -43,17 +43,18 @@ export class Bot {
 		});
 
 		this.client.on("error", (err: Error) => {
-			if (this.cnf.bot.developerIds.length > 0) {
-				const firstDev = this.cnf.bot.developerIds[0];
-				this.client.getDMChannel(firstDev).then((channel) => {
-					channel.createMessage(`**Unhandled Error**
-	Name: ${err.name}
-	Message: ${err.message}
-	Stack: ${err.stack}
-`);
+			// I got real fucking sick of network errors
+// 			if (this.cnf.bot.developerIds.length > 0) {
+// 				const firstDev = this.cnf.bot.developerIds[0];
+// 				this.client.getDMChannel(firstDev).then((channel) => {
+// 					channel.createMessage(`**Unhandled Error**
+// 	Name: ${err.name}
+// 	Message: ${err.message}
+// 	Stack: ${err.stack}
+// `);
 
-				});
-			}
+// // 				});
+			// }
 		});
 
 		this.connect();
